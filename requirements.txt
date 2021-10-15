@@ -1,0 +1,10 @@
+discord
+discord_components
+googletrans==3.1.0a0
+config
+requests
+youtube_dl
+asyncio
+PyNaCl
+ffmpeg
+colorama
