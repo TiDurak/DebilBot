@@ -9,9 +9,8 @@ from config import settings
 
 from rich import print
 
-import discord
+
 from discord.ext import commands
-from discord.ext.commands import has_permissions, CommandNotFound, MissingPermissions, CommandInvokeError, MemberNotFound, BotMissingPermissions
 from discord_components import DiscordComponents
 
 bot = commands.Bot(command_prefix = settings['prefix'])
