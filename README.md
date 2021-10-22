@@ -45,15 +45,20 @@
 
 ***Recomendation: before using, please, read the LICENSE file!***
 
-Open `config.py` file in root directory, and edit prefix:
+Open `config.py` file in root directory, and edit prefix value:
 ```
 settings = {
-    'token': os.environ['token'],
-    'prefix': 'd.' # <= edit prefix to your own
+    'token': os.environ['DEBIL_TOKEN'],
+    'prefix': 'd.',
+    'path_to_ffmpeg': r'C:\Program Files\ffmpeg\bin\ffmpeg.exe', # Path to ffmpeg. For Linux users just type "ffmpeg"
 }
 ```
 
-Then create environment variable "token" with your token value
+Then create environment variable "DEBIL_TOKEN" with your token value
+
+To launch music commands, as **play**:
+Windows: [download ffmpeg build](https://www.gyan.dev/ffmpeg/builds/), unpack archive, `path_to_ffmpeg` value must be your path to ffmpeg.
+Linux: just install ffmpeg (`sudo apt install ffmpeg`, `sudo apt-get install ffmpeg`, etc), in `path_to_ffmpeg` value type `ffmpeg`
 
 **For bot starting, open `main.py` file**
 

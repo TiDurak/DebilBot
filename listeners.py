@@ -1,8 +1,9 @@
-import asyncio
 import random
+import asyncio
 import discord
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound, MissingPermissions, MemberNotFound
+from rich import print
 
 class ErrorListener(commands.Cog):
     def __init__(self, bot):
@@ -18,12 +19,14 @@ class ErrorListener(commands.Cog):
             await ctx.send('❌ Участник не найден!')
 
 
-class StatChanger(commands.Cog):
+class OnReady(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
+        print('[b green] Bot is ready! Just type d.help to see all bot commands.')
+        print('[blue] starting status changer...')
         while True:
             RandomInteger = random.randint(0, 4)
 
@@ -45,4 +48,4 @@ class StatChanger(commands.Cog):
 
 def setup(bot):
     bot.add_cog(ErrorListener(bot))
-    bot.add_cog(StatChanger(bot))
+    bot.add_cog(OnReady(bot))
