@@ -26,7 +26,6 @@ class OnReady(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print('[b green] Bot is ready! Just type d.help to see all bot commands.')
-        print('[blue] starting status changer...')
         while True:
             RandomInteger = random.randint(0, 4)
 

@@ -1,10 +1,10 @@
-import converters
-import games
-import help_command
-import moderation
-import music_bot
-import listeners
-import text_commands
+from cogs import converters
+from cogs import games
+from cogs import help_command
+from cogs import moderation
+from cogs import music_bot
+from cogs import listeners
+from cogs import text_commands
 from config import settings
 
 from rich import print
@@ -13,8 +13,6 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions, CommandNotFound, MissingPermissions, CommandInvokeError, MemberNotFound, BotMissingPermissions
 from discord_components import DiscordComponents
-
-print('[b blue] All modules has been loaded!')
 
 bot = commands.Bot(command_prefix = settings['prefix'])
 DiscordComponents(bot)
@@ -48,6 +46,6 @@ text = text_commands.Text(bot)
 text_commands.setup(bot)
 print('[blue] text_commands.py file has been loaded!')
 
-print('[b i blue] All files has been loaded. Starting...')
+print('[b i blue] All cogs has been loaded. Starting...')
 
 bot.run(settings['token'])
