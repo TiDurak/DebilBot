@@ -134,7 +134,3 @@ dmypy.json
 .vs/
 DebilBot/
 workspace.code-workspace
-
-# Sublime Text
-main.sublime-workspace
-main.sublime-project

@@ -91,16 +91,13 @@ class Music(commands.Cog):
                     elif responce.component.label == 'Стоп':
                         vc.stop()
                         await firstmessage.edit(embed=embed, components=[Button(style = ButtonStyle.red, label = 'Выход', emoji = '🚪')])
-                        await responce.respond(content = '🛑 Остановлено!')
 
                     elif responce.component.label == 'Пауза / Продолжить':
                         if vc.is_playing():
                             vc.pause()
-                            await responce.respond(content = '⏯️ Пауза!')
 
                         elif vc.is_paused():
                             vc.resume()
-                            await responce.respond(content = '⏯️ Продолжим...')
 
                 
         except Exception as e:
