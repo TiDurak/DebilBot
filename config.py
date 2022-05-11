@@ -13,6 +13,6 @@ path = {
 
 settings = {
     'token': os.environ['DEBIL_TOKEN'],
-    'prefix': 'db.',
+    'prefix': 'd.',
     'path_to_ffmpeg': path.get('linux') # If u use Windows, type path.get('windows'), else if u use Linux, or Heroku, type path.get('linux')
 }
