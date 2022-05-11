@@ -8,7 +8,7 @@ from rich import print
 class ErrorListener(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
+"""
     @commands.Cog.listener()
     async def on_command_error(ctx, error):
         if isinstance(error, CommandNotFound):
@@ -17,7 +17,7 @@ class ErrorListener(commands.Cog):
             await ctx.send('❌ У вас нету привилегий управления сообщениями!')
         elif isinstance(error, MemberNotFound):
             await ctx.send('❌ Участник не найден!')
-
+"""
 
 class OnReady(commands.Cog):
     def __init__(self, bot):

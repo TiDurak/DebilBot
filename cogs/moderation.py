@@ -4,6 +4,9 @@ from discord.errors import NotFound
 from discord.ext.commands import has_permissions, CommandNotFound, MissingPermissions, CommandInvokeError, MemberNotFound, BotMissingPermissions
 
 class Moderation(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
     @has_permissions(manage_messages = True)
     @commands.command()
     async def clear(self, ctx, arg1):
@@ -16,7 +19,7 @@ class Moderation(commands.Cog):
     @commands.command()
     async def kick(self, ctx, member: discord.Member, reason = 'Не указано'):
         await member.kick(reason=reason)
-        await ctx.send("Изгоняем участника {0} по причине: {1}".format(member, reason))
+        await ctx.send(f"Изгоняем участника {member} по причине: {reason}")
 
     @kick.error
     async def kick_error(self, ctx, error):

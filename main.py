@@ -6,12 +6,15 @@ from cogs import music
 from cogs import listeners
 from cogs import text
 from config import settings
+import sys
 
 from rich import print
 
 
 from discord.ext import commands
 from discord_components import DiscordComponents
+
+print(f'[b yellow] Python {sys.version}')
 
 bot = commands.Bot(command_prefix = settings['prefix'])
 DiscordComponents(bot)
