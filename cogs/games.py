@@ -37,16 +37,9 @@ class Games(commands.Cog):
         elif responce.component.label == 'Бумага':
             await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{desc} \n Ты выбрал `{responce.component.label}`, а я выбрал `{SomeChoice}`' ), components=[])
 
-
-        # Заметка для себя:
-        # responce.component.label - выбор юзера
-        # SomeChoice - выбор бота
-
-        # Ничья
         if responce.component.label == SomeChoice:
             await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{SomeChoice}` \n Ничья!'), components=[])
 
-        # Победа
         elif responce.component.label == 'Камень' and SomeChoice == 'Ножницы':
             await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{SomeChoice}` \n Победа!!!'), components=[])
 
