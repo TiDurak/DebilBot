@@ -6,34 +6,28 @@
 
 <a href="https://discord.gg/4dEmQjt"><img src="https://img.shields.io/badge/Discord-Join%20TODAY!-7289DA?logo=discord&logoColor=7289DA"></a>
 <a href="https://youtube.com/c/gamerdisclaimer"><img src="https://img.shields.io/badge/YouTube-Subscribe%20NOW!-red?logo=youtube&logoColor=red"></a>
-<a href="https://discord.com/api/oauth2/authorize?client_id=699912361481470032&permissions=8&scope=bot"><img src="https://img.shields.io/badge/DebilBot.exe-Add to Discord server-orange?logo=probot&logoColor=orange"></a>
+<a href="https://discord.com/api/oauth2/authorize?client_id=699912361481470032&permissions=8&scope=bot"><img src="https://img.shields.io/badge/DebilBot-Add to Discord server-orange?logo=probot&logoColor=orange"></a>
 <br>
-<img src="https://img.shields.io/badge/Python-3.9x-yellow">
+<img src="https://img.shields.io/badge/Python-3.10x-yellow">
 <img src="https://img.shields.io/badge/Discord.Py-1.7.3-blue">
-<img src="https://img.shields.io/badge/Requests-2.26.0-blue">
-<img src="https://img.shields.io/badge/Googletrans-3.1.0a0-blue">
-<img src="https://img.shields.io/badge/YouTube__DL-2021.6.6-blue">
-<img src="https://img.shields.io/badge/discord__components-2.0.4-blue">
-<img src="https://img.shields.io/badge/PyNaCl-1.4.0-blue">
-<img src="https://img.shields.io/badge/Colorama-0.4.4-blue">
-
 
 ***
 
 ### Requirements
 
 #### Languages
-+ **Python 3.9.0**
++ **Python 3.10.0**
 
 #### Python modules
-+ Discord.py
++ discord
++ discord_components
++ googletrans==3.1.0a0
 + requests
 + youtube_dl
 + asyncio
 + PyNaCl
-+ colorama
-+ discord_components
-+ googletrans==3.1.0a0
++ ffmpeg
++ rich
 
 #### Programs
 + FFmpeg
@@ -47,10 +41,15 @@
 
 Open `config.py` file in root directory, and edit prefix value:
 ```
+path = {
+    'windows': r'C:\Program Files\ffmpeg\bin\ffmpeg.exe',
+    'linux': 'ffmpeg'
+}
+
 settings = {
     'token': os.environ['DEBIL_TOKEN'],
     'prefix': 'd.',
-    'path_to_ffmpeg': r'C:\Program Files\ffmpeg\bin\ffmpeg.exe', # Path to ffmpeg. For Linux users just type "ffmpeg"
+    'path_to_ffmpeg': path.get('linux') # If u are use Windows, type path.get('windows') and type path to the ffmpeg, else if u are use Linux, or Heroku, type path.get('linux')
 }
 ```
 
