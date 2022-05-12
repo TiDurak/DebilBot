@@ -14,5 +14,5 @@ path = {
 settings = {
     'token': os.environ['DEBIL_TOKEN'],
     'prefix': 'd.',
-    'path_to_ffmpeg': path.get('linux') # If u use Windows, type path.get('windows'), else if u use Linux, or Heroku, type path.get('linux')
+    'path_to_ffmpeg': path.get('linux') # If u are use Windows, type path.get('windows') and type path to the ffmpeg, else if u are use Linux, or Heroku, type path.get('linux')
 }
