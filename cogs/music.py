@@ -86,10 +86,22 @@ class Music(commands.Cog):
             url = extracted['formats'][0]['url']
             return url
 
+    def __get_duration(self, video):
+        total_seconds = video.get('duration')
+        hours = (total_seconds - ( total_seconds % 3600))/3600
+        seconds_minus_hours = (total_seconds - hours*3600)
+        minutes = (seconds_minus_hours - (seconds_minus_hours % 60) )/60
+        seconds = seconds_minus_hours - minutes*60
+
+        time = '{}:{}:{}'.format(int(hours), int(minutes), int(seconds))
+        return time
+
     async def __play(self, context, url, video):
+        duration = self.__get_duration(video)
         embed = (discord.Embed(title = f'{self.bot.get_emoji(878537811601555466)} Играет',
                                description = f"**{video.get('title')}**",
                                color = 0xff2a2a)
+                .add_field(name = '⌛ Продолжительность', value = duration)
                 .add_field(name = '🙃 Запросил', value = context.author.mention)
                 .set_thumbnail(url = video.get('thumbnail'))  )
         firstmessage = await context.send(
