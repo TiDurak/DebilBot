@@ -194,7 +194,6 @@ class Music(commands.Cog):
     @commands.command()
     async def play(self, ctx, *, arg):
         await self.__connect(ctx)
-        print(f"{self.__vc.is_playing()}")
         vid = self.__search(arg)
         if not self.__vc.is_playing():
             url = self.__get_url(vid)
