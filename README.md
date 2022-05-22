@@ -39,21 +39,8 @@
 
 ***Recomendation: before using, please, read the LICENSE file!***
 
-Open `config.py` file in root directory, and edit prefix value:
-```
-path = {
-    'windows': r'C:\Program Files\ffmpeg\bin\ffmpeg.exe',
-    'linux': 'ffmpeg'
-}
-
-settings = {
-    'token': os.environ['DEBIL_TOKEN'],
-    'prefix': 'd.',
-    'path_to_ffmpeg': path.get('linux') # If u are use Windows, type path.get('windows') and type path to the ffmpeg, else if u are use Linux, or Heroku, type path.get('linux')
-}
-```
-
-Then create environment variable "DEBIL_TOKEN" with your token value
+Open `config.py` file in root directory, and edit prefix value, token value (or make environment variable DEBIL_TOKEN with your token value),
+path to ffmpeg, and in dict with emojis set up values with emoji id.
 
 To launch music commands, as **play**:
 Windows: [download ffmpeg build](https://www.gyan.dev/ffmpeg/builds/), unpack archive, `path_to_ffmpeg` value must be your path to ffmpeg.
