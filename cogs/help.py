@@ -49,8 +49,22 @@ class Help(commands.Cog):
     @help.command()
     async def play(self, ctx):
         helptext = ('```d.play <название песни, или URL>```\n'
-                    'Воспроизводит песню с YouTube, если бот не подключен к голосовому чату, то подключает его к нему')
+                    'Воспроизводит песню с YouTube, или добавляет её в список')
         embed = discord.Embed(color = 0xffcd4c , title = 'play', description = helptext)
+        await ctx.send(embed = embed)
+
+    @help.command()
+    async def queue(self, ctx):
+        helptext = ('```d.queue```\n'
+                    'Выводит список воспроизведения на экран')
+        embed = discord.Embed(color = 0xffcd4c , title = 'queue', description = helptext)
+        await ctx.send(embed = embed)
+
+    @help.command()
+    async def skip(self, ctx):
+        helptext = ('```d.skip```\n'
+                    'Пропускает песню, которая сейчас проигрывается, и начинает проигрываать следующую')
+        embed = discord.Embed(color = 0xffcd4c , title = 'skip', description = helptext)
         await ctx.send(embed = embed)
                 
     @help.command()
@@ -71,7 +85,7 @@ class Help(commands.Cog):
     @help.command()
     async def stop(self, ctx):
         helptext = ('```d.stop```\n'
-                    'Окончательно останавливает воспроизведение')
+                    'Окончательно останавливает воспроизведение, и очищае список')
         embed = discord.Embed(color = 0xffcd4c , title = 'stop', description = helptext)
         await ctx.send(embed = embed)
     
