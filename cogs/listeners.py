@@ -10,6 +10,15 @@ class ErrorListener(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.Cog.listener()
+    async def on_command_error(ctx, error):
+        if isinstance(error, CommandNotFound):
+            await ctx.send('❌ Комманда не существует!')
+        elif isinstance(error, MissingPermissions):
+            await ctx.send('❌ У вас нету привилегий управления сообщениями!')
+        elif isinstance(error, MemberNotFound):
+            await ctx.send('❌ Участник не найден!')
+
 class OnReady(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -18,9 +27,9 @@ class OnReady(commands.Cog):
     async def on_ready(self):
         print('[b green] Bot is ready! Just type d.help to see all bot commands.')
         while True:
-            RandomInteger = random.randint(0, 4)
+            random_int = random.randint(0, 4)
 
-            match RandomInteger:
+            match random_int:
                 case 0:
                     await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="ровный базар"))
                 case 1:
