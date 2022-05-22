@@ -99,7 +99,7 @@ class Music(commands.Cog):
 
     async def __play(self, context, url, video):
         duration = self.__get_duration(video)
-        embed = (discord.Embed(title = f'{self.bot.get_emoji(878537811601555466)} Играет',
+        embed = (discord.Embed(title = f'{self.bot.get_emoji(settings["emojis"]["youtube"])} Играет',
                                description = f"**{video.get('title')}**",
                                color = 0xff2a2a)
                 .add_field(name = '⌛ Продолжительность', value = duration)
@@ -177,7 +177,7 @@ class Music(commands.Cog):
         if not self.__vc.is_paused():
             self.__vc.pause()
         elif self.__vc.is_paused():
-            asyncio.run_coroutine_threadsafe(context.send(f'{self.bot.get_emoji(518051242807787520)} Лол, я на паузе, что ты ещё хочешь от меня?! Для этого есть `{settings.get("prefix")}resume`'), self.bot.loop)
+            asyncio.run_coroutine_threadsafe(context.send(f'{self.bot.get_emoji(settings["emojis"]["wuuut"])} Лол, я на паузе, что ты ещё хочешь от меня?! Для этого есть `{settings.get("prefix")}resume`'), self.bot.loop)
 
     def __resume(self, context):
         if not self.__vc.is_playing():
@@ -225,7 +225,7 @@ class Music(commands.Cog):
             self.__leave(ctx)
             сtx.send('🚪 Бот вышел из голосового чата')
         except: 
-            ctx.send(f'{self.bot.get_emoji(518051242807787520)} Опять нашёлся умник, который пытается обхитрить систему, и хочет выгнать бота из голосового чата, который даже к нему не подключен...')
+            ctx.send(f'{self.bot.get_emoji(settings["emojis"]["wuuut"])} Опять нашёлся умник, который пытается обхитрить систему, и хочет выгнать бота из голосового чата, который даже к нему не подключен...')
             
 
     @commands.command()

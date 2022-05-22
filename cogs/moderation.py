@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord.errors import NotFound
 from discord.ext.commands import has_permissions, CommandNotFound, MissingPermissions, CommandInvokeError, MemberNotFound, BotMissingPermissions
+from config import settings
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
@@ -13,7 +14,7 @@ class Moderation(commands.Cog):
         amount = int(arg1)
         await ctx.message.delete()
         await ctx.channel.purge(limit = amount)
-        await ctx.send(f'{self.bot.get_emoji(880326444356612116)} Очищено {amount} сообщений! Запрос на очистку от {ctx.author.mention}')
+        await ctx.send(f'{self.bot.get_emoji(settings["emojis"]["squid_cleaning"])} Очищено {amount} сообщений! Запрос на очистку от {ctx.author.mention}')
 
     @has_permissions(kick_members = True)
     @commands.command()

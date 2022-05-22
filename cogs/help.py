@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord_components import DiscordComponents, Button, ButtonStyle
-
+from config import settings
 
 class Help(commands.Cog):
     def __init__(self, bot):
@@ -153,7 +153,7 @@ class Help(commands.Cog):
                     '5⃣ Prongls\n'
                     '6⃣ 2\n'
                     '7⃣ корочки')
-            BadExample = discord.Embed(color = 0xffcd4c , title = f'{self.bot.get_emoji(879411306157985862)} GamerDisclaimer#7647: Какие', description=Desc)
+            BadExample = discord.Embed(color = 0xffcd4c , title = f'{self.bot.get_emoji(settings["emojis"]["stonks"])} GamerDisclaimer#7647: Какие', description=Desc)
             await responce.respond(embed=BadExample)
                 
         @help.command()

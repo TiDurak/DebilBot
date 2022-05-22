@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from googletrans import Translator
+from config import settings
 
 class Text(commands.Cog):
     def __init__(self, bot):
@@ -47,7 +48,7 @@ class Text(commands.Cog):
         description = []
         for x, option in enumerate(options):
             description += '\n {} {}'.format(reactions[x], option)
-        embed = discord.Embed(color = 0xffcd4c , title = f'{self.bot.get_emoji(879411306157985862)} {ctx.message.author}: {question}', description=''.join(description))
+        embed = discord.Embed(color = 0xffcd4c , title = f'{self.bot.get_emoji(settings["emojis"]["stonks"])} {ctx.message.author}: {question}', description=''.join(description))
         react_message = await ctx.send(embed=embed)
         for reaction in reactions[:len(options)]:
             await react_message.add_reaction(reaction)

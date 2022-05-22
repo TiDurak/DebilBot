@@ -11,13 +11,15 @@ class ErrorListener(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_command_error(ctx, error):
+    async def on_command_error(self, ctx, error):
         if isinstance(error, CommandNotFound):
             await ctx.send('❌ Комманда не существует!')
         elif isinstance(error, MissingPermissions):
             await ctx.send('❌ У вас нету привилегий управления сообщениями!')
         elif isinstance(error, MemberNotFound):
             await ctx.send('❌ Участник не найден!')
+        else:
+            raise error
 
 class OnReady(commands.Cog):
     def __init__(self, bot):
