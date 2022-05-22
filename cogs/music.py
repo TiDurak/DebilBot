@@ -29,6 +29,7 @@ class Queue():
             return 0
 
     def get_playing_now(self):
+        print(self.__playing_now)
         return self.__playing_now
 
     def set_playing_now(self, track):
@@ -153,9 +154,8 @@ class Music(commands.Cog):
         if not self.__queue.is_empty():
             asyncio.run_coroutine_threadsafe(self.__playing_now_embed.delete(), self.bot.loop)
             next_track = self.__queue.play_next()
-            vid = self.__search(next_track)
-            url = self.__get_url(vid)
-            asyncio.run_coroutine_threadsafe(self.__play(context, url, vid), self.bot.loop)
+            url = self.__get_url(next_track)
+            asyncio.run_coroutine_threadsafe(self.__play(context, url, next_track), self.bot.loop)
             if self.__playing_now_embed is not None:
                 self.__playing_now_embed = None
         else:
@@ -193,7 +193,7 @@ class Music(commands.Cog):
             url = self.__get_url(vid)
             await self.__play(ctx, url, vid)
         else:
-            self.__queue.add_track(arg)
+            self.__queue.add_track(vid)
             await ctx.send(f"**{vid.get('title')}** добавлен в список.")
 
     @commands.command()
@@ -206,10 +206,10 @@ class Music(commands.Cog):
         now = self.__queue.get_playing_now()
         if now != None:
             embed = (discord.Embed(title = "📜 Список Воспроизведения", color = 0xf0cd4f))
-            video_now = self.__search(now)
-            embed.add_field(name = "▶️ Сейчас Играет", value = video_now.get('title'), inline = False)
+            embed.add_field(name = "▶️ Сейчас Играет", value = now, inline = False)
             for i in range(self.__queue.length()):
-                embed.add_field(name = i+1, value = self.__queue.get_by_id(i), inline = False)
+                video = self.__queue.get_by_id(i)
+                embed.add_field(name = i+1, value = video.get('title'), inline = False)
             await ctx.send(embed = embed)
         else:
             embed = (discord.Embed(title = "📜 Список Воспроизведения", 
@@ -231,13 +231,13 @@ class Music(commands.Cog):
     @commands.command()
     async def stop(self, ctx):
         self.__stop(ctx)
-        context.send('🛑 Остановлено!')
+        ctx.send('🛑 Остановлено!')
 
 
     @commands.command()
     async def pause(self, ctx):
         self.__pause(ctx)
-        context.send('🔇 Воспроизведение приостановлено!')
+        ctx.send('🔇 Воспроизведение приостановлено!')
 
     @commands.command()
     async def resume(self, ctx):
