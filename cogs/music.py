@@ -188,7 +188,13 @@ class Music(commands.Cog):
     @commands.command()
     async def play(self, ctx, *, arg):
         await self.__connect(ctx)
-        vid = self.__search(arg)
+        try:
+            vid = self.__search(arg)
+        except IndexError:
+            await ctx.send(":x: Песня не была найдена :(")
+            await self.__vc.disconnect()
+            return
+            
         if not self.__vc.is_playing():
             url = self.__get_url(vid)
             await self.__play(ctx, url, vid)
