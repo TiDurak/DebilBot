@@ -170,9 +170,8 @@ class Music(commands.Cog):
         self.__playing_now_embed = None
 
     def __leave(self, context):
-        try:
-            self.__pause(context)
-            asyncio.run_coroutine_threadsafe(self.__vc.disconnect(), self.bot.loop)
+        self.__pause(context)
+        asyncio.run_coroutine_threadsafe(self.__vc.disconnect(), self.bot.loop)
 
     def __pause(self, context):
         if not self.__vc.is_paused():
