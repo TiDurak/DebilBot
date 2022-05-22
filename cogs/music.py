@@ -40,9 +40,9 @@ class Queue():
 
     def is_empty(self):
         if len(self.__queue):
-            return True
-        else:
             return False
+        else:
+            return True
 
     def length(self):
         return len(self.__queue)
@@ -131,14 +131,15 @@ class Music(commands.Cog):
                 case 'Стоп':
                     await self.__playing_now_embed.edit(embed=embed, components=[Button(style = ButtonStyle.red, label = 'Выход', emoji = '🚪')])
                     self.__stop(context)
+                    await responce.respond(content = '🛑 Остановлено!')
                     return
                 case 'Пауза / Продолжить':
                     if self.__vc.is_playing():
                         self.__vc.pause()
-                        await responce.respond(content = '⏯️')
+                        await responce.respond(content = '⏯️ Пауза')
                     elif self.__vc.is_paused():
                         self.__vc.resume()
-                        await responce.respond(content = '⏯️')
+                        await responce.respond(content = '⏯️ Продолжаю...')
                     return
                 case 'Пропустить':
                     await self.__playing_now_embed.edit(embed=embed, components=[])
@@ -149,7 +150,7 @@ class Music(commands.Cog):
     def __skip(self, context):
         if self.__vc.is_playing():
             self.__vc.pause()
-        if self.__queue.is_empty():
+        if not self.__queue.is_empty():
             asyncio.run_coroutine_threadsafe(self.__playing_now_embed.delete(), self.bot.loop)
             next_track = self.__queue.play_next()
             vid = self.__search(next_track)
@@ -166,30 +167,24 @@ class Music(commands.Cog):
             self.__vc.stop()
         elif self.__vc.is_paused():
             self.__vc.stop()
-        asyncio.run_coroutine_threadsafe(context.send('🛑 Остановлено!'), self.bot.loop)
         self.__playing_now_embed = None
 
     def __leave(self, context):
         try:
-            self.__stop(context)
+            self.__pause(context)
             asyncio.run_coroutine_threadsafe(self.__vc.disconnect(), self.bot.loop)
-            asyncio.run_coroutine_threadsafe(context.send('🚪 Бот вышел из голосового чата'), self.bot.loop)
-        except:
-            asyncio.run_coroutine_threadsafe(context.send( f'{self.bot.get_emoji(518051242807787520)} Опять нашёлся умник, который пытается обхитрить систему, и хочет выгнать бота из голосового чата, который даже к нему не подключен...'), self.bot.loop)
 
     def __pause(self, context):
         if not self.__vc.is_paused():
             self.__vc.pause()
-            asyncio.run_coroutine_threadsafe(context.send('🔇 Воспроизведение приостановлено!'), self.bot.loop)
         elif self.__vc.is_paused():
             asyncio.run_coroutine_threadsafe(context.send(f'{self.bot.get_emoji(518051242807787520)} Лол, я на паузе, что ты ещё хочешь от меня?! Для этого есть `{settings.get("prefix")}resume`'), self.bot.loop)
 
     def __resume(self, context):
         if not self.__vc.is_playing():
             self.__vc.resume()
-            asyncio.run_coroutine_threadsafe(ctx.send('🎵 Идёт Воспроизведение!'), self.bot.loop)
         elif self.__vc.is_playing():
-            asyncio.run_coroutine_threadsafe(ctx.send('🤪 Лол, я не на паузе, зачем ты ввёл эту команду?!'), self.bot.loop)
+            asyncio.run_coroutine_threadsafe(context.send('🤪 Лол, я не на паузе, зачем ты ввёл эту команду?!'), self.bot.loop)
 
     @commands.command()
     async def play(self, ctx, *, arg):
@@ -227,20 +222,28 @@ class Music(commands.Cog):
 
     @commands.command()
     async def leave(self, ctx):
-        self.__leave(ctx)
+        try:
+            self.__leave(ctx)
+            сtx.send('🚪 Бот вышел из голосового чата')
+        except: 
+            ctx.send(f'{self.bot.get_emoji(518051242807787520)} Опять нашёлся умник, который пытается обхитрить систему, и хочет выгнать бота из голосового чата, который даже к нему не подключен...')
+            
 
     @commands.command()
     async def stop(self, ctx):
         self.__stop(ctx)
+        context.send('🛑 Остановлено!')
 
 
     @commands.command()
     async def pause(self, ctx):
         self.__pause(ctx)
+        context.send('🔇 Воспроизведение приостановлено!')
 
     @commands.command()
     async def resume(self, ctx):
         self.__resume(ctx)
+        ctx.send('🎵 Идёт Воспроизведение!')
 
 def setup(bot):
     bot.add_cog(Music(bot))
