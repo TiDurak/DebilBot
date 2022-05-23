@@ -10,40 +10,24 @@ class Help(commands.Cog):
 
     @commands.group(invoke_without_command=True)
     async def help(self, ctx, command = None):
-        helptext = (':regional_indicator_d: :regional_indicator_e: :regional_indicator_b: :regional_indicator_i: :regional_indicator_l: :regional_indicator_b: :regional_indicator_o: :regional_indicator_t:\n'
-                    '***🤪 Префикс: `d.`***\n'
-                    '**❤️‍🔥 Создатель: GamerDisclaimer. https://youtube.com/c/gamerdisclaimer**\n'
-                    '**🏛️ Сервер, на который ты должен зайти (ну пазязя): https://discord.gg/4dEmQjt**\n')
-        helpmusic = ('**play** `название песни или URL` - подключает бота к голосовому каналу и воспроизводит песню (или добавляет её в список)\n'
-                     '**pause** - останавливает воспроизведение\n'
-                     '**resume** - снимает паузу\n'
-                     '**stop** - останавливает воспроизведение\n'
-                     '**leave** - выкидывает бота из чата (жаль бота, хнык)\n'
-                     '**skip** - пропуск одной песни из списка\n'
-                     '**queue** - просмотр очереди проигрывания\n')
-        helpmoderation = ('**clear** *<кол-во сообщений>* - удаляет сообщения\n'
-                          '**idclear** `id сообщения` - удаляет сообщение по MessageID\n'
-                          '**kick** `@упоминание пользователя` `причина (необязательно)` - кик пользователя\n'
-                          '**ban** `@упоминание пользователя` `причина (необязательно)` - бан пользователя\n')
-        helptextch = ('**translate** `Язык в формате ISO 639-1` `текст` - переводчик\n'
-                      '**poll** `"вопрос (ОБЯЗАТЕЛЬНО В КАВЫЧКАХ!)"` `"вариант ответа (В КАВЫЧКАХ!)"` - голосование, **вопрос и варианты ответа указываются в кавычках!**\n'
-                      '**echo** `текст` - просто повторяет всё, что вы ввели после echo\n')
-        helpconv = ('**encode_b64** `текст` - конвертирует ваш текст в base64\n'
-                    '**decode_b64** `base64 текст` - конвертирует base64 в человеческий, читаемый текст\n'
-                    '**encode_binary** `текст` - конвертирует ваш текст в бинарный код (1 и 0)\n'
-                    '**decode_binary** `бинарный код` - конвертирует бинарный код в текст, который вы скорее всего, умеете читать\n')
+        helptext = (f'**📙 Префикс: `{settings.get("prefix")}`**\n'
+                     '📙 `help` для вывода списка команд\n'
+                     '📙 `help` `название команды` для подробного описания команды\n')
+        helpmusic = ('`play` `pause` `resume` `stop` `leave` `skip` `queue`')
+        helpmoderation = ('`clear` `idclear` `kick` `ban`')
+        helptextch = ('`translate` `poll` `echo`')
+        helpconv = ('`encode_b64` `decode_b64` `encode_binary` `decode_binary`')
 
-        helpgames = ('**slots** - Азино777\n'
-                     '**janken** - Камень-Ножницы-Бумага\n')
-        helphelp = ('**help** - вывод меню с командами\n'
-                    '**help** `название команды` - более подробное описание команды, и её использование\n')
+        helpgames = ('`slots` `janken`')
+
         embed = discord.Embed(color = 0xffcd4c , title = 'Помощь', description = helptext)
         embed.add_field(name = '🎵 ***Музыка*** 🎵', value = helpmusic, inline=False)
         embed.add_field(name = '🔧 ***Модерация*** 🔧', value = helpmoderation, inline=False)
         embed.add_field(name = '📝 ***Текстовые*** 📝', value = helptextch, inline=False)
         embed.add_field(name = '💱 ***Конвертеры*** 💱', value = helpconv, inline=False)
         embed.add_field(name = '🎮 ***Недоигры*** 🎮', value = helpgames, inline=False)
-        embed.add_field(name = '❓ ***Помощь*** ❓', value = helphelp, inline=False)
+        embed.set_thumbnail(url = "https://tidurak.github.io/DebilBot_Text.png")
+        embed.set_footer(text="Создатель: GamerDisclaimer. https://github.com/TiDurak/DebilBot" , icon_url = "https://tidurak.github.io/gd_round_low.png")
         await ctx.send(embed = embed)
                         
     @help.command()
