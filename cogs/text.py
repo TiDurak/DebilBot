@@ -9,8 +9,7 @@ class Text(commands.Cog):
 
     @commands.command()
     async def translate(self, ctx, lang, *, text):
-        warntext = ('❌ Указан неверный язык! Использование команды:\n',
-                    'd.translate `ru` `Ваш текст`\n'
+        warntext = ('d.translate `ru` `Ваш текст`\n\n\n'
                     '`ru` является языком, на который нужно переводить\n'
                     'Вместо `ru` может быть:\n'
                     '`ua`, `en`, `hu`, и т.д.\n')
@@ -23,7 +22,9 @@ class Text(commands.Cog):
             embed.add_field(name = "Перевод", value = translation.text, inline = False)
             await ctx.send(embed = embed)
         except ValueError:
-            await ctx.send(warntext)
+            await ctx.send(embed = discord.Embed(color = 0xffcd4c,
+                                                 title = "❌ Указан неверный язык!",
+                                                 description = warntext))
 
 
     @commands.command()
