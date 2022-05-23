@@ -15,7 +15,7 @@ class ErrorListener(commands.Cog):
         if isinstance(error, CommandNotFound):
             await ctx.send('❌ Комманда не существует!')
         elif isinstance(error, MissingRequiredArgument):
-            await ctx.send(f'❌ Вы не ввели нужные аргументы. введите `{settings.get("prefix")}help ваша_команда`!')
+            await ctx.send(f'❌ Вы не ввели нужные аргументы. введите `{settings.get("prefix")}help ваша_команда`! Например: d.help poll')
         elif isinstance(error, MissingPermissions):
             await ctx.send('❌ У вас нету привилегий управления сообщениями!')
         elif isinstance(error, MemberNotFound):
