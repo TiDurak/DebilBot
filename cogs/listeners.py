@@ -2,7 +2,7 @@ import random
 import asyncio
 import discord
 from discord.ext import commands
-from discord.ext.commands import CommandNotFound, MissingPermissions, MemberNotFound
+from discord.ext.commands import CommandNotFound, MissingPermissions, MemberNotFound, MissingRequiredArgument
 from rich import print
 from config import settings
 
@@ -14,6 +14,8 @@ class ErrorListener(commands.Cog):
     async def on_command_error(self, ctx, error):
         if isinstance(error, CommandNotFound):
             await ctx.send('❌ Комманда не существует!')
+        elif isinstance(error, MissingRequiredArgument):
+            await ctx.send(f'❌ Вы не ввели нужные аргументы. введите `{settings.get("prefix")}help ваша_команда`!')
         elif isinstance(error, MissingPermissions):
             await ctx.send('❌ У вас нету привилегий управления сообщениями!')
         elif isinstance(error, MemberNotFound):
