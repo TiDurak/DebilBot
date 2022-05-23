@@ -32,23 +32,27 @@ class Text(commands.Cog):
 
     @commands.command()
     async def poll(self, ctx, question, *options: str):
+        lowercase = [opts.lower() for opts in options]
+
         await ctx.message.delete()
-        if len(options) <= 1:
+        if len(options) < 1:
             await ctx.send('❌ Для создания голосования нужно хотя-бы 1 ответ!')
             return
         if len(options) > 10:
             await ctx.send('❌ Нельзя использовать более 10 ответов!')
             return
 
-        if len(options) == 2 and options[0] == 'да' and options[1] == 'нет':
+        if len(options) == 2 and lowercase[0] in ('да', 'yes') and lowercase[1] in ('нет', 'no'):
             reactions = ['✅', '❌']
         else:
             reactions = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟']
 
         description = []
         for x, option in enumerate(options):
-            description += '\n {} {}'.format(reactions[x], option)
+            description += '\n{} {}'.format(reactions[x], option)
+            
         embed = discord.Embed(color = 0xffcd4c , title = f'{self.bot.get_emoji(settings["emojis"]["stonks"])} {ctx.message.author}: {question}', description=''.join(description))
+        
         react_message = await ctx.send(embed=embed)
         for reaction in reactions[:len(options)]:
             await react_message.add_reaction(reaction)
