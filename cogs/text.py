@@ -8,17 +8,20 @@ class Text(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def translate(self, ctx, lang, *, thing):
-        warntext = '''
-            ❌ Указан неверный язык! Использование команды:
-            d.translate `ru` `Ваш текст`
-            `ru` является языком, на который нужно переводить
-            Вместо `ru` может быть:
-            `ua`, `en`, `hu`, и т.д.'''
+    async def translate(self, ctx, lang, *, text):
+        warntext = ('❌ Указан неверный язык! Использование команды:\n',
+                    'd.translate `ru` `Ваш текст`\n'
+                    '`ru` является языком, на который нужно переводить\n'
+                    'Вместо `ru` может быть:\n'
+                    '`ua`, `en`, `hu`, и т.д.\n')
         try:
             translator = Translator()
-            translation = translator.translate(thing, dest=lang)
-            await ctx.send(translation.text)
+            translation = translator.translate(text, dest=lang)
+
+            embed = discord.Embed(color = 0xffcd4c , title = f"{ctx.author} :: DebilBot Translator")
+            embed.add_field(name = "Исходный Текст", value = text, inline = False)
+            embed.add_field(name = "Перевод", value = translation.text, inline = False)
+            await ctx.send(embed = embed)
         except ValueError:
             await ctx.send(warntext)
 
@@ -50,7 +53,7 @@ class Text(commands.Cog):
         description = []
         for x, option in enumerate(options):
             description += '\n{} {}'.format(reactions[x], option)
-            
+
         embed = discord.Embed(color = 0xffcd4c , title = f'{self.bot.get_emoji(settings["emojis"]["stonks"])} {ctx.message.author}: {question}', description=''.join(description))
         
         react_message = await ctx.send(embed=embed)
