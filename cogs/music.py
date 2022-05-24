@@ -149,7 +149,7 @@ class Music(commands.Cog):
 
 
     def __skip(self, context):
-        asyncio.run_coroutine_threadsafe(self.__playing_now_embed.edit(embed=__playing_now_embed, components=[]), self.bot.loop)
+        asyncio.run_coroutine_threadsafe(self.__playing_now_embed.edit(embed=self.__playing_now_embed, components=[]), self.bot.loop)
         if self.__vc.is_playing():
             self.__vc.pause()
         if not self.__queue.is_empty():
