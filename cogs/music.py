@@ -152,7 +152,7 @@ class Music(commands.Cog):
         if self.__vc.is_playing():
             self.__vc.pause()
         if not self.__queue.is_empty():
-            asyncio.run_coroutine_threadsafe(self.__playing_now_embed.delete(), self.bot.loop)
+            asyncio.run_coroutine_threadsafe(self.__playing_now_embed.edit(embed=embed, components=[]), self.bot.loop)
             next_track = self.__queue.play_next()
             url = self.__get_url(next_track)
             asyncio.run_coroutine_threadsafe(self.__play(context, url, next_track), self.bot.loop)
