@@ -1,10 +1,4 @@
-from cogs import converters
-from cogs import games
-from cogs import help
-from cogs import moderation
-from cogs import music
-from cogs import listeners
-from cogs import text
+from cogs import converters, games, help, moderation, information, music, listeners, text
 from config import settings
 import sys
 
@@ -30,6 +24,9 @@ print('[blue] help.py file has been loaded!')
 
 moderation.setup(bot)
 print('[blue] moderation.py file has been loaded!')
+
+information.setup(bot)
+print('[blue] information.py file has been loaded!')
 
 music.setup(bot)
 print('[blue] music.py file has been loaded!')
