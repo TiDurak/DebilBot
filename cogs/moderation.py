@@ -9,7 +9,7 @@ class Moderation(commands.Cog):
         self.bot = bot
 
     @has_permissions(manage_messages = True)
-    @commands.command()
+    @commands.command(aliases = ['clean', 'purge'])
     async def clear(self, ctx, arg1):
         amount = int(arg1)
         await ctx.message.delete()
