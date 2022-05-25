@@ -15,6 +15,7 @@ class Help(commands.Cog):
                      '📙 `help` `название команды` для подробного описания команды\n')
         helpmusic = ('`play` `pause` `resume` `stop` `leave` `skip` `queue`')
         helpmoderation = ('`clear` `idclear` `kick` `ban`')
+        helpinformation = ('`avatar` `user_info` `server_info`')
         helptextch = ('`translate` `poll` `echo`')
         helpconv = ('`encode_b64` `decode_b64` `encode_binary` `decode_binary`')
 
@@ -23,6 +24,7 @@ class Help(commands.Cog):
         embed = discord.Embed(color = 0xffcd4c , title = 'Помощь', description = helptext)
         embed.add_field(name = '🎵 ***Музыка*** 🎵', value = helpmusic, inline=False)
         embed.add_field(name = '🔧 ***Модерация*** 🔧', value = helpmoderation, inline=False)
+        embed.add_field(name = 'ℹ️ ***Информация*** ℹ️', value = helpinformation, inline=False)
         embed.add_field(name = '📝 ***Текстовые*** 📝', value = helptextch, inline=False)
         embed.add_field(name = '💱 ***Конвертеры*** 💱', value = helpconv, inline=False)
         embed.add_field(name = '🎮 ***Недоигры*** 🎮', value = helpgames, inline=False)
@@ -111,6 +113,31 @@ class Help(commands.Cog):
                     'Банит пользователя по пинку\n'
                     'Нужны привилегии бана пользователей')
         embed = discord.Embed(color = 0xffcd4c , title = 'ban', description = helptext)
+        await ctx.send(embed = embed)
+
+    @help.command()
+    async def avatar(self, ctx):
+        helptext = ('```d.avatar```\n'
+                    '```d.avatar @упоминание_пользователя```\n'
+                    'Отправляет вам аватар пользователя (или ваш)\n')
+        embed = discord.Embed(color = 0xffcd4c , title = 'avatar', description = helptext)
+        await ctx.send(embed = embed)
+
+    @help.command()
+    async def user_info(self, ctx):
+        helptext = ('```d.user_info```\n'
+                    '```d.user_info @упоминание_пользователя```\n'
+                    'Отправляет вам информацию о пользователе (если никого не упоминали, то информацию о вас)\n'
+                    'Алиасы: user\n')
+        embed = discord.Embed(color = 0xffcd4c , title = 'user_info', description = helptext)
+        await ctx.send(embed = embed)
+
+    @help.command()
+    async def server_info(self, ctx):
+        helptext = ('```d.server_info```\n'
+                    'Отправляет вам информацию о сервере\n'
+                    'Алиасы: server, guild, guild_info\n')
+        embed = discord.Embed(color = 0xffcd4c , title = 'server_info', description = helptext)
         await ctx.send(embed = embed)
 
     @help.command()
