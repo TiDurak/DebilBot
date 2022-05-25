@@ -65,6 +65,9 @@ clear *number of messages*              | Delete messages from text chat
 fetch *ID of the message*               | Delete one message from chat by ID
 kick *member mention*                   | Kicks member from server
 ban *member mention*                    | Bans member on server
+avatar *member mention*                 | Sends user avatar
+user_info *member mention*              | Shows user information
+server_info                             | Shows server information
 encode_b64 *text*                       | Coverts text to base64
 decode_b64 *base64*                     | Converts Base64 to the text
 encode_binary *text*                    | Coverts text to the binary code
