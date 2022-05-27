@@ -200,7 +200,7 @@ class Music(commands.Cog):
             await self.__play(ctx, url, vid)
         else:
             self.__queue.add_track(vid)
-            await ctx.send(f"**{vid.get('title')}** добавлен в список.")
+            await ctx.send(f"**{vid.get('title')}** добавлен в список, бля.")
 
     @commands.command()
     async def skip(self, ctx):

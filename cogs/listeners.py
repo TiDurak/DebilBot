@@ -13,13 +13,13 @@ class ErrorListener(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, CommandNotFound):
-            await ctx.send('❌ Комманда не существует!')
+            await ctx.send('❌ Комманда не существует! Ты вообще можешь хоть что-то правильно сделать, а?')
         elif isinstance(error, MissingRequiredArgument):
-            await ctx.send(f'❌ Вы не ввели нужные аргументы. введите `{settings.get("prefix")}help ваша_команда`! Например: d.help poll')
+            await ctx.send(f'❌ Не, ну ты внатуре дебил. Ты не ввёл нужные аргументы. введи `{settings.get("prefix")}help твоя_команда`! Например: d.help poll')
         elif isinstance(error, MissingPermissions):
-            await ctx.send('❌ У вас нету привилегий управления сообщениями!')
+            await ctx.send('❌ У тебя нету привилегий управления сообщениями, бомжара!')
         elif isinstance(error, MemberNotFound):
-            await ctx.send('❌ Участник не найден!')
+            await ctx.send('❌ Участник не найден, кретин!')
         else:
             raise error
 
