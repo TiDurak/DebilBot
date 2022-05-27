@@ -1,4 +1,4 @@
-<h1 align="center"><img src="https://tidurak.github.io/DebilBot2.svg" alt="DebilBot" border="0" height="28px"> DebilBot</h1>
+<h1 align="center"><img src="https://user-images.githubusercontent.com/82606298/170775456-475ffa71-9cf9-4584-9723-b3917ae0aecc.svg" alt="DebilBot" border="0" height="30px"> DebilBot</h1>
 
 
 #### Sample russian discord bot, written on discord.py 
