@@ -34,8 +34,8 @@ class Help(commands.Cog):
                         
     @help.command()
     async def play(self, ctx):
-        help_text = ('```d.play <название песни, или URL>```\n'
-                    'Воспроизводит песню с YouTube, или добавляет её в список')
+        help_text = (f'```d.play <название песни, или URL>```\n'
+                      'Воспроизводит песню с YouTube, или добавляет её в список')
         embed = discord.Embed(color = 0xffcd4c , title = 'play', description = help_text)
         await ctx.send(embed = embed)
 
