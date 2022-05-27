@@ -83,7 +83,7 @@ class Help(commands.Cog):
         await ctx.send(embed = embed)
 
 
-    @help.command()
+    @help.command(aliases = ['clean', 'purge'])
     async def clear(self, ctx):
         helptext = ('```d.clear <кол-во сообщений>```\n'
                     'Массовое удаление сообщение из текущего канала\n'
@@ -123,7 +123,7 @@ class Help(commands.Cog):
         embed = discord.Embed(color = 0xffcd4c , title = 'avatar', description = helptext)
         await ctx.send(embed = embed)
 
-    @help.command()
+    @help.command(aliases = ['user'])
     async def user_info(self, ctx):
         helptext = ('```d.user_info```\n'
                     '```d.user_info @упоминание_пользователя```\n'
@@ -132,7 +132,7 @@ class Help(commands.Cog):
         embed = discord.Embed(color = 0xffcd4c , title = 'user_info', description = helptext)
         await ctx.send(embed = embed)
 
-    @help.command()
+    @help.command(aliases = ['server', 'guild', 'guild_info'])
     async def server_info(self, ctx):
         helptext = ('```d.server_info```\n'
                     'Отправляет вам информацию о сервере\n'
@@ -210,7 +210,7 @@ class Help(commands.Cog):
         embed = discord.Embed(color = 0xffcd4c , title = 'slots', description = helptext)
         await ctx.send(embed = embed)
 
-    @help.command()
+    @help.command(aliases = ['rockpaperscissors', 'rps'])
     async def janken(self, ctx):
         helptext = ('```d.janken```\n'
                     'Классические камень-ножницы-бумага.\n'
