@@ -6,7 +6,7 @@ from youtube_dl import YoutubeDL
 from config import settings
 
 ### YTDL and FFmpeg configs ###
-YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True'}
+YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True', 'quiet': True}
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 ### YTDL and FFmpeg configs ###
 
@@ -66,7 +66,6 @@ class Music(commands.Cog):
                 return
             
             voice_channel = ctx.message.author.voice.channel
-            print(voice_channel)
             self.__vc = await voice_channel.connect()
         except:
             pass
