@@ -19,8 +19,13 @@ settings = {
     'emojis': {'wuuut': 518051242807787520, 'youtube': 878537811601555466,
                'stonks': 879411306157985862, 'squid_cleaning': 880326444356612116}, # Replace this dict values to your Emoji Id's.
     'activities': [discord.Activity(type=discord.ActivityType.watching, name="зомбоящик"),
-                   discord.Activity(type=discord.ActivityType.watching, name="на писюны"),
+                   discord.Activity(type=discord.ActivityType.watching, name="на пизду"),
+                   discord.Activity(type=discord.ActivityType.watching, name="и охуевает"),
+                   discord.Activity(type=discord.ActivityType.watching, name="какой у тебя маленький хуй"),
+                   discord.Activity(type=discord.ActivityType.watching, name="на глистов у тебя в жопе"),
                    discord.Activity(type=discord.ActivityType.listening, name="ровный базар"),
-                   discord.Activity(type=discord.ActivityType.watching, name="порнушку"),
-                   discord.Game(name="игру")]
+                   discord.Activity(type=discord.ActivityType.listening, name="моргенчлена, твоего батю блядь"),
+                   discord.Activity(type=discord.ActivityType.watching, name="поруху с собакой"),
+                   discord.Game(name="игру"),
+                   discord.Game(name="ебанину нахуй")]
 }

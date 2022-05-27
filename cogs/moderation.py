@@ -40,6 +40,7 @@ class Moderation(commands.Cog):
         if isinstance(error, CommandInvokeError):
             await ctx.send('❌ У бота нету привилегий бана! Пожалуйста, удалите бота из сервера, и добавьте его снова по следующей ссылке: https://discord.com/api/oauth2/authorize?client_id=699912361481470032&permissions=8&scope=bot')
     @has_permissions(manage_messages = True)
+    
     @commands.command()
     async def idclear(self, ctx, arg1):
         await ctx.message.delete()
@@ -48,7 +49,6 @@ class Moderation(commands.Cog):
             await msg.delete(arg1)
         except NotFound as e:
             await ctx.send('❌ Введите корректный ID сообщения! *Для того, чтобы скопировать ID сообщения, перейдите в настройки пользователя > расширенные, и включите режим разработчика. После этого вы сможете копировать ID сообщений.*')
-
         
     @idclear.error
     async def idclear_error(self, ctx, error):

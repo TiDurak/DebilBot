@@ -11,15 +11,14 @@ class Help(commands.Cog):
     @commands.group(invoke_without_command=True)
     async def help(self, ctx, command = None):
         help_text = (f'**📙 Префикс: `{settings.get("prefix")}`**\n'
-                     '📙 `help` для вывода списка команд\n'
-                     '📙 `help` `название команды` для подробного описания команды\n')
+                      '📙 `help` для вывода списка команд\n'
+                      '📙 `help` `название команды` для подробного описания команды\n')
         help_music = ('`play` `pause` `resume` `stop` `leave` `skip` `queue`')
         help_moderation = ('`clear` `idclear` `kick` `ban`')
         help_information = ('`avatar` `user_info` `server_info`')
         help_text_channels = ('`translate` `poll` `echo`')
         help_conv = ('`encode_b64` `decode_b64` `encode_binary` `decode_binary`')
-
-        helpgames = ('`slots` `janken`')
+        help_games = ('`slots` `janken`')
 
         embed = discord.Embed(color = 0xffcd4c , title = 'Помощь', description = help_text)
         embed.add_field(name = '🎵 ***Музыка*** 🎵', value = help_music, inline=False)
