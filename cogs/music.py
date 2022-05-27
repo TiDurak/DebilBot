@@ -70,7 +70,7 @@ class Music(commands.Cog):
         except:
             pass
 
-    def __search(self, arg):
+    def __extract(self, arg):
         video = None
         with YoutubeDL(YDL_OPTIONS) as ydl:
             try:
@@ -188,7 +188,7 @@ class Music(commands.Cog):
     async def play(self, ctx, *, arg):
         await self.__connect(ctx)
         try:
-            vid = self.__search(arg)
+            vid = self.__extract(arg)
         except IndexError:
             await ctx.send(":x: Песня не была найдена :(")
             await self.__vc.disconnect()
