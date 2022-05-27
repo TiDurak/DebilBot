@@ -184,10 +184,10 @@ class Help(commands.Cog):
 
     @help.command()
     async def decode_b64(self, ctx):
-            helptext = ('```d.decode_b64 <base64 текст>```\n'
-                        'Конвертирует ваш Base64 код в ноормальный, понятный любому человеку (кроме фаната а4) текст')
-            embed = discord.Embed(color = 0xffcd4c , title = 'decode_b64', description = helptext)
-            await ctx.send(embed = embed)
+        helptext = ('```d.decode_b64 <base64 текст>```\n'
+                    'Конвертирует ваш Base64 код в ноормальный, понятный любому человеку (кроме фаната а4) текст')
+        embed = discord.Embed(color = 0xffcd4c , title = 'decode_b64', description = helptext)
+        await ctx.send(embed = embed)
 
     @help.command()
     async def encode_binary(self, ctx):
