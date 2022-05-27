@@ -1,4 +1,5 @@
 import os
+import discord
 
 try:
     os.environ['DEBIL_TOKEN']
@@ -16,5 +17,10 @@ settings = {
     'prefix': 'd.',
     'path_to_ffmpeg': path.get('linux'), # If u are use Windows, type path.get('windows') and type path to the ffmpeg, else if u are use Linux, or Heroku, type path.get('linux')
     'emojis': {'wuuut': 518051242807787520, 'youtube': 878537811601555466,
-               'stonks': 879411306157985862, 'squid_cleaning': 880326444356612116} # Replace this dict values to your Emoji Id's.
+               'stonks': 879411306157985862, 'squid_cleaning': 880326444356612116}, # Replace this dict values to your Emoji Id's.
+    'activities': [discord.Activity(type=discord.ActivityType.watching, name="зомбоящик"),
+                   discord.Activity(type=discord.ActivityType.watching, name="на писюны"),
+                   discord.Activity(type=discord.ActivityType.listening, name="ровный базар"),
+                   discord.Activity(type=discord.ActivityType.watching, name="порнушку"),
+                   discord.Game(name="игру")]
 }

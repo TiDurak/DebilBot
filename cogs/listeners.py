@@ -30,13 +30,8 @@ class OnReady(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print('[b green] Bot is ready! Just type d.help to see all bot commands.')
-        activities = [discord.Activity(type=discord.ActivityType.watching, name="зомбоящик"),
-                      discord.Activity(type=discord.ActivityType.watching, name="на писюны"),
-                      discord.Activity(type=discord.ActivityType.listening, name="ровный базар"),
-                      discord.Activity(type=discord.ActivityType.watching, name="порнушку"),
-                      discord.Game(name="игру")]
         while True:
-            activity = activities[random.randint(0, 4)]
+            activity = random.choice(settings['activities'])
             await self.bot.change_presence(status=discord.Status.online, activity=activity)
             await asyncio.sleep(5)
             await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(f"{settings.get('prefix')}help"))
