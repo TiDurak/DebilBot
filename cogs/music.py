@@ -204,7 +204,7 @@ class Music(commands.Cog):
 
     @commands.command()
     async def skip(self, ctx):
-        ctx.send("⏭️ Скипаю")
+        await ctx.send("⏭️ Скипаю")
         self.__skip(ctx)
 
     @commands.command(name="queue")
@@ -237,18 +237,18 @@ class Music(commands.Cog):
     @commands.command()
     async def stop(self, ctx):
         self.__stop(ctx)
-        ctx.send('🛑 Остановлено!')
+        await ctx.send('🛑 Остановлено!')
 
 
     @commands.command()
     async def pause(self, ctx):
         self.__pause(ctx)
-        ctx.send('🔇 Воспроизведение приостановлено!')
+        await ctx.send('🔇 Воспроизведение приостановлено!')
 
     @commands.command()
     async def resume(self, ctx):
         self.__resume(ctx)
-        ctx.send('🎵 Идёт Воспроизведение!')
+        await ctx.send('🎵 Идёт Воспроизведение!')
 
 def setup(bot):
     bot.add_cog(Music(bot))
