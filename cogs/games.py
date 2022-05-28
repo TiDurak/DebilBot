@@ -24,28 +24,22 @@ class Games(commands.Cog):
         choice = random.choice(answers)
 
         responce = await self.bot.wait_for('button_click', check = lambda message: message.author == ctx.author)
-                    
-        if responce.component.label == 'Камень':
-            await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}`' ), components=[])
-
-        elif responce.component.label == 'Ножницы':
-            await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}`' ), components=[])
-
-        elif responce.component.label == 'Бумага':
-            await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}`' ), components=[])
-
+           
+        async def victory():
+            await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}` \n Победа!!!'), components=[])
+             
         if responce.component.label == choice:
             await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}` \n Ничья!'), components=[])
 
         elif responce.component.label == 'Камень' and choice == 'Ножницы':
-            await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}` \n Победа!!!'), components=[])
+            await victory()
 
         elif responce.component.label == 'Ножницы' and choice == 'Бумага':
-            await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}` \n Победа!!!'), components=[])
-        
-        elif responce.component.label == 'Бумага' and choice == 'Камень':
-            await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}` \n Победа!!!'), components=[])
+            await victory()
 
+        elif responce.component.label == 'Бумага' and choice == 'Камень':
+            await victory()
+            
         else:
             await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}` \n Проигрыш :('), components=[])
 
