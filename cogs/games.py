@@ -50,62 +50,30 @@ class Games(commands.Cog):
 
         symbols = ['🍒', '🔔', '7️⃣', '👑', '☠️']
 
+        slot = [0, 1, 2]
 
+        for i in range(3):
+            slot[i] = symbols[random.randint(0,3)]
 
+        is_same = True if slot[0] == slot[1] == slot[2] else False
 
-        percentage = random.uniform(0,100)
-        if percentage <= 30:
-            slot1 = symbols[4]
-        elif percentage <= 55 and percentage > 30:
-            slot1 = symbols[3]
-        elif percentage <= 70 and percentage > 55:
-            slot1 = symbols[2]
-        elif percentage <= 85 and percentage > 70:
-            slot1 = symbols[1]
-        elif percentage <= 100 and percentage > 85:
-            slot1 = symbols[0]
-
-        percentage = random.uniform(0,100)
-        if percentage <= 20:
-            slot2 = symbols[4]
-        elif percentage <= 40 and percentage > 20:
-            slot2 = symbols[3]
-        elif percentage <= 60 and percentage > 40:
-            slot2 = symbols[2]
-        elif percentage <= 87 and percentage > 60:
-            slot2 = symbols[1]
-        elif percentage <= 100 and percentage > 87:
-            slot2 = symbols[0]
-
-        percentage = random.uniform(0,100)
-        if percentage <= 35:
-            slot3 = symbols[4]
-        elif percentage <= 41 and percentage > 35:
-            slot3 = symbols[3]
-        elif percentage <= 60 and percentage > 41:
-            slot3 = symbols[2]
-        elif percentage <= 94 and percentage > 60:
-            slot3 = symbols[1]
-        elif percentage <= 100 and percentage > 95:
-            slot3 = symbols[0]
-
-        if slot1 == slot2 == slot3 == symbols[4]:
+        if is_same and symbols[4] in slot:
             footer = 'Лузер! Ваш баланс обнулён'
-        elif slot1 == slot2 == slot3 == symbols[3]:
+        elif is_same and symbols[3] in slot:
             footer = '+ 5 000 баксов на ваш счёт'
-        elif slot1 == slot2 == slot3 == symbols[2]:
+        elif is_same and symbols[2] in slot:
             footer = '+ 10 000 баксов на ваш счёт'
-        elif slot1 == slot2 == slot3 == symbols[1]:
+        elif is_same and symbols[1] in slot:
             footer = '+ 15 000 баксов на ваш счёт'
-        elif slot1 == slot2 == slot3 == symbols[0]:
+        elif is_same and symbols[0] in slot:
             footer = 'ДЖЕКПОТ!!! + 1 000 000 баксов на ваш счёт'
-        elif slot1 == slot2 == symbols[0] or slot1 == slot3 == symbols[0] or slot2 == slot3 == symbols[0]:
+        elif symbols[0] == slot[0] == slot[1] or slot[0] == slot[2] == symbols[0] or slot[1] == slot[2] == symbols[0]:
             footer = '+ 3 500 баксов на ваш счёт'
-        elif slot1 == symbols[0] or slot2 == symbols[0] or slot3 == symbols[0]:
+        elif symbols[0] in slot:
             footer = '+ 1 500 баксов на ваш счёт'
         else:
             footer = 'Ничего('
-        embed = discord.Embed(color = 0x36c600, title = '🎰 Slots Azino777', description = str(slot1) + str(slot2) + str(slot3))
+        embed = discord.Embed(color = 0x36c600, title = '🎰 Slots Azino777', description = str(slot[0]) + str(slot[1]) + str(slot[2]))
         embed.set_footer(text = footer, icon_url = "https://i.imgur.com/uZIlRnK.png")
         await ctx.send(embed = embed)
 
