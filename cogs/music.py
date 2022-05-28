@@ -203,8 +203,13 @@ class Music(commands.Cog):
 
     @commands.command()
     async def skip(self, ctx):
-        await ctx.send("⏭️ Скипаю")
-        self.__skip(ctx)
+        try:
+            self.__skip(ctx)
+            await ctx.send("⏭️ Скипаю")
+        except AttributeError:
+            await ctx.message.add_reaction("🤡")
+            await ctx.send(f":face_with_symbols_over_mouth: ДА ТЫ ЗАЕБААААЛ! Сорянчик. {ctx.author.mention}, Как ты хочешь скипнуть музон, если Я БЛЯДЬ НЕ ПОДКЛЮЧЁН К ГОЛОСОВОМУ ЧААТУ! БЛЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯДЬ!!")
+            await ctx.send("С такими додиками, как ты, я сталкиваюсь 24/7")
 
     @commands.command(name="queue")
     async def queue_embed(self, ctx):
@@ -229,25 +234,37 @@ class Music(commands.Cog):
         try:
             self.__leave(ctx)
             await сtx.send('🚪 Бот вышел из голосового чата')
-        except: 
+        except AttributeError: 
+            await ctx.message.add_reaction("🤡")
             await ctx.send(f'{self.bot.get_emoji(settings["emojis"]["wuuut"])} Опять нашёлся умник, который пытается обхитрить систему, и хочет выгнать бота из голосового чата, который даже к нему не подключен...')
             
 
     @commands.command()
     async def stop(self, ctx):
-        self.__stop(ctx)
-        await ctx.send('🛑 Остановлено!')
-
+        try:
+            self.__stop(ctx)
+            await ctx.send('🛑 Остановлено!')
+        except AttributeError: 
+            await ctx.message.add_reaction("🤡")
+            await ctx.send(f'{self.bot.get_emoji(settings["emojis"]["wuuut"])} Да ты опять решил остановить музон, я даже не в голосовом чате, высер тупой!')
 
     @commands.command()
     async def pause(self, ctx):
-        self.__pause(ctx)
-        await ctx.send('🔇 Воспроизведение приостановлено!')
+        try:
+            self.__pause(ctx)
+            await ctx.send('🔇 Воспроизведение приостановлено!')
+        except AttributeError:
+            await ctx.message.add_reaction("🤡")
+            await ctx.send(f'{self.bot.get_emoji(settings["emojis"]["wuuut"])} Ты... решил.. поставить на паузу... музыку, которая не играет. Долбаёб всратый...')
 
     @commands.command()
     async def resume(self, ctx):
-        self.__resume(ctx)
-        await ctx.send('🎵 Идёт Воспроизведение!')
+        try:
+            self.__resume(ctx)
+            await ctx.send('🎵 Идёт Воспроизведение!')
+        except AttributeError:
+            await ctx.message.add_reaction("🤡")
+            await ctx.send(f"{self.bot.get_emoji(settings['emojis']['wuuut'])} Для начала введи хотя бы `{settings.get('prefix')}play [название_песни]`")
 
 def setup(bot):
     bot.add_cog(Music(bot))
