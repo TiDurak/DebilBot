@@ -175,14 +175,11 @@ class Music(commands.Cog):
     def __pause(self, context):
         if not self.__vc.is_paused():
             self.__vc.pause()
-        elif self.__vc.is_paused():
-            asyncio.run_coroutine_threadsafe(context.send(f'{self.bot.get_emoji(settings["emojis"]["wuuut"])} Лол, я на паузе, что ты ещё хочешь от меня?! Для этого есть `{settings.get("prefix")}resume`'), self.bot.loop)
-
+        
     def __resume(self, context):
         if not self.__vc.is_playing():
             self.__vc.resume()
-        elif self.__vc.is_playing():
-            asyncio.run_coroutine_threadsafe(context.send('🤪 Лол, я не на паузе, зачем ты ввёл эту команду?!'), self.bot.loop)
+        elif self.__vc.is_playing():asyncio.run_coroutine_threadsafe(context.send('🤪 Лол, я не на паузе, зачем ты ввёл эту команду?!'), self.bot.loop)
 
     @commands.command()
     async def play(self, ctx, *, arg):
@@ -251,8 +248,12 @@ class Music(commands.Cog):
     @commands.command()
     async def pause(self, ctx):
         try:
-            self.__pause(ctx)
-            await ctx.send('🔇 Воспроизведение приостановлено!')
+            if not self.__vc.is_paused():
+                self.__pause(ctx)
+                await ctx.send('🔇 Воспроизведение приостановлено!')
+            else:
+                await ctx.message.add_reaction("🤡")
+                await ctx.send(f"🤡 Я на паузе, упырь конченный. Для этого есть `{settings.get('prefix')}resume`")
         except AttributeError:
             await ctx.message.add_reaction("🤡")
             await ctx.send(f'{self.bot.get_emoji(settings["emojis"]["wuuut"])} Ты... решил.. поставить на паузу... музыку, которая не играет. Долбаёб всратый...')
