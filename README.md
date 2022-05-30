@@ -26,7 +26,6 @@
 + youtube_dl
 + asyncio
 + PyNaCl
-+ ffmpeg
 + rich
 
 #### Programs
