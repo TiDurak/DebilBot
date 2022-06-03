@@ -89,6 +89,7 @@ class Music(commands.Cog):
 
 
     async def __play(self, context, url, video):
+        self.__vc.play(discord.FFmpegPCMAudio(executable=settings['path_to_ffmpeg'], source = url, **FFMPEG_OPTIONS), after = lambda e: self.__skip(context = context))
         duration = video.get("duration")
         embed = (discord.Embed(title = f'{self.bot.get_emoji(settings["emojis"]["youtube"])} Играет',
                                description = f"**{video.get('title')}**",
@@ -108,7 +109,6 @@ class Music(commands.Cog):
         ])
 
         self.__playing_now_embed = firstmessage
-        self.__vc.play(discord.FFmpegPCMAudio(executable=settings['path_to_ffmpeg'], source = url, **FFMPEG_OPTIONS), after = lambda e: self.__skip(context = context))
         title = video.get('title')
         self.__queue.set_playing_now(title)
         while self.__vc.is_playing:
