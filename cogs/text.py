@@ -63,5 +63,5 @@ class Text(commands.Cog):
         embed.set_footer(text= f'Poll ID: {react_message.id} \nКстати! Вопрос нужно указывать в кавычках!' )
         await react_message.edit(embed=embed)
 
-def setup(bot):
-    bot.add_cog(Text(bot))
+async def setup(bot):
+    await bot.add_cog(Text(bot))

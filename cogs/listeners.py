@@ -37,6 +37,6 @@ class OnReady(commands.Cog):
             await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(f"{settings.get('prefix')}help"))
             await asyncio.sleep(5)
 
-def setup(bot):
-    bot.add_cog(ErrorListener(bot))
-    bot.add_cog(OnReady(bot))
+async def setup(bot):
+    await bot.add_cog(ErrorListener(bot))
+    await bot.add_cog(OnReady(bot))

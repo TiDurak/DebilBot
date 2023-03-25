@@ -41,5 +41,5 @@ class Convert(commands.Cog):
         embed = discord.Embed(color = 0xff8080, title = 'Binary Decoder', description = json_data['text'])
         await ctx.send(embed = embed)
 
-def setup(bot):
-        bot.add_cog(Convert(bot))
+async def setup(bot):
+        await bot.add_cog(Convert(bot))

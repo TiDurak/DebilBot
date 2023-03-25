@@ -42,5 +42,5 @@ class Information(commands.Cog):
         embed.set_footer(text = f"Запросил {ctx.author}", icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
 
-def setup(bot):
-    bot.add_cog(Information(bot))
+async def setup(bot):
+    await bot.add_cog(Information(bot))

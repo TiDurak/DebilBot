@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from discord_components import DiscordComponents, Button, ButtonStyle
 from config import settings
 
 class Help(commands.Cog):
@@ -139,18 +138,20 @@ class Help(commands.Cog):
         embed = discord.Embed(color = 0xffcd4c , title = 'server_info', description = help_text)
         await ctx.send(embed = embed)
 
+    class ISOCodes(discord.ui.View):
+        def __init__(self):
+            super().__init__()
+            self.__url = "https://snipp.ru/handbk/iso-639-1"
+            self.add_item(discord.ui.Button(label='Коды ISO 639-1', url=self.__url))
+
     @help.command()
     async def translate(self, ctx):
-        help_text = (f'```{settings.get("prefix")}translate <язык> <текст>```\n'
-                      'Переводит ваш текст, язык указывается по стандарту ISO 639-1\n'
-                      'Полный список наименований будет доступен после нажатия на кнопку ниже')
+        help_text = (f"```{settings.get('prefix')}translate <язык> <текст>```\n"
+                      "Переводит ваш текст, язык указывается по стандарту ISO 639-1\n"
+                      "Полный список наименований будет доступен после нажатия на кнопку ниже")
         embed = discord.Embed(color = 0xffcd4c , title = 'translate', description = help_text)
-        await ctx.send(
-        embed = embed,
-        components = [
-        Button(style = ButtonStyle.URL, url = 'https://snipp.ru/handbk/iso-639-1', label='Коды ISO 639-1')
-        ])
-        
+        await ctx.send(embed=embed, view=self.ISOCodes())
+
     @help.command()
     async def poll(self, ctx):
         help_text = (f'```{settings.get("prefix")}poll "вопрос" "вариант 1" "вариант 2"```\n'
@@ -160,10 +161,9 @@ class Help(commands.Cog):
                       '```{settings.get("prefix")}poll "Какие чипсы вы предпочитаете" "Lais" "Prongls" "2 корочки"```\n'
                       'Плохой пример:\n'
                       '```{settings.get("prefix")}poll Какие чипсы вы предпочитаете Lais Prongls 2 корочки```\n'
-                      'В плохом примере нету кавычек, соответственно, за вопрос будет считыватся только `Какие`, остальное будет вариантами ответа\n'
-                      '**Для вывода результата плохого примера, нажмите на кнопку ниже**')
+                      'В плохом примере нету кавычек, соответственно, за вопрос будет считыватся только `Какие`, остальное будет вариантами ответа\n')
         embed = discord.Embed(color = 0xffcd4c , title = 'poll', description = help_text)
-        await ctx.send(embed = embed, components = [[Button(style = ButtonStyle.blue, label = 'Результат Плохого Примера')]])
+        await ctx.send(embed=embed)
                 
     @help.command()
     async def echo(self, ctx):
@@ -217,5 +217,5 @@ class Help(commands.Cog):
         embed = discord.Embed(color = 0xffcd4c , title = 'Камень-Ножницы-Бумага', description = help_text)
         await ctx.send(embed = embed)
 
-def setup(bot):
-        bot.add_cog(Help(bot))
+async def setup(bot):
+    await bot.add_cog(Help(bot))

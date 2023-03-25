@@ -2,7 +2,6 @@ import asyncio
 import datetime
 import discord
 from discord.ext import commands
-from discord_components import DiscordComponents, Button, ButtonStyle
 from youtube_dl import YoutubeDL
 from config import settings
 
@@ -55,9 +54,9 @@ class Queue():
 
 
 class Music(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot, intents):
         self.bot = bot
-        self.__client = discord.Client()
+        self.__client = discord.Client(intents=intents)
         self.__queue = Queue()
 
     async def __connect(self, ctx):
@@ -87,6 +86,41 @@ class Music(commands.Cog):
             url = extracted['formats'][0]['url']
             return url
 
+    # noinspection PyUnresolvedReferences
+    class PlayerButtons(discord.ui.View):
+        def __init__(self, voice_chat, context, leave, stop, pause, resume, skip):
+            super().__init__()
+            self.__vc = voice_chat
+            self.__ctx = context
+            self.__leave = leave
+            self.__stop = stop
+            self.__pause = pause
+            self.__resume = resume
+            self.__skip = skip
+
+        @discord.ui.button(style=discord.ButtonStyle.red, label='Выход', emoji='🚪')
+        async def button_leave(self, interaction: discord.Interaction, button: discord.ui.Button):
+            await interaction.response.send_message("Хорошо блин, ухожу, тупой ты дебил", tts=True, delete_after=8)
+            self.__leave(self.__ctx)
+
+        @discord.ui.button(style=discord.ButtonStyle.red, label='Стоп', emoji='🛑')
+        async def button_stop(self, interaction: discord.Interaction, button: discord.ui.Button):
+            await interaction.response.send_message("Хорошо, тормознул", tts=True, delete_after=8)
+            self.__stop(self.__ctx)
+
+        @discord.ui.button(style=discord.ButtonStyle.blurple, label='Пауза / Продолжить', emoji='⏯️')
+        async def button_pause_resume(self, interaction: discord.Interaction, button: discord.ui.Button):
+            if self.__vc.is_playing():
+                await interaction.response.send_message("Усё, усё, пауза", tts=True, delete_after=8)
+                self.__vc.pause()
+            elif self.__vc.is_paused():
+                await interaction.response.send_message("Играем дальше, значит. Ты задолбал", tts=True, delete_after=8)
+                self.__vc.resume()
+
+        @discord.ui.button(style=discord.ButtonStyle.blurple, label='Пропустить', emoji='⏭️')
+        async def button_skip(self, interaction: discord.Interaction, button: discord.ui.Button):
+            await interaction.response.send_message("Эту песню мы попускаем, потому что гивно", tts=True, delete_after=8)
+            self.__skip(self.__ctx)
 
     async def __play(self, context, url, video):
         self.__vc.play(discord.FFmpegPCMAudio(executable=settings['path_to_ffmpeg'], source = url, **FFMPEG_OPTIONS), after = lambda e: self.__skip(context = context))
@@ -97,18 +131,14 @@ class Music(commands.Cog):
                 .add_field(name = '⌛ Продолжительность', value = datetime.timedelta(seconds=duration))
                 .add_field(name = '🙃 Запросил', value = context.author.mention)
                 .set_thumbnail(url = video.get('thumbnail'))  )
-        firstmessage = await context.send(
-        embed = embed,
-        components = [
-            [
-                Button(style = ButtonStyle.red, label = 'Выход', emoji = '🚪'),
-                Button(style = ButtonStyle.red, label = 'Стоп', emoji = '🛑'),
-                Button(style = ButtonStyle.blue, label = 'Пауза / Продолжить', emoji = '⏯️'),
-                Button(style = ButtonStyle.blue, label = 'Пропустить', emoji = '⏭️'),
-            ]
-        ])
+        await context.send(embed = embed, view=self.PlayerButtons(self.__vc,
+                                                                  context,
+                                                                  self.__leave,
+                                                                  self.__stop,
+                                                                  self.__pause,
+                                                                  self.__resume,
+                                                                  self.__skip))
 
-        self.__playing_now_embed = firstmessage
         title = video.get('title')
         self.__queue.set_playing_now(title)
         while self.__vc.is_playing:
@@ -121,7 +151,6 @@ class Music(commands.Cog):
                     await responce.respond(content = '🚪 Бот вышел из голосового чата')
                     return
                 case 'Стоп':
-                    await self.__playing_now_embed.edit(embed=embed, components=[Button(style = ButtonStyle.red, label = 'Выход', emoji = '🚪')])
                     self.__stop(context)
                     await responce.respond(content = '🛑 Остановлено!')
                     return
@@ -137,7 +166,6 @@ class Music(commands.Cog):
                     await self.__playing_now_embed.edit(embed=embed, components=[])
                     await responce.respond(content = '⏭️ Скипаю...')
                     self.__skip(context)
-
 
     def __skip(self, context):
         asyncio.run_coroutine_threadsafe(self.__playing_now_embed.edit(components=[]), self.bot.loop)
@@ -171,7 +199,8 @@ class Music(commands.Cog):
     def __resume(self, context):
         if not self.__vc.is_playing():
             self.__vc.resume()
-        elif self.__vc.is_playing():asyncio.run_coroutine_threadsafe(context.send('🤪 Лол, я не на паузе, зачем ты ввёл эту команду?!'), self.bot.loop)
+        elif self.__vc.is_playing():
+            asyncio.run_coroutine_threadsafe(context.send('🤪 Лол, я не на паузе, зачем ты ввёл эту команду?!'), self.bot.loop)
 
     @commands.command()
     async def play(self, ctx, *, arg):
@@ -259,5 +288,5 @@ class Music(commands.Cog):
             await ctx.message.add_reaction("🤡")
             await ctx.send(f"{self.bot.get_emoji(settings['emojis']['wuuut'])} Для начала введи хотя бы `{settings.get('prefix')}play [название_песни]`")
 
-def setup(bot):
-    bot.add_cog(Music(bot))
+async def setup(bot, intents):
+    await bot.add_cog(Music(bot, intents))

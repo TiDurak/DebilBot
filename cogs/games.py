@@ -1,47 +1,37 @@
 import random
 import discord
 from discord.ext import commands
-from discord_components import DiscordComponents, Button, ButtonStyle
 
 class Games(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        
+
+    # noinspection PyUnresolvedReferences
+    class JankenButtons(discord.ui.View):
+        def __init__(self):
+            super().__init__()
+
+        @discord.ui.button(label="Камень", emoji="🗿", style=discord.ButtonStyle.blurple)
+        async def rock_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+            await interaction.response.send_message("Камень")
+
+        @discord.ui.button(label="Ножницы", emoji="✂️", style=discord.ButtonStyle.red)
+        async def scissors_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+            await interaction.response.send_message("Ножницы")
+
+        @discord.ui.button(label="Бумага", emoji="📄", style=discord.ButtonStyle.gray)
+        async def paper_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+            await interaction.response.send_message("Бумага")
+
     @commands.command(aliases=['rps', 'rockpaperscissors'])
     async def janken(self, ctx):
         description = 'Сыграй со мной в камень ножницы бумагу! выбери один из вариантов ниже:'
         embed = discord.Embed(color = 0xffcd4c, title = f'{ctx.message.author}: Камень Ножницы Бумага', description = description)
-        gamebar = await ctx.send(
-            embed = embed,
-            components = [
-                [
-                    Button(style = ButtonStyle.blue, label = 'Камень', emoji = '🗿'),
-                    Button(style = ButtonStyle.red, label = 'Ножницы', emoji = '✂️'),
-                    Button(style = ButtonStyle.gray, label = 'Бумага', emoji = '📄'),
-                ]
-        ])
+        await ctx.send(embed = embed)
         answers = ['Камень', 'Ножницы', 'Бумага']
         choice = random.choice(answers)
 
-        responce = await self.bot.wait_for('button_click', check = lambda message: message.author == ctx.author)
-           
-        async def victory():
-            await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}` \n Победа!!!'), components=[])
-             
-        if responce.component.label == choice:
-            await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}` \n Ничья!'), components=[])
-
-        elif responce.component.label == 'Камень' and choice == 'Ножницы':
-            await victory()
-
-        elif responce.component.label == 'Ножницы' and choice == 'Бумага':
-            await victory()
-
-        elif responce.component.label == 'Бумага' and choice == 'Камень':
-            await victory()
-            
-        else:
-            await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}` \n Проигрыш :('), components=[])
+        #await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}` \n Проигрыш :('), components=[])
 
 
     @commands.command()
@@ -77,5 +67,5 @@ class Games(commands.Cog):
         embed.set_footer(text = footer, icon_url = "https://i.imgur.com/uZIlRnK.png")
         await ctx.send(embed = embed)
 
-def setup(bot):
-    bot.add_cog(Games(bot))
+async def setup(bot):
+    await bot.add_cog(Games(bot))

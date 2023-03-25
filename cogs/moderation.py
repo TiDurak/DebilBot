@@ -14,7 +14,7 @@ class Moderation(commands.Cog):
         amount = int(arg1)
         await ctx.message.delete()
         await ctx.channel.purge(limit = amount)
-        await ctx.send(f'{self.bot.get_emoji(settings["emojis"]["squid_cleaning"])} Очищено {amount} сообщений! Запрос на очистку от {ctx.author.mention}')
+        await ctx.send(f'{self.bot.get_emoji(settings["emojis"]["squid_cleaning"])} {ctx.author.mention}: Очищено {amount} сообщений!')
 
     @has_permissions(kick_members = True)
     @commands.command()
@@ -57,5 +57,5 @@ class Moderation(commands.Cog):
         elif isinstance(error, CommandInvokeError):
             await ctx.send('❌ У бота нету привилегий управления сообщениями! Пожалуйста, удалите бота из сервера, и добавьте его снова по следующей ссылке: https://discord.com/api/oauth2/authorize?client_id=699912361481470032&permissions=8&scope=bot')
 
-def setup(bot):
-    bot.add_cog(Moderation(bot))
+async def setup(bot):
+    await bot.add_cog(Moderation(bot))
