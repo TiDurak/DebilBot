@@ -2,6 +2,5 @@ discord==2.2.2
 googletrans==3.1.0a0
 requests
 yt_dlp
-asyncio
 PyNaCl
 rich

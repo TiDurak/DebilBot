@@ -23,8 +23,7 @@
 + discord 2.2.2
 + googletrans 3.1.0a0
 + requests
-+ youtube_dl
-+ asyncio
++ yt-dlp
 + PyNaCl
 + rich
 
