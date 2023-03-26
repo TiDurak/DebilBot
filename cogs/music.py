@@ -2,20 +2,20 @@ import asyncio
 import datetime
 import discord
 from discord.ext import commands
-from youtube_dl import YoutubeDL
+from yt_dlp import YoutubeDL
 from config import settings
 
-### YTDL and FFmpeg configs ###
+# YTDL and FFmpeg configs
 YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True', 'quiet': True}
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-### YTDL and FFmpeg configs ###
+# YTDL and FFmpeg configs
 
-class Queue():
+
+class Queue:
     def __init__(self):
         self.__vc = None
         self.__queue = []
         self.__playing_now = None
-        self.__playing_now_embed = None
 
     def add_track(self, title):
         self.__queue.append(title)
@@ -83,7 +83,7 @@ class Music(commands.Cog):
 
     def __get_url(self, extracted):
         with YoutubeDL(YDL_OPTIONS) as ydl:
-            url = extracted['formats'][0]['url']
+            url = extracted['url']
             return url
 
     # noinspection PyUnresolvedReferences
@@ -141,44 +141,16 @@ class Music(commands.Cog):
 
         title = video.get('title')
         self.__queue.set_playing_now(title)
-        while self.__vc.is_playing:
-            responce = await self.bot.wait_for('button_click', check = lambda message: message.author == context.author)
-            
-            match responce.component.label:
-                case 'Выход':
-                    await self.__playing_now_embed.edit(embed=embed, components=[])
-                    self.__leave(context)
-                    await responce.respond(content = '🚪 Бот вышел из голосового чата')
-                    return
-                case 'Стоп':
-                    self.__stop(context)
-                    await responce.respond(content = '🛑 Остановлено!')
-                    return
-                case 'Пауза / Продолжить':
-                    if self.__vc.is_playing():
-                        self.__vc.pause()
-                        await responce.respond(content = '⏯️ Пауза')
-                    elif self.__vc.is_paused():
-                        self.__vc.resume()
-                        await responce.respond(content = '⏯️ Продолжаю...')
-                    return
-                case 'Пропустить':
-                    await self.__playing_now_embed.edit(embed=embed, components=[])
-                    await responce.respond(content = '⏭️ Скипаю...')
-                    self.__skip(context)
 
     def __skip(self, context):
-        asyncio.run_coroutine_threadsafe(self.__playing_now_embed.edit(components=[]), self.bot.loop)
         if self.__vc.is_playing():
             self.__vc.pause()
         if not self.__queue.is_empty():
             next_track = self.__queue.play_next()
             url = self.__get_url(next_track)
             asyncio.run_coroutine_threadsafe(self.__play(context, url, next_track), self.bot.loop)
-            if self.__playing_now_embed is not None:
-                self.__playing_now_embed = None
         else:
-            asyncio.run_coroutine_threadsafe(context.send("Список воспроизведения пуст.", delete_after = 3), self.bot.loop)
+            asyncio.run_coroutine_threadsafe(context.send("Список воспроизведения пуст.", delete_after=3), self.bot.loop)
 
     def __stop(self, context):
         self.__queue.clear()
@@ -186,7 +158,6 @@ class Music(commands.Cog):
             self.__vc.stop()
         elif self.__vc.is_paused():
             self.__vc.stop()
-        self.__playing_now_embed = None
 
     def __leave(self, context):
         self.__pause(context)
