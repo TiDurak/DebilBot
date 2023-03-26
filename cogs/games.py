@@ -2,37 +2,83 @@ import random
 import discord
 from discord.ext import commands
 
+
 class Games(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     # noinspection PyUnresolvedReferences
     class JankenButtons(discord.ui.View):
-        def __init__(self):
+        def __init__(self, embed):
             super().__init__()
+            self.__answers = ['Камень', 'Ножницы', 'Бумага']
+            self.__user_choice = None
+            self.__embed = embed
+
+        async def __edit_message(self, interaction):
+            answer = random.choice(self.__answers)
+            victory = None
+
+            if self.__user_choice == 'Камень' and answer == 'Ножницы':
+                victory = True
+
+            elif self.__user_choice == 'Ножницы' and answer == 'Бумага':
+                victory = True
+
+            elif self.__user_choice == 'Бумага' and answer == 'Камень':
+                victory = True
+
+            elif self.__user_choice is answer:
+                victory = None
+
+            else:
+                victory = False
+
+            if victory:
+                await interaction.response.edit_message(content=None,
+                                                        view=None,
+                                                        embed=discord.Embed(color=self.__embed.color,
+                                                                            title=self.__embed.title,
+                                                                            description=f"{self.__embed.description} \n"
+                                                                                        f"Ты выбрал `{self.__user_choice}`, а я выбрал `{answer}` \n"
+                                                                                        "Впервые в своей жизни ты победил... УРАААА!!!!11!1! 🎉🥳🥳"))
+            elif not victory and victory is not None:
+                await interaction.response.edit_message(content=None,
+                                                        view=None,
+                                                        embed=discord.Embed(color=self.__embed.color,
+                                                                            title=self.__embed.title,
+                                                                            description=f"{self.__embed.description} \n"
+                                                                                        f"Ты выбрал `{self.__user_choice}`, а я выбрал `{answer}` \n"
+                                                                                        "Ну да. Ты просрал, как всегда, АХАААХАХХААЗЗАЗА 🤪🤣"))
+
+            else:
+                await interaction.response.edit_message(content=None,
+                                                        view=None,
+                                                        embed=discord.Embed(color=self.__embed.color, title=self.__embed.title,
+                                                                            description=f"{self.__embed.description} \n"
+                                                                                        f"Ты выбрал `{self.__user_choice}`, а я выбрал `{answer}` \n"
+                                                                                        "Ничья, ёпта. Го ещё раз, придурок малолетний! 😐"))
 
         @discord.ui.button(label="Камень", emoji="🗿", style=discord.ButtonStyle.blurple)
         async def rock_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-            await interaction.response.send_message("Камень")
+            self.__user_choice = "Камень"
+            await self.__edit_message(interaction)
 
         @discord.ui.button(label="Ножницы", emoji="✂️", style=discord.ButtonStyle.red)
         async def scissors_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-            await interaction.response.send_message("Ножницы")
+            self.__user_choice = "Ножницы"
+            await self.__edit_message(interaction)
 
         @discord.ui.button(label="Бумага", emoji="📄", style=discord.ButtonStyle.gray)
         async def paper_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-            await interaction.response.send_message("Бумага")
+            self.__user_choice = "Бумага"
+            await self.__edit_message(interaction)
 
     @commands.command(aliases=['rps', 'rockpaperscissors'])
     async def janken(self, ctx):
         description = 'Сыграй со мной в камень ножницы бумагу! выбери один из вариантов ниже:'
-        embed = discord.Embed(color = 0xffcd4c, title = f'{ctx.message.author}: Камень Ножницы Бумага', description = description)
-        await ctx.send(embed = embed)
-        answers = ['Камень', 'Ножницы', 'Бумага']
-        choice = random.choice(answers)
-
-        #await gamebar.edit(embed=discord.Embed(color = embed.color, title = embed.title, description = f'{embed.description} \n Ты выбрал `{responce.component.label}`, а я выбрал `{choice}` \n Проигрыш :('), components=[])
-
+        embed = discord.Embed(color=0xffcd4c, title=f'{ctx.message.author}: Камень Ножницы Бумага', description=description)
+        await ctx.send(embed=embed, view=self.JankenButtons(embed=embed))
 
     @commands.command()
     async def slots(self, ctx):
