@@ -74,10 +74,8 @@ class Music(commands.Cog):
         video = None
         with YoutubeDL(YDL_OPTIONS) as ydl:
             try:
-                get(arg) 
-            except:
                 video = ydl.extract_info(f"ytsearch:{arg}", download=False)['entries'][0]
-            else:
+            except:
                 video = ydl.extract_info(arg, download=False)
             return video
 
