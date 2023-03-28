@@ -220,7 +220,7 @@ class Help(commands.Cog):
     @help.command(aliases=['anekdot'])
     async def joke(self, ctx):
         help_text = (f'```{settings.get("prefix")}joke```\n'
-                      'Скидывает тебе, ленивому дураку случайный анек категории б'
+                      'Скидывает тебе, ленивому дураку случайный анек категории б \n'
                      f'Алиасы: `{settings.get("prefix")}anekdot`\n')
         embed = discord.Embed(color=0xffcd4c, title='Анекдот', description=help_text)
         await ctx.send(embed=embed)
