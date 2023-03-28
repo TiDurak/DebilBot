@@ -2,7 +2,7 @@ import asyncio
 import datetime
 import discord
 from discord.ext import commands
-from yt_dlp import YoutubeDL
+from yt_dlp import YoutubeDL, utils
 from config import settings
 
 # YTDL and FFmpeg configs
@@ -52,7 +52,6 @@ class Queue:
         return self.__queue[id]
 
 
-
 class Music(commands.Cog):
     def __init__(self, bot, intents):
         self.bot = bot
@@ -73,11 +72,15 @@ class Music(commands.Cog):
     def __extract(self, arg):
         video = None
         with YoutubeDL(YDL_OPTIONS) as ydl:
+            # noinspection PyExceptClausesOrder
             try:
                 video = ydl.extract_info(f"ytsearch:{arg}", download=False)['entries'][0]
-            except:
+                return video
+            except utils.DownloadError:  # If not found video by basic searching
                 video = ydl.extract_info(arg, download=False)
-            return video
+                return video
+            except utils.DownloadError:  # If url was not found
+                raise IndexError()
 
     def __get_url(self, extracted):
         with YoutubeDL(YDL_OPTIONS) as ydl:
@@ -169,7 +172,7 @@ class Music(commands.Cog):
         if not self.__vc.is_playing():
             self.__vc.resume()
         elif self.__vc.is_playing():
-            asyncio.run_coroutine_threadsafe(context.send('🤪 Лол, я не на паузе, зачем ты ввёл эту команду?!'), self.bot.loop)
+            asyncio.run_coroutine_threadsafe(context.send("🤪 Лол, я не на паузе, зачем ты ввёл эту команду?!"), self.bot.loop)
 
     @commands.command()
     async def play(self, ctx, *, arg):
@@ -177,7 +180,7 @@ class Music(commands.Cog):
         try:
             vid = self.__extract(arg)
         except IndexError:
-            await ctx.send(":x: Песня не была найдена :(")
+            await ctx.send(":x: Ты дебилка тупая! ЧТО ЗА ГОВНО ТЫ ВЫСРАЛ?! КАК Я МОГУ ТЕБЕ ЭТУ ХЕРЕСЬ НАЙТИ?!!??!?!?!?1!!7!?!")
             await self.__vc.disconnect()
             return
             
@@ -256,6 +259,7 @@ class Music(commands.Cog):
         except AttributeError:
             await ctx.message.add_reaction("🤡")
             await ctx.send(f"{self.bot.get_emoji(settings['emojis']['wuuut'])} Для начала введи хотя бы `{settings.get('prefix')}play [название_песни]`")
+
 
 async def setup(bot, intents):
     await bot.add_cog(Music(bot, intents))
