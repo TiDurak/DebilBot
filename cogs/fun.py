@@ -130,7 +130,11 @@ class Fun(commands.Cog):
             embed = discord.Embed(color=0x33bbff, title=f"📋 Анекдот #{joke_number}",
                                   description=jokes.p.text)
             embed.set_footer(text="Этот даунский анек взят (*скомунизжен) из https://baneks.ru/")
-            await ctx.send(embed=embed)
+            message = await ctx.send(embed=embed)
+
+            emojis = ['🤣', '😐', '💩']
+            for emoji in emojis:
+                await message.add_reaction(emoji)
 
 
 async def setup(bot):
