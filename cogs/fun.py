@@ -1,9 +1,12 @@
 import random
 import discord
+import requests
+
 from discord.ext import commands
+from bs4 import BeautifulSoup as bs
 
 
-class Games(commands.Cog):
+class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -113,5 +116,22 @@ class Games(commands.Cog):
         embed.set_footer(text = footer, icon_url = "https://i.imgur.com/uZIlRnK.png")
         await ctx.send(embed = embed)
 
+    @commands.command(aliases=["anekdot"])
+    async def joke(self, ctx):
+        joke_website = "https://baneks.ru/"
+        joke_number = str(random.randint(1, 1142))
+
+        joke_url = joke_website + joke_number
+        request = requests.get(joke_url)
+        soup = bs(request.text, "html.parser")
+
+        parsed = soup.find_all("article")
+        for jokes in parsed:
+            embed = discord.Embed(color=0x33bbff, title=f"📋 Анекдот #{joke_number}",
+                                  description=jokes.p.text)
+            embed.set_footer(text="Этот даунский анек взят (*скомунизжен) из https://baneks.ru/")
+            await ctx.send(embed=embed)
+
+
 async def setup(bot):
-    await bot.add_cog(Games(bot))
+    await bot.add_cog(Fun(bot))

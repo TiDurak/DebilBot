@@ -22,7 +22,7 @@
 `pip install -r requirements.txt`
 + discord 2.2.2
 + googletrans 3.1.0a0
-+ requests
++ beautifulsoup4
 + yt-dlp
 + PyNaCl
 + rich
@@ -77,3 +77,4 @@ Linux: just install ffmpeg (`sudo apt install ffmpeg`, `sudo apt-get install ffm
 | poll *question* *answer1* *answ2*    | Creates a poll. Minimum 2 answers, max 10. !!!Questions and answers take IN QUOTES |
 | echo *text*                          | Repeats your text                                                                  |
 | slots                                | Slot machine                                                                       |
+| joke                                 | Sends one random joke for you                                                      | 

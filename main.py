@@ -1,4 +1,4 @@
-from cogs import converters, games, help, moderation, information, music, listeners, text
+from cogs import converters, fun, help, moderation, information, music, listeners, text
 from config import settings
 import sys
 import asyncio
@@ -19,8 +19,8 @@ bot = commands.Bot(command_prefix=settings['prefix'], intents=intents)
 asyncio.run(converters.setup(bot))
 print('[blue]converters.py file has been loaded!')
 
-asyncio.run(games.setup(bot))
-print('[blue]games.py file has been loaded!')
+asyncio.run(fun.setup(bot))
+print('[blue]fun.py file has been loaded!')
 
 asyncio.run(help.setup(bot))
 print('[blue]help.py file has been loaded!')

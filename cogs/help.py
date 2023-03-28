@@ -17,7 +17,7 @@ class Help(commands.Cog):
         help_information = ('`avatar` `user_info` `server_info`')
         help_text_channels = ('`translate` `poll` `echo`')
         help_conv = ('`encode_b64` `decode_b64` `encode_binary` `decode_binary`')
-        help_games = ('`slots` `janken`')
+        help_fun = ('`slots` `janken` `joke`')
 
         embed = discord.Embed(color = 0xffcd4c , title = 'Помощь', description = help_text)
         embed.add_field(name = '🎵 ***Музыка*** 🎵', value = help_music, inline=False)
@@ -25,7 +25,7 @@ class Help(commands.Cog):
         embed.add_field(name = 'ℹ️ ***Информация*** ℹ️', value = help_information, inline=False)
         embed.add_field(name = '📝 ***Текстовые*** 📝', value = help_text_channels, inline=False)
         embed.add_field(name = '💱 ***Конвертеры*** 💱', value = help_conv, inline=False)
-        embed.add_field(name = '🎮 ***Недоигры*** 🎮', value = help_games, inline=False)
+        embed.add_field(name = '🎮 ***Веселье*** 🎮', value = help_fun, inline=False)
         embed.set_thumbnail(url = "https://tidurak.github.io/DebilBot_Text.png")
         embed.set_footer(text="Создатель: GamerDisclaimer. https://github.com/TiDurak/DebilBot" , icon_url = "https://tidurak.github.io/gd_round_low.png")
         await ctx.send(embed = embed)
@@ -210,12 +210,20 @@ class Help(commands.Cog):
     @help.command(aliases = ['rockpaperscissors', 'rps'])
     async def janken(self, ctx):
         help_text = (f'```{settings.get("prefix")}janken```\n'
-                      'Классические камень-ножницы-бумага.\n'
-                      'Правила обьяснять не буду, ибо их итак все знают\n'
-                      '(Кстать, *это первая команда с алиасами!*)\n'
-                      'Алиасы: `{settings.get("prefix")}rockpaperscissors`, `{settings.get("prefix")}rps`\n')
+                       'Классические камень-ножницы-бумага.\n'
+                       'Правила обьяснять не буду, ибо их итак все знают\n'
+                       '(Кстать, *это первая команда с алиасами!*)\n'
+                      f'Алиасы: `{settings.get("prefix")}rockpaperscissors`, `{settings.get("prefix")}rps`\n')
         embed = discord.Embed(color = 0xffcd4c , title = 'Камень-Ножницы-Бумага', description = help_text)
         await ctx.send(embed = embed)
+
+    @help.command(aliases=['anekdot'])
+    async def joke(self, ctx):
+        help_text = (f'```{settings.get("prefix")}joke```\n'
+                      'Скидывает тебе, ленивому дураку случайный анек категории б'
+                     f'Алиасы: `{settings.get("prefix")}anekdot`\n')
+        embed = discord.Embed(color=0xffcd4c, title='Анекдот', description=help_text)
+        await ctx.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(Help(bot))
