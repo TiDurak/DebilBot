@@ -3,6 +3,7 @@ from discord.ext import commands
 from googletrans import Translator
 from config import settings
 
+
 class Text(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -26,13 +27,10 @@ class Text(commands.Cog):
                                                  title = "❌ Указан неверный язык!",
                                                  description = warntext))
 
-
     @commands.command()
     async def echo(self, ctx, *, arg):
         await ctx.message.delete()
         await ctx.send(arg)
-
-
 
     @commands.command()
     async def poll(self, ctx, question, *options: str):
@@ -62,6 +60,7 @@ class Text(commands.Cog):
             await react_message.add_reaction(reaction)
         embed.set_footer(text= f'Poll ID: {react_message.id} \nКстати! Вопрос нужно указывать в кавычках!' )
         await react_message.edit(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(Text(bot))

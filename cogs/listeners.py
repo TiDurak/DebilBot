@@ -6,6 +6,7 @@ from discord.ext.commands import CommandNotFound, MissingPermissions, MemberNotF
 from rich import print
 from config import settings
 
+
 class ErrorListener(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -23,12 +24,15 @@ class ErrorListener(commands.Cog):
         else:
             raise error
 
+
 class OnReady(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
+        await self.bot.tree.sync()
+
         print('[b green] Bot is ready! Just type d.help to see all bot commands.')
         while True:
             activity = random.choice(settings['activities'])

@@ -1,11 +1,11 @@
-from cogs import converters, fun, help, moderation, information, music, listeners, text
+from cogs import converters, fun, help, moderation, information, music, listeners, text, slash
 from config import settings
 import sys
 import asyncio
 
 from rich import print
 
-from discord import Intents
+from discord import Intents, app_commands
 from discord.ext import commands
 
 print(f'[b yellow]Python {sys.version}')
@@ -39,6 +39,9 @@ print('[blue]listeners.py file has been loaded!')
 
 asyncio.run(text.setup(bot))
 print('[blue]text.py file has been loaded!')
+
+asyncio.run(slash.setup(bot))
+print('[blue]slash.py file has been loaded!')
 
 print('[b i blue]All cogs has been loaded. Starting...')
 
