@@ -24,7 +24,7 @@ class Slash(commands.Cog):
                            option3="Третий варик",
                            option4="Ну ты понял короче")
     async def poll(self, interaction: discord.Interaction,
-                   question: str, option1: str, option2: str = None,
+                   question: str, option1: str, option2: str = "None",
                    option3: str = "None", option4: str = "None", option5: str = "None",
                    option6: str = "None", option7: str = "None", option8: str = "None"):
 
@@ -83,8 +83,8 @@ class Slash(commands.Cog):
         app_commands.Choice(name="Французский", value="fr"),
         app_commands.Choice(name="Чешский", value="cs"),
     ], is_embed=[
-        app_commands.Choice(name="Вывести в виде окошка", value=1),
-        app_commands.Choice(name="Вывести в обычного текста", value=0),
+        app_commands.Choice(name="Вывести в виде вложения (По умолчанию)", value=1),
+        app_commands.Choice(name="Вывести в виде обычного текста", value=0),
     ])
     async def translate(self, interaction: discord.Interaction,
                         language: app_commands.Choice[str], text: str,
