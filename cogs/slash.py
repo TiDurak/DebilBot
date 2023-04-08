@@ -100,6 +100,22 @@ class Slash(commands.Cog):
         else:
             await interaction.response.send_message(translation.text)
 
+    @app_commands.command(name="kick",
+                          description="Кикает какого-то челика")
+    @app_commands.default_permissions(kick_members=True)
+    async def kick(self, interaction: discord.Interaction,
+                   member: discord.Member, reason: str = "Не указано"):
+        await member.kick(reason=reason)
+        await interaction.response.send_message(f"Изгоняем участника {member} по причине: {reason}")
+
+    @app_commands.command(name="ban",
+                          description="Банит какого-то левого пидора")
+    @app_commands.default_permissions(ban_members=True)
+    async def ban(self, interaction: discord.Interaction,
+                   member: discord.Member, reason: str = "Не указано"):
+        await member.ban(reason=reason)
+        await interaction.response.send_message(f"еБаним участника {member} по причине: {reason}")
+
 
 async def setup(bot):
     await bot.add_cog(Slash(bot))
