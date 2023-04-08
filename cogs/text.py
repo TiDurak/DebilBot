@@ -10,6 +10,8 @@ class Text(commands.Cog):
 
     @commands.command()
     async def translate(self, ctx, lang, *, text):
+        """Переводит текст"""
+
         warntext = ('d.translate `ru` `Ваш текст`\n\n\n'
                     '`ru` является языком, на который нужно переводить\n'
                     'Вместо `ru` может быть:\n'
@@ -18,22 +20,25 @@ class Text(commands.Cog):
             translator = Translator()
             translation = translator.translate(text, dest=lang)
 
-            embed = discord.Embed(color = 0xffcd4c , title = f"{ctx.author} :: DebilBot Translator")
-            embed.add_field(name = "Исходный Текст", value = text, inline = False)
-            embed.add_field(name = "Перевод", value = translation.text, inline = False)
-            await ctx.send(embed = embed)
+            embed = discord.Embed(color=0xffcd4c, title=f"{ctx.author} :: DebilBot Translator")
+            embed.add_field(name="Исходный Текст", value=text, inline=False)
+            embed.add_field(name="Перевод", value=translation.text, inline=False)
+            await ctx.send(embed=embed)
         except ValueError:
-            await ctx.send(embed = discord.Embed(color = 0xffcd4c,
-                                                 title = "❌ Указан неверный язык!",
-                                                 description = warntext))
+            await ctx.send(embed=discord.Embed(color=0xffcd4c,
+                                               title="❌ Указан неверный язык!",
+                                               description=warntext))
 
     @commands.command()
     async def echo(self, ctx, *, arg):
+        """Повторяет сообщение за тобой"""
+
         await ctx.message.delete()
         await ctx.send(arg)
 
     @commands.command()
     async def poll(self, ctx, question, *options: str):
+        """Устраивает голосование/опрос. Рекомендуется использовать /poll"""
         lowercase = [opts.lower() for opts in options]
 
         await ctx.message.delete()
@@ -53,12 +58,14 @@ class Text(commands.Cog):
         for x, option in enumerate(options):
             description += '\n{} {}'.format(reactions[x], option)
 
-        embed = discord.Embed(color = 0xffcd4c , title = f'{self.bot.get_emoji(settings["emojis"]["stonks"])} {ctx.message.author}: {question}', description=''.join(description))
-        
+        embed = discord.Embed(color=0xffcd4c,
+                              title=f'{self.bot.get_emoji(settings["emojis"]["stonks"])} {ctx.message.author}: {question}',
+                              description=''.join(description))
+
         react_message = await ctx.send(embed=embed)
         for reaction in reactions[:len(options)]:
             await react_message.add_reaction(reaction)
-        embed.set_footer(text= f'Poll ID: {react_message.id} \nКстати! Вопрос нужно указывать в кавычках!' )
+        embed.set_footer(text=f'Poll ID: {react_message.id} \nКстати! Вопрос нужно указывать в кавычках!')
         await react_message.edit(embed=embed)
 
 

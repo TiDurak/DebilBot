@@ -5,10 +5,8 @@ from discord.ext import commands
 from yt_dlp import YoutubeDL, utils
 from config import settings
 
-# YTDL and FFmpeg configs
-YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True', 'quiet': True}
+YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True', 'quiet': True}
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-# YTDL and FFmpeg configs
 
 
 class Queue:
@@ -61,9 +59,9 @@ class Music(commands.Cog):
     async def __connect(self, ctx):
         try:
             if not ctx.message.author.voice:
-                await ctx.send('❌ **ЛОХ ТУПОЙ!** Сначало подключись к голосовому чату, а потом мне мозги !@?%#&')
+                await ctx.send('❌ **ЛОХ ТУПОЙ!** Сначала подключись к голосовому чату, а потом мне мозги !@?%#&')
                 return
-            
+
             voice_channel = ctx.message.author.voice.channel
             self.__vc = await voice_channel.connect()
         except:
@@ -120,25 +118,27 @@ class Music(commands.Cog):
 
         @discord.ui.button(style=discord.ButtonStyle.blurple, label='Пропустить', emoji='⏭️')
         async def button_skip(self, interaction: discord.Interaction, button: discord.ui.Button):
-            await interaction.response.send_message("Эту песню мы попускаем, потому что гивно", tts=True, delete_after=8)
+            await interaction.response.send_message("Эту песню мы попускаем, потому что гивно", tts=True,
+                                                    delete_after=8)
             self.__skip(self.__ctx)
 
     async def __play(self, context, url, video):
-        self.__vc.play(discord.FFmpegPCMAudio(executable=settings['path_to_ffmpeg'], source = url, **FFMPEG_OPTIONS), after = lambda e: self.__skip(context = context))
+        self.__vc.play(discord.FFmpegPCMAudio(executable=settings['path_to_ffmpeg'], source=url, **FFMPEG_OPTIONS),
+                       after=lambda e: self.__skip(context=context))
         duration = video.get("duration")
-        embed = (discord.Embed(title = f'{self.bot.get_emoji(settings["emojis"]["youtube"])} Играет',
-                               description = f"**{video.get('title')}**",
-                               color = 0xff2a2a)
-                .add_field(name = '⌛ Продолжительность', value = datetime.timedelta(seconds=duration))
-                .add_field(name = '🙃 Запросил', value = context.author.mention)
-                .set_thumbnail(url = video.get('thumbnail'))  )
-        await context.send(embed = embed, view=self.PlayerButtons(self.__vc,
-                                                                  context,
-                                                                  self.__leave,
-                                                                  self.__stop,
-                                                                  self.__pause,
-                                                                  self.__resume,
-                                                                  self.__skip))
+        embed = (discord.Embed(title=f'{self.bot.get_emoji(settings["emojis"]["youtube"])} Играет',
+                               description=f"**{video.get('title')}**",
+                               color=0xff2a2a)
+                 .add_field(name='⌛ Продолжительность', value=datetime.timedelta(seconds=duration))
+                 .add_field(name='🙃 Запросил', value=context.author.mention)
+                 .set_thumbnail(url=video.get('thumbnail')))
+        await context.send(embed=embed, view=self.PlayerButtons(self.__vc,
+                                                                context,
+                                                                self.__leave,
+                                                                self.__stop,
+                                                                self.__pause,
+                                                                self.__resume,
+                                                                self.__skip))
 
         title = video.get('title')
         self.__queue.set_playing_now(title)
@@ -151,7 +151,8 @@ class Music(commands.Cog):
             url = self.__get_url(next_track)
             asyncio.run_coroutine_threadsafe(self.__play(context, url, next_track), self.bot.loop)
         else:
-            asyncio.run_coroutine_threadsafe(context.send("Список воспроизведения пуст.", delete_after=3), self.bot.loop)
+            asyncio.run_coroutine_threadsafe(context.send("Список воспроизведения пуст.", delete_after=3),
+                                             self.bot.loop)
 
     def __stop(self, context):
         self.__queue.clear()
@@ -167,7 +168,7 @@ class Music(commands.Cog):
     def __pause(self, context):
         if not self.__vc.is_paused():
             self.__vc.pause()
-        
+
     def __resume(self, context):
         if not not self.__vc.is_playing():
             self.__vc.resume()
@@ -177,6 +178,7 @@ class Music(commands.Cog):
 
     @commands.command()
     async def play(self, ctx, *, arg):
+        """Воспроизводит песню с YouTube, или добавляет её в список, если сейчас играет другая песня"""
         await self.__connect(ctx)
         try:
             vid = self.__extract(arg)
@@ -185,7 +187,7 @@ class Music(commands.Cog):
                            "КАК Я МОГУ ТЕБЕ ЭТУ ХЕРЕСЬ НАЙТИ?!!??!?!?!?1!!7!?!")
             await self.__vc.disconnect()
             return
-            
+
         if not self.__vc.is_playing():
             url = self.__get_url(vid)
             await self.__play(ctx, url, vid)
@@ -195,6 +197,8 @@ class Music(commands.Cog):
 
     @commands.command()
     async def skip(self, ctx):
+        """Пропускает текущую песню"""
+
         try:
             self.__skip(ctx)
             await ctx.send("⏭️ Скипаю")
@@ -207,36 +211,39 @@ class Music(commands.Cog):
 
     @commands.command(name="queue")
     async def queue_embed(self, ctx):
+        """Показывает список следующих песен"""
+
         now = self.__queue.get_playing_now()
         if now != None:
-            embed = (discord.Embed(title = "📜 Список Воспроизведения", color = 0xf0cd4f))
-            embed.add_field(name = "▶️ Сейчас Играет", value = now, inline = False)
+            embed = (discord.Embed(title="📜 Список Воспроизведения", color=0xf0cd4f))
+            embed.add_field(name="▶️ Сейчас Играет", value=now, inline=False)
             for i in range(self.__queue.length()):
                 video = self.__queue.get_by_id(i)
-                embed.add_field(name = i+1, value = video.get('title'), inline = False)
-            await ctx.send(embed = embed)
+                embed.add_field(name=i + 1, value=video.get('title'), inline=False)
+            await ctx.send(embed=embed)
         else:
-            embed = (discord.Embed(title = "📜 Список Воспроизведения", 
-                                   color = 0xf0cd4f,
-                                   description = "Список воспроизведения пуст."))
-            await ctx.send(embed = embed)
-        
-
+            embed = (discord.Embed(title="📜 Список Воспроизведения",
+                                   color=0xf0cd4f,
+                                   description="Список воспроизведения пуст."))
+            await ctx.send(embed=embed)
 
     @commands.command()
     async def leave(self, ctx):
+        """Кикает бота из голосового чата"""
+
         try:
             self.__leave(ctx)
             await ctx.send('🚪 Бот вышел из голосового чата')
-        except AttributeError: 
+        except AttributeError:
             await ctx.message.add_reaction("🤡")
             await ctx.send(f'{self.bot.get_emoji(settings["emojis"]["wuuut"])} Опять нашёлся умник, '
                            f'который пытается обхитрить систему, и хочет выгнать бота из голосового чата, '
                            f'который даже к нему не подключен...')
-            
 
     @commands.command()
     async def stop(self, ctx):
+        """Останавливает текущую песню, и очищает список проигрывания"""
+
         try:
             if self.__vc.is_playing():
                 self.__stop(ctx)
@@ -245,13 +252,16 @@ class Music(commands.Cog):
                 await ctx.message.add_reaction("🤡")
                 await ctx.send(f"ТЫЖДУБИНА. Я не могу остановить музон, которого не существует. "
                                f"Фейспалм всей толпой, ребятки. Накидайте ему реакций клоуна")
-        except AttributeError: 
+        except AttributeError:
             await ctx.message.add_reaction("🤡")
-            await ctx.send(f"{self.bot.get_emoji(settings['emojis']['wuuut'])} ТЫЖДУБИНА. Я не могу остановить музон, которого не существует. "
-                           f"Фейспалм всей толпой, ребятки. Накидайте ему реакций клоуна")
+            await ctx.send(
+                f'{self.bot.get_emoji(settings["emojis"]["wuuut"])} ТЫЖДУБИНА. Я не могу остановить музон, которого не существует. '
+                f'Фейспалм всей толпой, ребятки. Накидайте ему реакций клоуна')
 
     @commands.command()
     async def pause(self, ctx):
+        """Ставит песню на паузу"""
+
         try:
             if not self.__vc.is_paused():
                 self.__pause(ctx)
@@ -266,6 +276,8 @@ class Music(commands.Cog):
 
     @commands.command()
     async def resume(self, ctx):
+        """То же самое, что и пауза, только наоборот (ты лох, и докажи что нет)"""
+
         try:
             if self.__vc.is_paused():
                 self.__resume(ctx)

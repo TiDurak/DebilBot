@@ -40,27 +40,31 @@ class Fun(commands.Cog):
             if victory:
                 await interaction.response.edit_message(content=None,
                                                         view=None,
-                                                        embed=discord.Embed(color=self.__embed.color,
-                                                                            title=self.__embed.title,
-                                                                            description=f"{self.__embed.description} \n"
-                                                                                        f"Ты выбрал `{self.__user_choice}`, а я выбрал `{answer}` \n"
-                                                                                        "Впервые в своей жизни ты победил... УРАААА!!!!11!1! 🎉🥳🥳"))
+                                                        embed=discord.Embed(
+                                                            color=self.__embed.color,
+                                                            title=self.__embed.title,
+                                                            description=f"{self.__embed.description} \n"
+                                                                        f"Ты выбрал `{self.__user_choice}`, а я выбрал `{answer}` \n"
+                                                                        "Впервые в своей жизни ты победил... УРАААА!!!!11!1! 🎉🥳🥳"))
             elif not victory and victory is not None:
                 await interaction.response.edit_message(content=None,
                                                         view=None,
-                                                        embed=discord.Embed(color=self.__embed.color,
-                                                                            title=self.__embed.title,
-                                                                            description=f"{self.__embed.description} \n"
-                                                                                        f"Ты выбрал `{self.__user_choice}`, а я выбрал `{answer}` \n"
-                                                                                        "Ну да. Ты просрал, как всегда, АХАААХАХХААЗЗАЗА 🤪🤣"))
+                                                        embed=discord.Embed(
+                                                            color=self.__embed.color,
+                                                            title=self.__embed.title,
+                                                            description=f"{self.__embed.description} \n"
+                                                                        f"Ты выбрал `{self.__user_choice}`, а я выбрал `{answer}` \n"
+                                                                        "Ну да. Ты просрал, как всегда, АХАААХАХХААЗЗАЗА 🤪🤣"))
 
             else:
                 await interaction.response.edit_message(content=None,
                                                         view=None,
-                                                        embed=discord.Embed(color=self.__embed.color, title=self.__embed.title,
-                                                                            description=f"{self.__embed.description} \n"
-                                                                                        f"Ты выбрал `{self.__user_choice}`, а я выбрал `{answer}` \n"
-                                                                                        "Ничья, ёпта. Го ещё раз, придурок малолетний! 😐"))
+                                                        embed=discord.Embed(
+                                                            color=self.__embed.color,
+                                                            title=self.__embed.title,
+                                                            description=f"{self.__embed.description} \n"
+                                                                        f"Ты выбрал `{self.__user_choice}`, а я выбрал `{answer}` \n"
+                                                                        "Ничья, ёпта. Го ещё раз, придурок малолетний! 😐"))
 
         @discord.ui.button(label="Камень", emoji="🗿", style=discord.ButtonStyle.blurple)
         async def rock_button(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -79,12 +83,15 @@ class Fun(commands.Cog):
 
     @commands.command(aliases=['rps', 'rockpaperscissors'])
     async def janken(self, ctx):
+        """Камень ножницы бумага! ЪУЪ Бляд!"""
         description = 'Сыграй со мной в камень ножницы бумагу! выбери один из вариантов ниже:'
-        embed = discord.Embed(color=0xffcd4c, title=f'{ctx.message.author}: Камень Ножницы Бумага', description=description)
+        embed = discord.Embed(color=0xffcd4c, title=f'{ctx.message.author}: Камень Ножницы Бумага',
+                              description=description)
         await ctx.send(embed=embed, view=self.JankenButtons(embed=embed))
 
     @commands.command()
     async def slots(self, ctx):
+        """Азино три топора короче"""
         author_id = str(ctx.author.id)
 
         symbols = ['🍒', '🔔', '7️⃣', '👑', '☠️']
@@ -92,7 +99,7 @@ class Fun(commands.Cog):
         slot = [0, 1, 2]
 
         for i in range(3):
-            slot[i] = symbols[random.randint(0,3)]
+            slot[i] = symbols[random.randint(0, 3)]
 
         is_same = True if slot[0] == slot[1] == slot[2] else False
 
@@ -112,12 +119,14 @@ class Fun(commands.Cog):
             footer = '+ 1 500 баксов на ваш счёт'
         else:
             footer = 'Ничего('
-        embed = discord.Embed(color = 0x36c600, title = '🎰 Slots Azino777', description = str(slot[0]) + str(slot[1]) + str(slot[2]))
-        embed.set_footer(text = footer, icon_url = "https://i.imgur.com/uZIlRnK.png")
-        await ctx.send(embed = embed)
+        embed = discord.Embed(color=0x36c600, title='🎰 Slots Azino777',
+                              description=str(slot[0]) + str(slot[1]) + str(slot[2]))
+        embed.set_footer(text=footer, icon_url="https://i.imgur.com/uZIlRnK.png")
+        await ctx.send(embed=embed)
 
     @commands.command(aliases=["anekdot"])
     async def joke(self, ctx):
+        """Парсит анекдот из сайта, и делится им с тобой, ибо ты даун, не можешь сам его загуглить"""
         joke_website = "https://baneks.ru/"
         joke_number = str(random.randint(1, 1142))
 
