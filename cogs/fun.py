@@ -138,10 +138,10 @@ class Fun(commands.Cog):
         for jokes in parsed:
             embed = discord.Embed(color=0x33bbff, title=f"📋 Анекдот #{joke_number}",
                                   description=jokes.p.text)
-            embed.set_footer(text="Этот даунский анек взят (*скомунизжен) из https://baneks.ru/")
+            embed.set_footer(text="Рекомендуется использовать /anekdot ввиду большего функционала и удобства")
             message = await ctx.send(embed=embed)
 
-            emojis = ['🤣', '😐', '💩']
+            emojis = ['🤣', '😐', '💩', '🪗']
             for emoji in emojis:
                 await message.add_reaction(emoji)
 

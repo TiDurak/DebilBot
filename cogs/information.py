@@ -12,9 +12,9 @@ class Information(commands.Cog):
         """Показывает аватарку упомянутого персонажа (если никого не указывать, то показывает твоё ебало)"""
 
         if member is None:
-            user_avatar_url = ctx.author.avatar_url
+            user_avatar_url = ctx.author.avatar.url
         else:
-            user_avatar_url = member.avatar_url
+            user_avatar_url = member.avatar.url
         await ctx.send(user_avatar_url)
 
     @commands.command(aliases=['user'])
@@ -31,8 +31,8 @@ class Information(commands.Cog):
         embed.add_field(name='Бот', value=is_bot, inline=False)
         embed.add_field(name='Зашёл На Сервер', value=user.joined_at.strftime("%#d %B %Y, %H:%M"))
         embed.add_field(name='Дата Регистрации', value=user.created_at.strftime("%#d %B %Y, %H:%M"))
-        embed.set_thumbnail(url=user.avatar_url)
-        embed.set_footer(text=f"Запросил {ctx.author}", icon_url=ctx.author.avatar_url)
+        embed.set_thumbnail(url=user.avatar.url)
+        embed.set_footer(text=f"Запросил {ctx.author}", icon_url=ctx.author.avatar.url)
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["server", "guild", "guild_info"])
@@ -45,7 +45,7 @@ class Information(commands.Cog):
         embed.add_field(name='Число Участников', value=ctx.guild.member_count, inline=False)
         embed.add_field(name='Дата Содания Сервера', value=ctx.guild.created_at.strftime("%#d %B %Y, %H:%M"))
         embed.set_thumbnail(url=ctx.guild.icon_url)
-        embed.set_footer(text=f"Запросил {ctx.author}", icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f"Запросил {ctx.author}", icon_url=ctx.author.avatar.url)
         await ctx.send(embed=embed)
 
 
