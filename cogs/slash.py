@@ -105,6 +105,22 @@ class Slash(commands.Cog):
         else:
             await interaction.response.send_message(translation.text)
 
+    @app_commands.command(name="clear", description="Очищает несколько сообщений")
+    @app_commands.default_permissions(manage_messages=True)
+    @app_commands.describe(amount="Каличества саапщений, каторие я удолю",
+                           member="Я буду чистеть сапщение только этава челавека")
+    async def clear(self, interaction: discord.Interaction, amount: app_commands.Range[int, 1, 500], member: discord.Member = None):
+        channel = interaction.channel
+
+        def check_(m):
+            return m.author == member
+
+        if not member:
+            await channel.purge(limit=amount)
+        else:
+            await channel.purge(limit=amount, check=check_)
+        await interaction.response.send_message(f"{self.bot.get_emoji(settings['emojis']['squid_cleaning'])} Очищено {amount} сообщений")
+
     @app_commands.command(name="kick",
                           description="Кикает какого-то челика")
     @app_commands.default_permissions(kick_members=True)
