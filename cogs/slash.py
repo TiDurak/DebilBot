@@ -140,6 +140,7 @@ class Slash(commands.Cog):
     async def hash(self, interaction: discord.Interaction,
                    method: app_commands.Choice[str],
                    text: str):
+        hash_object = None
         if method.value == "sha1":
             hash_object = hashlib.sha1(text.encode())
         if method.value == "sha256":
@@ -152,7 +153,7 @@ class Slash(commands.Cog):
 
         embed = discord.Embed(color=0xffcd4c, title="Хеширатор блэт")
         embed.add_field(name="Исходный Текст", value=text, inline=False)
-        embed.add_field(name=f"Метод Хеширования: {method.value.upper()}", value=hex_dig, inline=False)
+        embed.add_field(name=f"Метод Хеширования: {method.name}", value=hex_dig, inline=False)
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="translate", description="Переводит текст, ибо ты даун, "
