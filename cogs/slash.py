@@ -1,5 +1,6 @@
 import random
 import requests
+import hashlib
 from config import settings
 
 import discord
@@ -63,6 +64,28 @@ class Slash(commands.Cog):
         react_message = await interaction.original_response()
         for reaction in reactions[:len(options)]:
             await react_message.add_reaction(reaction)
+
+    @app_commands.command(name="hash",
+                          description="хеширует твой недотекст")
+    @app_commands.describe(method="Метод хеширования",
+                           text="Твой недотекст нахуй")
+    @app_commands.choices(method=[
+        app_commands.Choice(name="SHA256", value="sha256"),
+        app_commands.Choice(name="MD5", value="md5")
+    ])
+    async def hash(self, interaction: discord.Interaction,
+                   method: app_commands.Choice[str],
+                   text: str):
+        if method.value == "sha256":
+            hash_object = hashlib.sha256(text.encode())
+        elif method.value == "md5":
+            hash_object = hashlib.md5(text.encode())
+        hex_dig = hash_object.hexdigest()
+
+        embed = discord.Embed(color=0xffcd4c, title="Хеширатор блэт")
+        embed.add_field(name="Исходный Текст", value=text, inline=False)
+        embed.add_field(name=f"Метод Хеширования: {method.value.upper()}", value=hex_dig, inline=False)
+        await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="translate", description="Переводит текст, ибо ты даун, "
                                                         "не можешь перевести сам")
