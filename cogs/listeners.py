@@ -35,14 +35,11 @@ class OnReady(commands.Cog):
 
         print('[b green]Bot is ready! Just type d.help to see all bot commands.')
         while True:
-            try:
-                activity = random.choice(settings['activities'])
-                await self.bot.change_presence(status=discord.Status.online, activity=activity)
-                await asyncio.sleep(5)
-                await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(f"{settings.get('prefix')}help"))
-                await asyncio.sleep(5)
-            except ConnectionRefusedError:
-                print("[yellow]ConnectionResetError. All is ok, you can no pay attention for that")
+            activity = random.choice(settings['activities'])
+            await self.bot.change_presence(status=discord.Status.online, activity=activity)
+            await asyncio.sleep(5)
+            await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(f"{settings.get('prefix')}help"))
+            await asyncio.sleep(5)
 
 
 async def setup(bot):
