@@ -70,14 +70,21 @@ class Slash(commands.Cog):
     @app_commands.describe(method="Метод хеширования",
                            text="Твой недотекст нахуй")
     @app_commands.choices(method=[
+        app_commands.Choice(name="SHA1", value="sha1"),
         app_commands.Choice(name="SHA256", value="sha256"),
-        app_commands.Choice(name="MD5", value="md5")
+        app_commands.Choice(name="SHA512", value="sha512"),
+        app_commands.Choice(name="MD5", value="md5"),
+
     ])
     async def hash(self, interaction: discord.Interaction,
                    method: app_commands.Choice[str],
                    text: str):
+        if method.value == "sha1":
+            hash_object = hashlib.sha1(text.encode())
         if method.value == "sha256":
             hash_object = hashlib.sha256(text.encode())
+        if method.value == "sha512":
+            hash_object = hashlib.sha512(text.encode())
         elif method.value == "md5":
             hash_object = hashlib.md5(text.encode())
         hex_dig = hash_object.hexdigest()
