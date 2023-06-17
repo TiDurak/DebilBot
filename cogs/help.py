@@ -22,15 +22,16 @@ class HelpCommand(commands.MinimalHelpCommand):
             embed = discord.Embed(color=0xffcd4c, title='Помощь',
                                   description=page)
             embed.set_thumbnail(url="https://tidurak.github.io/DebilBot_Text.png")
-            embed.set_footer(text="Создатель: GamerDisclaimer. https://github.com/TiDurak/DebilBot",
+            embed.set_footer(text="Создатель: @gdisclaimer. https://github.com/TiDurak/DebilBot",
                              icon_url="https://tidurak.github.io/gd_round_low.png")
             await destination.send(embed=embed)
 
     def get_opening_note(self) -> str:
         return (
             f"**📙 Префикс: `{settings.get('prefix')}`**\n"
-            "📙 `help` для вывода списка команд\n"
-            "📙 `help` `название команды` для подробного описания команды\n")
+            f"📙 `{settings.get('prefix')}help` для вывода списка команд\n"
+            f"📙 `{settings.get('prefix')}help` `название команды` для подробного описания команды\n"
+            "🍄 Ещё вы можете использовать слэш команды (`/`), что я вам настоятельно рекомендую")
 
 
 async def setup(bot):
