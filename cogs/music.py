@@ -67,23 +67,18 @@ class Music(commands.Cog):
         except:
             pass
 
-    def __extract(self, arg):
+    def __get_info(self, arg):
         video = None
         with YoutubeDL(YDL_OPTIONS) as ydl:
             # noinspection PyExceptClausesOrder
             try:
-                video = ydl.extract_info(f"ytsearch:{arg}", download=False)['entries'][0]
+                video = ydl.extract_info(f"ytsearch3:{arg}", download=False)['entries']
                 return video
             except utils.DownloadError:  # If not found video by basic searching
                 video = ydl.extract_info(arg, download=False)
                 return video
             except utils.DownloadError:  # If url was not found
                 raise IndexError()
-
-    def __get_url(self, extracted):
-        with YoutubeDL(YDL_OPTIONS) as ydl:
-            url = extracted['url']
-            return url
 
     # noinspection PyUnresolvedReferences
     class PlayerButtons(discord.ui.View):
@@ -99,39 +94,55 @@ class Music(commands.Cog):
 
         @discord.ui.button(style=discord.ButtonStyle.red, label='Выход', emoji='🚪')
         async def button_leave(self, interaction: discord.Interaction, button: discord.ui.Button):
-            await interaction.response.send_message("Хорошо блин, ухожу, тупой ты дебил", tts=True, delete_after=8)
+            await interaction.response.send_message("Хорошо блин, ухожу, тупой ты дебил",
+                                                    tts=True,
+                                                    delete_after=8)
             self.__leave(self.__ctx)
 
         @discord.ui.button(style=discord.ButtonStyle.red, label='Стоп', emoji='🛑')
         async def button_stop(self, interaction: discord.Interaction, button: discord.ui.Button):
-            await interaction.response.send_message("Хорошо, тормознул", tts=True, delete_after=8)
+            await interaction.response.send_message("Хорошо, тормознул",
+                                                    tts=True,
+                                                    delete_after=8)
             self.__stop(self.__ctx)
 
         @discord.ui.button(style=discord.ButtonStyle.blurple, label='Пауза / Продолжить', emoji='⏯️')
         async def button_pause_resume(self, interaction: discord.Interaction, button: discord.ui.Button):
             if self.__vc.is_playing():
-                await interaction.response.send_message("Усё, усё, пауза", tts=True, delete_after=8)
+                await interaction.response.send_message("Усё, усё, пауза",
+                                                        tts=True,
+                                                        delete_after=8)
                 self.__vc.pause()
             elif self.__vc.is_paused():
-                await interaction.response.send_message("Играем дальше, значит. Ты задолбал", tts=True, delete_after=8)
+                await interaction.response.send_message("Играем дальше, значит. Ты задолбал",
+                                                        tts=True,
+                                                        delete_after=8)
                 self.__vc.resume()
 
         @discord.ui.button(style=discord.ButtonStyle.blurple, label='Пропустить', emoji='⏭️')
         async def button_skip(self, interaction: discord.Interaction, button: discord.ui.Button):
-            await interaction.response.send_message("Эту песню мы попускаем, потому что гивно", tts=True,
+            await interaction.response.send_message("Эту песню мы попускаем, потому что гивно",
+                                                    tts=True,
                                                     delete_after=8)
             self.__skip(self.__ctx)
 
-    async def __play(self, context, url, video):
-        self.__vc.play(discord.FFmpegPCMAudio(executable=settings['path_to_ffmpeg'], source=url, **FFMPEG_OPTIONS),
+    async def __play(self, context, video):
+        self.__vc.play(discord.FFmpegPCMAudio(executable=settings['path_to_ffmpeg'],
+                                              source=video.get("url"), **FFMPEG_OPTIONS),
                        after=lambda e: self.__skip(context=context))
+
         duration = video.get("duration")
-        embed = (discord.Embed(title=f'{self.bot.get_emoji(settings["emojis"]["youtube"])} Играет',
+        upload_date = video.get("upload_date")
+        upload_date = f"{upload_date[:4]}.{upload_date[4:6]}.{upload_date[6:]}"
+        embed = (discord.Embed(title=f'{self.bot.get_emoji(settings["emojis"]["youtube"])} Щас шпилит',
                                description=f"**{video.get('title')}**",
                                color=0xff2a2a)
-                 .add_field(name='⌛ Продолжительность', value=datetime.timedelta(seconds=duration))
-                 .add_field(name='🙃 Запросил', value=context.author.mention)
-                 .set_thumbnail(url=video.get('thumbnail')))
+                 .add_field(name="👤 Автор", value=video.get("uploader"), inline=False)
+                 .add_field(name="⌛ Длительность", value=datetime.timedelta(seconds=duration))
+                 .add_field(name="📅 Дата Загрузки", value=upload_date)
+                 .add_field(name="👍 Кол-во Лайков", value=video.get('like_count', 'Скрыто'))
+                 .add_field(name="🔔 Запросил", value=context.author.mention, inline=False)
+                 .set_thumbnail(url=video.get("thumbnail")))
         await context.send(embed=embed, view=self.PlayerButtons(self.__vc,
                                                                 context,
                                                                 self.__leave,
@@ -142,14 +153,16 @@ class Music(commands.Cog):
 
         title = video.get('title')
         self.__queue.set_playing_now(title)
+        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=title))
 
     def __skip(self, context):
+        await self.bot.change_presence(status=discord.Status.online,
+                                       activity=discord.Game(f"{settings.get('prefix')}help"))
         if self.__vc.is_playing():
             self.__vc.pause()
         if not self.__queue.is_empty():
             next_track = self.__queue.play_next()
-            url = self.__get_url(next_track)
-            asyncio.run_coroutine_threadsafe(self.__play(context, url, next_track), self.bot.loop)
+            asyncio.run_coroutine_threadsafe(self.__play(context, next_track), self.bot.loop)
         else:
             asyncio.run_coroutine_threadsafe(context.send("Список воспроизведения пуст.", delete_after=3),
                                              self.bot.loop)
@@ -176,12 +189,50 @@ class Music(commands.Cog):
             asyncio.run_coroutine_threadsafe(context.send("🤪 Лол, я не на паузе, "
                                                           "зачем ты ввёл эту команду?!"), self.bot.loop)
 
+    class SelectSongButtons(discord.ui.View):
+        def __init__(self):
+            super().__init__(timeout=30)
+            self.value = None
+
+        @discord.ui.button(style=discord.ButtonStyle.blurple, emoji='1️⃣')
+        async def button_first(self, interaction: discord.Interaction, button: discord.ui.Button):
+            await interaction.response.send_message("Харош, выбрана первая песня")
+            self.value = 0
+            self.stop()
+
+        @discord.ui.button(style=discord.ButtonStyle.blurple, emoji='2️⃣')
+        async def button_second(self, interaction: discord.Interaction, button: discord.ui.Button):
+            await interaction.response.send_message("Окей, будет тебе вторая песня")
+            self.value = 1
+            self.stop()
+
+        @discord.ui.button(style=discord.ButtonStyle.blurple, emoji='3️⃣')
+        async def button_third(self, interaction: discord.Interaction, button: discord.ui.Button):
+            await interaction.response.send_message("Лана, врубаю третью")
+            self.value = 2
+            self.stop()
+
     @commands.command()
     async def play(self, ctx, *, arg):
         """Воспроизводит песню с YouTube, или добавляет её в список, если сейчас играет другая песня"""
+        reply = await ctx.send(f"Ищу песню по запросу **\"{arg}\"**, подождите немного")
+
+        videos = self.__get_info(arg)
+        view = self.SelectSongButtons()
+
+        embed = (discord.Embed(title=f"🔍 Результаты поиска по запросу \"{arg}\"", color=0xf0cd4f))
+        for i in range(3):
+            upload_date = f"{videos[i]['upload_date'][:4]}.{videos[i]['upload_date'][4:6]}.{videos[i]['upload_date'][6:]}"
+            embed.add_field(name=f"{i+1}. {videos[i].get('title')}",
+                            value=f"👤 {videos[i]['uploader']} \n"
+                                  f"⏳ {datetime.timedelta(seconds=videos[i]['duration'])} \n"
+                                  f"📅 {upload_date}",
+                            inline=False)
+        await reply.edit(content="", embed=embed, view=view)
+        await view.wait()
         await self.__connect(ctx)
         try:
-            vid = self.__extract(arg)
+            vid = videos[view.value]
         except IndexError:
             await ctx.send(":x: Ты дебилка тупая! ЧТО ЗА ГОВНО ТЫ ВЫСРАЛ?! "
                            "КАК Я МОГУ ТЕБЕ ЭТУ ХЕРЕСЬ НАЙТИ?!!??!?!?!?1!!7!?!")
@@ -189,8 +240,7 @@ class Music(commands.Cog):
             return
 
         if not self.__vc.is_playing():
-            url = self.__get_url(vid)
-            await self.__play(ctx, url, vid)
+            await self.__play(ctx, vid)
         else:
             self.__queue.add_track(vid)
             await ctx.send(f"**{vid.get('title')}** добавлен в список, бля.")
@@ -219,7 +269,7 @@ class Music(commands.Cog):
             embed.add_field(name="▶️ Сейчас Играет", value=now, inline=False)
             for i in range(self.__queue.length()):
                 video = self.__queue.get_by_id(i)
-                embed.add_field(name=i + 1, value=video.get('title'), inline=False)
+                embed.add_field(name=f"{i+1} по списку", value=video.get('title'), inline=False)
             await ctx.send(embed=embed)
         else:
             embed = (discord.Embed(title="📜 Список Воспроизведения",
