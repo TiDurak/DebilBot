@@ -140,7 +140,7 @@ class Music(commands.Cog):
                  .add_field(name="👤 Автор", value=video.get("uploader"), inline=False)
                  .add_field(name="⌛ Длительность", value=datetime.timedelta(seconds=duration))
                  .add_field(name="📅 Дата Загрузки", value=upload_date)
-                 .add_field(name="👍 Кол-во Лайков", value=video.get('like_count', 'Скрыто'))
+                 .add_field(name="👍 Кол-во Лайков", value=video.get('like_count', 'Скрыто'), inline=False)
                  .add_field(name="🔔 Запросил", value=context.author.mention, inline=False)
                  .set_thumbnail(url=video.get("thumbnail")))
         await context.send(embed=embed, view=self.PlayerButtons(self.__vc,
