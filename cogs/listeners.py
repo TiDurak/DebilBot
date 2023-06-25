@@ -34,12 +34,7 @@ class OnReady(commands.Cog):
         await self.bot.tree.sync()
 
         print('[b green]Bot is ready! Just type d.help to see all bot commands.')
-        while True:
-            activity = random.choice(settings['activities'])
-            await self.bot.change_presence(status=discord.Status.online, activity=activity)
-            await asyncio.sleep(5)
-            await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(f"{settings.get('prefix')}help"))
-            await asyncio.sleep(5)
+        await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(f"{settings.get('prefix')}help"))
 
 
 async def setup(bot):
