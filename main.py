@@ -1,4 +1,5 @@
-from cogs import converters, fun, help, moderation, information, music, listeners, text, slash
+from cogs import converters, fun, help, moderation, information, music, listeners, text
+from cogs.slash import s_fun, s_text, s_moderation, s_converters
 from config import settings
 import sys
 import asyncio
@@ -24,7 +25,10 @@ asyncio.run(information.setup(bot))
 asyncio.run(music.setup(bot, intents))
 asyncio.run(listeners.setup(bot))
 asyncio.run(text.setup(bot))
-asyncio.run(slash.setup(bot))
+asyncio.run(s_fun.setup(bot))
+asyncio.run(s_text.setup(bot))
+asyncio.run(s_moderation.setup(bot))
+asyncio.run(s_converters.setup(bot))
 
 print("[b i blue]Starting a bot. It may take a few seconds")
 
