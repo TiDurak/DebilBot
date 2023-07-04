@@ -52,7 +52,7 @@ class SText(commands.Cog):
             description += '\n{} {}'.format(reactions[x], option)
 
         embed = discord.Embed(color=0xffcd4c,
-                              title=f'{self.bot.get_emoji(settings["emojis"]["stonks"])} {interaction.user}: {question}',
+                              title=f'{self.bot.get_emoji(settings["emojis"]["stonks"])} {interaction.user.name}: {question}',
                               description=''.join(description))
 
         await interaction.response.send_message(embed=embed)
