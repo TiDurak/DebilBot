@@ -60,7 +60,7 @@ class Music(commands.Cog):
         try:
             if not ctx.message.author.voice:
                 await ctx.send('❌ **ЛОХ ТУПОЙ!** Сначала подключись к голосовому чату, а потом мне мозги !@?%#&')
-                return
+                return False
 
             voice_channel = ctx.message.author.voice.channel
             self.__vc = await voice_channel.connect()
@@ -156,8 +156,8 @@ class Music(commands.Cog):
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=title))
 
     def __skip(self, context):
-        await self.bot.change_presence(status=discord.Status.online,
-                                       activity=discord.Game(f"{settings.get('prefix')}help"))
+        asyncio.run_coroutine_threadsafe(self.bot.change_presence(status=discord.Status.online,
+                                         activity=discord.Game(f"{settings.get('prefix')}help")), self.bot.loop)
         if self.__vc.is_playing():
             self.__vc.pause()
         if not self.__queue.is_empty():
@@ -168,6 +168,11 @@ class Music(commands.Cog):
                                              self.bot.loop)
 
     def __stop(self, context):
+        asyncio.run_coroutine_threadsafe(
+            self.bot.change_presence(status=discord.Status.online,
+                                     activity=discord.Game(f"{settings.get('prefix')}help")),
+            self.bot.loop)
+
         self.__queue.clear()
         if self.__vc.is_playing():
             self.__vc.stop()
@@ -175,6 +180,10 @@ class Music(commands.Cog):
             self.__vc.stop()
 
     def __leave(self, context):
+        asyncio.run_coroutine_threadsafe(
+            self.bot.change_presence(status=discord.Status.online,
+                                     activity=discord.Game(f"{settings.get('prefix')}help")),
+            self.bot.loop)
         self.__pause(context)
         asyncio.run_coroutine_threadsafe(self.__vc.disconnect(), self.bot.loop)
 
@@ -215,6 +224,12 @@ class Music(commands.Cog):
     @commands.command()
     async def play(self, ctx, *, arg):
         """Воспроизводит песню с YouTube, или добавляет её в список, если сейчас играет другая песня"""
+
+        is_connected = await self.__connect(ctx)
+        if is_connected is False:
+            return
+
+        await ctx.message.add_reaction("🔍")
         reply = await ctx.send(f"Ищу песню по запросу **\"{arg}\"**, подождите немного")
 
         videos = self.__get_info(arg)
@@ -230,7 +245,15 @@ class Music(commands.Cog):
                             inline=False)
         await reply.edit(content="", embed=embed, view=view)
         await view.wait()
-        await self.__connect(ctx)
+
+        if view.value is None:
+            reactions = ["🇺", "🇪", "🇧", "🇦", "🇳"]
+            for react in reactions:
+                await ctx.message.add_reaction(react)
+            await reply.edit(content="## ⌛ Таймаут \n"
+                                     "В следующий раз быстрее думай, **кретин**. \n"
+                                     "Больше 30 секунд ждать не собираюсь, **уродина** белопольная", embed=None, view=None)
+            return
         try:
             vid = videos[view.value]
         except IndexError:
@@ -238,6 +261,8 @@ class Music(commands.Cog):
                            "КАК Я МОГУ ТЕБЕ ЭТУ ХЕРЕСЬ НАЙТИ?!!??!?!?!?1!!7!?!")
             await self.__vc.disconnect()
             return
+
+        await ctx.message.add_reaction("✅")
 
         if not self.__vc.is_playing():
             await self.__play(ctx, vid)
