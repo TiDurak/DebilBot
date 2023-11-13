@@ -5,3 +5,4 @@ requests
 yt_dlp
 PyNaCl
 rich
+pillow
