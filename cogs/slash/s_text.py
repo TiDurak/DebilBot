@@ -95,7 +95,7 @@ class SText(commands.Cog):
         translation = translator.translate(text, dest=str(language.value))
 
         if is_embed == 1:
-            embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user} :: DebilBot Super Mega 228 Translator")
+            embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user.name} :: DebilBot Super Mega 228 Translator")
             embed.add_field(name="Исходный Текст", value=text, inline=False)
             embed.add_field(name=f"Перевод на {language.name}", value=translation.text, inline=False)
             await interaction.response.send_message(embed=embed)
