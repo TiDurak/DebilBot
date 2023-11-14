@@ -89,36 +89,36 @@ class SMusic(commands.Cog):
         @discord.ui.button(style=discord.ButtonStyle.red, label='Выход', emoji='🚪')
         async def button_leave(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.send_message("Хорошо блин, ухожу, тупой ты дебил",
-                                                         delete_after=8)
+                                                    ephemeral=True)
             self.__leave()
 
         @discord.ui.button(style=discord.ButtonStyle.red, label='Стоп', emoji='🛑')
         async def button_stop(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.send_message("Хорошо, тормознул",
-                                                         delete_after=8)
+                                                    ephemeral=True)
             self.__stop()
 
         @discord.ui.button(style=discord.ButtonStyle.blurple, label='Пауза / Продолжить', emoji='⏯️')
         async def button_pause_resume(self, interaction: discord.Interaction, button: discord.ui.Button):
             if self.__vc.is_playing():
                 await interaction.response.send_message("Усё, усё, пауза",
-                                                             delete_after=8)
+                                                        ephemeral=True)
                 self.__vc.pause()
             elif self.__vc.is_paused():
                 await interaction.response.send_message("Играем дальше, значит. Ты задолбал",
-                                                             delete_after=8)
+                                                        ephemeral=True)
                 self.__vc.resume()
 
         @discord.ui.button(style=discord.ButtonStyle.blurple, label='Пропустить', emoji='⏭️')
         async def button_skip(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.send_message("Эту песню мы попускаем, потому что гивно",
-                                                         delete_after=8)
+                                                    ephemeral=True)
             self.__skip(interaction)
 
     async def __play(self, interaction, video):
         self.vc.play(discord.FFmpegPCMAudio(executable=settings['path_to_ffmpeg'],
-                                              source=video.get("url"), **FFMPEG_OPTIONS),
-                       after=lambda e: self.__skip(interaction=interaction))
+                                            source=video.get("url"), **FFMPEG_OPTIONS),
+                     after=lambda e: self.__skip(interaction=interaction))
 
         duration = video.get("duration")
         upload_date = video.get("upload_date")
@@ -187,19 +187,19 @@ class SMusic(commands.Cog):
 
         @discord.ui.button(style=discord.ButtonStyle.blurple, emoji='1️⃣')
         async def button_first(self, interaction: discord.Interaction, button: discord.ui.Button):
-            await interaction.response.send_message("Харош, выбрана первая песня")
+            await interaction.response.send_message("Харош, выбрана первая песня", ephemeral=True)
             self.value = 0
             self.stop()
 
         @discord.ui.button(style=discord.ButtonStyle.blurple, emoji='2️⃣')
         async def button_second(self, interaction: discord.Interaction, button: discord.ui.Button):
-            await interaction.response.send_message("Окей, будет тебе вторая песня")
+            await interaction.response.send_message("Окей, будет тебе вторая песня", ephemeral=True)
             self.value = 1
             self.stop()
 
         @discord.ui.button(style=discord.ButtonStyle.blurple, emoji='3️⃣')
         async def button_third(self, interaction: discord.Interaction, button: discord.ui.Button):
-            await interaction.response.send_message("Лана, врубаю третью")
+            await interaction.response.send_message("Лана, врубаю третью", ephemeral=True)
             self.value = 2
             self.stop()
 

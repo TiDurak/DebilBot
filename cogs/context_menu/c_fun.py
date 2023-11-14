@@ -19,11 +19,11 @@ class CFun(commands.Cog):
         if len(message.content) > 135:
             await interaction.response.send_message("⚠️ ЭЭЭээээ слиш ти педрило-хуило, низя больше 135 символов в цитати, "
                                                     "ти миня понеЛ?!!!?!??!11?!?!", 
-                                                    delete_after=10)
+                                                    ephemeral=True)
         elif len(message.content) < 1:
             await interaction.response.send_message("⚠️ ээээиий вай вах дАрагои, што ти дэлат?! "
                                                     "нужна хатябы 1 букава для цытати, мой дарагои, ваххх", 
-                                                    delete_after=10)
+                                                    ephemeral=True)
         else:
             quote_generator = QuoteImageCreator('assets/back.jpg')
             quote_image = quote_generator.create_quote_image(message.content, message.author.name)
