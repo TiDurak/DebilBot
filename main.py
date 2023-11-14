@@ -1,5 +1,5 @@
 from cogs import converters, fun, help, moderation, information, music, listeners, text
-from cogs.context_menu import c_fun
+from cogs.context_menu import c_fun, c_information
 from cogs.slash import s_fun, s_text, s_music, s_moderation, s_converters
 from config import settings
 import sys
@@ -27,6 +27,7 @@ asyncio.run(music.setup(bot))
 asyncio.run(listeners.setup(bot))
 asyncio.run(text.setup(bot))
 asyncio.run(c_fun.setup(bot))
+asyncio.run(c_information.setup(bot))
 asyncio.run(s_fun.setup(bot))
 asyncio.run(s_text.setup(bot))
 asyncio.run(s_music.setup(bot))
