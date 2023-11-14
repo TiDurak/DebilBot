@@ -11,9 +11,9 @@ class CFun(commands.Cog):
         self.bot = bot
         self.ctx_menu = app_commands.ContextMenu(
             name="Сделать Цитату",
-            callback=self.quote, # set the callback of the context menu to "my_cool_context_menu"
+            callback=self.quote,
         )
-        self.bot.tree.add_command(self.ctx_menu) # add the context menu to the tree
+        self.bot.tree.add_command(self.ctx_menu)
 
     async def quote(self, interaction: discord.Interaction, message: discord.Message) -> None:
         if len(message.content) > 135:
