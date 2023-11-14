@@ -134,3 +134,6 @@ dmypy.json
 .vs/
 DebilBot/
 workspace.code-workspace
+
+# Quote image
+quote.png
