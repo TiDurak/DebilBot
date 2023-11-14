@@ -43,12 +43,12 @@ class SFun(commands.Cog):
 
     @app_commands.command(name="quote", description="Создаёт картинку с цитатой жака фреско")
     @app_commands.describe(text="Ваша цитата (до 135 символов)",
-                           username="Никнейм пользователя (по умолчанию ваш)")
-    async def quote(self, interaction: discord.Interaction, text: app_commands.Range[str, 1, 135], username: discord.Member = None):
-        if username == None:
-            username = interaction.user.name
+                           user="Никнейм пользователя (по умолчанию ваш)")
+    async def quote(self, interaction: discord.Interaction, text: app_commands.Range[str, 1, 135], user: discord.Member = None):
+        if user == None:
+            user = interaction.user
         quote_generator = QuoteImageCreator('assets/back.jpg')
-        quote_image = quote_generator.create_quote_image(text, username)
+        quote_image = quote_generator.create_quote_image(text, user.name)
         await interaction.response.send_message(file=discord.File(quote_image))
 
 async def setup(bot):
