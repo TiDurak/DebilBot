@@ -1,3 +1,4 @@
+import json
 import random
 import requests
 import discord
@@ -5,7 +6,10 @@ from discord import app_commands
 from discord.ext import commands
 from bs4 import BeautifulSoup as bs
 
+from googletrans import Translator
+
 from classes.quote_image_creator import QuoteImageCreator
+from classes.exceptions import APIError
 
 class SFun(commands.Cog):
     """Fun"""
@@ -50,6 +54,41 @@ class SFun(commands.Cog):
         quote_generator = QuoteImageCreator('assets/back.jpg')
         quote_image = quote_generator.create_quote_image(text, user.name)
         await interaction.response.send_message(file=discord.File(quote_image))
+
+
+    @app_commands.command(name="epicgames_giveaway", description="Список бесплатных раздач Epic Games Store")
+    async def epicgames_giveaway(self, interaction: discord.Interaction):
+        url = "https://www.gamerpower.com/api/giveaways?platform=epic-games-store"
+        response = requests.get(url)
+        if response.status_code == 200:
+            embed_list = []
+            translator = Translator()
+            for game in response.json():
+                if game.get("worth") != "N/A":
+                    continue
+                translation = translator.translate(game.get('description'), dest="ru")
+                date = game.get("end_date")
+                if date != "N/A":
+                    date = f"{date[8:9]}.{date[5:6]}.{date[0:3]} : {date[11:]}"
+                embed = discord.Embed(title=game.get("title"), color=0x33bbff)
+                embed.add_field(name="📃 Описание", value=translation.text, inline=False)
+                embed.add_field(name="🛒 Тип товара", value=game.get("type"), inline=False)
+                embed.add_field(name="📅 Дата окончания", value=date, inline=False)
+                embed.set_thumbnail(url=game.get("thumbnail"))
+                embed_list.append(embed)
+
+                if embed_list == []:
+                    await interaction.response.send_message("🚫 На данный момент бесплатных раздач нету (бля ☹️)")
+                    return
+            await interaction.response.send_message("# 🆓 Бесплатные раздачи Epic Games Store", embeds=embed_list)
+
+        elif response.status_code == 201:
+            await interaction.response.send_message("🚫 Ашалеть. Настал тот момент, когда у эпик гейсов не проходят раздачи")
+        elif response.status_code == 500:
+            await interaction.response.send_message("🚫 Ошибка API: Что-то случилось на серверах апишника. Попробуйте позже")
+            raise APIError("Error 500. Somethin went wrong, try again later")
+            return "error"
+        
 
 async def setup(bot):
     await bot.add_cog(SFun(bot))
