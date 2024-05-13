@@ -58,6 +58,7 @@ class SFun(commands.Cog):
 
     @app_commands.command(name="epicgames_giveaway", description="Список бесплатных раздач Epic Games Store")
     async def epicgames_giveaway(self, interaction: discord.Interaction):
+        # TODO: https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?locale=ru_RU&country=UA&allowCountries=UA
         url = "https://www.gamerpower.com/api/giveaways?platform=epic-games-store"
         response = requests.get(url)
         if response.status_code == 200:
@@ -69,8 +70,8 @@ class SFun(commands.Cog):
                 translation = translator.translate(game.get('description'), dest="ru")
                 date = game.get("end_date")
                 if date != "N/A":
-                    date = f"{date[8:9]}.{date[5:6]}.{date[0:3]} : {date[11:]}"
-                embed = discord.Embed(title=game.get("title"), color=0x33bbff)
+                    date = f"{date[8:10]}.{date[5:7]}.{date[0:4]} : {date[11:]}"
+                embed = discord.Embed(title=game.get("title"), color=0xffcd7f)
                 embed.add_field(name="📃 Описание", value=translation.text, inline=False)
                 embed.add_field(name="🛒 Тип товара", value=game.get("type"), inline=False)
                 embed.add_field(name="📅 Дата окончания", value=date, inline=False)
@@ -81,6 +82,39 @@ class SFun(commands.Cog):
                     await interaction.response.send_message("🚫 На данный момент бесплатных раздач нету (бля ☹️)")
                     return
             await interaction.response.send_message("# 🆓 Бесплатные раздачи Epic Games Store", embeds=embed_list)
+
+        elif response.status_code == 201:
+            await interaction.response.send_message("🚫 Ашалеть. Настал тот момент, когда у эпик гейсов не проходят раздачи")
+        elif response.status_code == 500:
+            await interaction.response.send_message("🚫 Ошибка API: Что-то случилось на серверах апишника. Попробуйте позже")
+            raise APIError("Error 500. Somethin went wrong, try again later")
+            return "error"
+
+    @app_commands.command(name="steam_sales", description="Список скидок Steam")
+    async def steam_sales(self, interaction: discord.Interaction):
+        url = "https://www.gamerpower.com/api/giveaways?platform=steam"
+        response = requests.get(url)
+        if response.status_code == 200:
+            embed_list = []
+            translator = Translator()
+            for game in response.json():
+                translation = translator.translate(game.get('description'), dest="ru")
+                date = game.get("end_date")
+                if date != "N/A":
+                    date = f"{date[8:10]}.{date[5:7]}.{date[0:4]} : {date[11:]}"
+                embed = discord.Embed(title=game.get("title"), color=0xffcd7f)
+                embed.add_field(name="📃 Описание", value=translation.text, inline=False)
+                embed.add_field(name="💵 Цена (в регионе США)", value=game.get("worth"), inline=False)
+                embed.add_field(name="🛒 Тип товара", value=game.get("type"), inline=False)
+                embed.add_field(name="📅 Дата окончания", value=date, inline=False)
+                embed.set_thumbnail(url=game.get("thumbnail"))
+                embed_list.append(embed)
+
+                if embed_list == []:
+                    await interaction.response.send_message("🚫 На данный момент бесплатных раздач нету (бля ☹️)")
+                    return
+                if len(embed_list) > 10:
+                    await interaction.response.send_message(f"# 🏷️ Специальные предложения Steam", embeds=embed_list[:9])
 
         elif response.status_code == 201:
             await interaction.response.send_message("🚫 Ашалеть. Настал тот момент, когда у эпик гейсов не проходят раздачи")
