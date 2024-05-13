@@ -32,7 +32,7 @@ class Information(commands.Cog):
         embed.add_field(name='Зашёл На Сервер', value=user.joined_at.strftime("%#d %B %Y, %H:%M"))
         embed.add_field(name='Дата Регистрации', value=user.created_at.strftime("%#d %B %Y, %H:%M"))
         embed.set_thumbnail(url=user.avatar.url)
-        embed.set_footer(text=f"Запросил {ctx.author}", icon_url=ctx.author.avatar.url)
+        embed.set_footer(text=f"Запросил {ctx.author.name}", icon_url=ctx.author.avatar.url)
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["server", "guild", "guild_info"])
@@ -44,8 +44,8 @@ class Information(commands.Cog):
         embed.add_field(name='ID Сервера', value=ctx.guild.id)
         embed.add_field(name='Число Участников', value=ctx.guild.member_count, inline=False)
         embed.add_field(name='Дата Содания Сервера', value=ctx.guild.created_at.strftime("%#d %B %Y, %H:%M"))
-        embed.set_thumbnail(url=ctx.guild.icon_url)
-        embed.set_footer(text=f"Запросил {ctx.author}", icon_url=ctx.author.avatar.url)
+        embed.set_thumbnail(url=ctx.guild.icon.url)
+        embed.set_footer(text=f"Запросил {ctx.author.name}", icon_url=ctx.author.avatar.url)
         await ctx.send(embed=embed)
 
 

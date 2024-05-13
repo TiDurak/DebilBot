@@ -20,7 +20,7 @@ class Text(commands.Cog):
             translator = Translator()
             translation = translator.translate(text, dest=lang)
 
-            embed = discord.Embed(color=0xffcd4c, title=f"{ctx.author} :: DebilBot Translator")
+            embed = discord.Embed(color=0xffcd4c, title=f"{ctx.author.name} :: DebilBot Translator")
             embed.add_field(name="Исходный Текст", value=text, inline=False)
             embed.add_field(name="Перевод", value=translation.text, inline=False)
             await ctx.send(embed=embed)
