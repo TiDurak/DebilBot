@@ -18,6 +18,7 @@ class CFun(commands.Cog):
             name="Ты Еблан!",
             callback=self.get_eblan,
         )
+        self.bot.tree.add_command(self.ctx_quote)
         self.bot.tree.add_command(self.ctx_eblan)
 
     async def quote(self, interaction: discord.Interaction, message: discord.Message) -> None:
