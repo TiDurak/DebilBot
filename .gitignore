@@ -135,6 +135,9 @@ dmypy.json
 DebilBot/
 workspace.code-workspace
 
+# IntelliJ IDEA
+.idea/
+
 # Images
 quote.png
 eblan_ready.jpg
