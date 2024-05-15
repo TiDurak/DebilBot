@@ -29,7 +29,7 @@ google_ai_settings = {
         "temperature": 0.9,
         "top_p": 1,
         "top_k": 0,
-        "max_output_tokens": 2048,
+        "max_output_tokens": 2000,
         "response_mime_type": "text/plain",
     },
     "safety_settings": [

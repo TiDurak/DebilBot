@@ -122,11 +122,25 @@ class SText(commands.Cog):
     @app_commands.command(name="ai", description="Общение с нейросетью Google Gemini")
     @app_commands.describe(message="Задай свой вопрос, скотина блядь")
     async def ai(self, interaction: discord.Interaction, message: str):
-        response = self.chat_session.send_message(message)
         embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user.name} :: DebilAI - Powered by GeminiAI")
         embed.add_field(name="❓ Вопрос", value=message, inline=False)
-        embed.add_field(name="🤌 Ответ от гейросетки", value=response.text, inline=False)
         await interaction.response.send_message(embed=embed)
+        response = self.chat_session.send_message(message)
+        if len(response.text) > 1000:
+            res = response.text
+            j = 1
+            embed.add_field(name="🤌 Ответ от гейросетки", value=res[:999], inline=False)
+            while True:
+                j += 1
+                res = res[999:]
+                if len(res) > 1000:
+                    embed.add_field(name="\u200b", value=res[0:999], inline=False)
+                else:
+                    embed.add_field(name="\u200b", value=res, inline=False)
+                    break
+        else:
+            embed.add_field(name="🤌 Ответ от гейросетки", value=response.text, inline=False)
+        await interaction.edit_original_response(embed=embed)
 
 
 async def setup(bot):
