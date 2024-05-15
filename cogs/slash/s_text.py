@@ -1,10 +1,11 @@
-from config import settings
+from config import settings, google_ai_settings
 
 import discord
 from discord import app_commands
 from discord.ext import commands
 
 from googletrans import Translator
+import google.generativeai as genai
 
 
 class SText(commands.Cog):
@@ -12,6 +13,20 @@ class SText(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        genai.configure(api_key=google_ai_settings.get("google_api_key"))
+
+        
+
+        model = genai.GenerativeModel(
+          model_name="gemini-1.0-pro-001",
+          safety_settings=google_ai_settings.get("safety_settings"),
+          generation_config=google_ai_settings.get("generation_config"),
+        )
+
+        self.chat_session = model.start_chat(
+          history=[
+          ]
+        )
 
     @app_commands.command(name="echo", description="Выводит текст от лица бота")
     @app_commands.describe(message="Твоё сообщение, которое я напишу за тебя")
@@ -103,6 +118,15 @@ class SText(commands.Cog):
             await interaction.response.send_message(translation.text) @ app_commands.command(name="translate",
                                                                                              description="Переводит текст, ибо ты даун, "
                                                                                                          "не можешь перевести сам")
+
+    @app_commands.command(name="ai", description="Общение с нейросетью Google Gemini")
+    @app_commands.describe(message="Задай свой вопрос, скотина блядь")
+    async def ai(self, interaction: discord.Interaction, message: str):
+        response = self.chat_session.send_message(message)
+        embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user.name} :: DebilAI - Powered by GeminiAI")
+        embed.add_field(name="❓ Вопрос", value=message, inline=False)
+        embed.add_field(name="🤌 Ответ от гейросетки", value=response.text, inline=False)
+        await interaction.response.send_message(embed=embed)
 
 
 async def setup(bot):

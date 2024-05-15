@@ -17,10 +17,11 @@
 
 ***Recomendation: before using read the LICENSE file!***
 
-1. Install all dependencies (`pip install -r requirements.txt`)
-2. Get your bot token in [discord dev portal](https://discord.com/developers/applications) 
-3. Set DEBIL_TOKEN environment variable, **OR** put it in `settings.token` in `config.py`
-4. Run main.py file
+1. Install all dependencies (`pip install -r requirements.txt`) 
+2. Install [Google Cloud CLI](https://cloud.google.com/sdk/docs/install), set up [`GOOGLE_API_KEY`](https://aistudio.google.com/app/apikey) and follow [this instructions](https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev) for using `/ai` command
+3. Get your bot token in [discord dev portal](https://discord.com/developers/applications) 
+4. Set DEBIL_TOKEN environment variable, **OR** put it in `settings.token` in `config.py`
+5. Run main.py file
 
 
 To launch music commands:
