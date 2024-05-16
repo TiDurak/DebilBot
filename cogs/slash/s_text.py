@@ -120,9 +120,10 @@ class SText(commands.Cog):
     @app_commands.command(name="ai", description="Общение с нейросетью Google Gemini")
     @app_commands.describe(message="Задай свой вопрос, скотина блядь")
     async def ai(self, interaction: discord.Interaction, message: str):
-        embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user.name} :: DebilAI - Powered by GeminiAI")
-        embed.add_field(name="❓ Вопрос", value=message, inline=False)
+        embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user.name} :: {message}")
         await interaction.response.send_message(embed=embed)
+        embed.set_footer(text="DebilAI - Powered by Google Gemini 1.0 Pro",
+                         icon_url="https://tidurak.github.io/google-gemini-icon.png")
         chat_session = self.chat_sessions.get(interaction.guild.id)
         if chat_session == None:
             self.chat_sessions[interaction.guild.id] = self.model.start_chat(history=[])
@@ -140,7 +141,7 @@ class SText(commands.Cog):
         if len(response.text) > 1000:
             res = response.text
             j = 1
-            embed.add_field(name="🤌 Ответ от гейросетки", value=res[:999], inline=False)
+            embed.add_field(name="\u200b", value=res[:999], inline=False)
             while True:
                 j += 1
                 res = res[999:]
@@ -150,7 +151,8 @@ class SText(commands.Cog):
                     embed.add_field(name="\u200b", value=res, inline=False)
                     break
         else:
-            embed.add_field(name="🤌 Ответ от гейросетки", value=response.text, inline=False)
+            embed.add_field(name="\u200b", value=response.text, inline=False)
+        
         await interaction.edit_original_response(embed=embed)
 
 
