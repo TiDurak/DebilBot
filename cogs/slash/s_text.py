@@ -17,16 +17,13 @@ class SText(commands.Cog):
 
         
 
-        model = genai.GenerativeModel(
-          model_name="gemini-1.0-pro-001",
+        self.model = genai.GenerativeModel(
+          model_name="gemini-1.0-pro",
           safety_settings=google_ai_settings.get("safety_settings"),
           generation_config=google_ai_settings.get("generation_config"),
         )
-
-        self.chat_session = model.start_chat(
-          history=[
-          ]
-        )
+        self.chat_sessions = {}
+        
 
     @app_commands.command(name="echo", description="Выводит текст от лица бота")
     @app_commands.describe(message="Твоё сообщение, которое я напишу за тебя")
@@ -125,7 +122,12 @@ class SText(commands.Cog):
         embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user.name} :: DebilAI - Powered by GeminiAI")
         embed.add_field(name="❓ Вопрос", value=message, inline=False)
         await interaction.response.send_message(embed=embed)
-        response = self.chat_session.send_message(message)
+        chat_session = self.chat_sessions.get(interaction.guild.id)
+        if chat_session == None:
+            self.chat_sessions[interaction.guild.id] = self.model.start_chat(history=[])
+            chat_session = self.chat_sessions.get(interaction.guild.id)
+
+        response = chat_session.send_message(message)
         if len(response.text) > 1000:
             res = response.text
             j = 1
