@@ -6,6 +6,7 @@ from discord.ext import commands
 
 from googletrans import Translator
 import google.generativeai as genai
+from google.generativeai.types import StopCandidateException
 
 
 class SText(commands.Cog):
@@ -126,8 +127,16 @@ class SText(commands.Cog):
         if chat_session == None:
             self.chat_sessions[interaction.guild.id] = self.model.start_chat(history=[])
             chat_session = self.chat_sessions.get(interaction.guild.id)
+            response = None
 
-        response = chat_session.send_message(message)
+        try:
+            response = chat_session.send_message(message)
+        except StopCandidateException:
+            fuck_you_message = "ТЫ еблаН? Я нейронка от гугла, и у меня ёбнутые фильтры на т.н. \"опасный\" контент. ЫЫЫЫЫ"
+            embed.add_field(name="🚫 Иди нахуй", value=fuck_you_message, inline=False)
+            await interaction.edit_original_response(embed=embed)
+            return
+
         if len(response.text) > 1000:
             res = response.text
             j = 1
