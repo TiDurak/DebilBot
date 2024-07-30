@@ -19,7 +19,7 @@ class SText(commands.Cog):
         
 
         self.model = genai.GenerativeModel(
-          model_name="gemini-1.0-pro",
+          model_name="gemini-1.5-flash",
           safety_settings=google_ai_settings.get("safety_settings"),
           generation_config=google_ai_settings.get("generation_config"),
         )
@@ -122,7 +122,7 @@ class SText(commands.Cog):
     async def ai(self, interaction: discord.Interaction, message: str):
         embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user.name} :: {message}")
         await interaction.response.send_message(embed=embed)
-        embed.set_footer(text="DebilAI - Powered by Google Gemini 1.0 Pro",
+        embed.set_footer(text="DebilAI - Powered by Google Gemini 1.5 Flash",
                          icon_url="https://tidurak.github.io/google-gemini-icon.png")
         chat_session = self.chat_sessions.get(interaction.guild.id)
         if chat_session == None:
