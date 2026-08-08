@@ -137,7 +137,7 @@ dmypy.json
 # Visual Studio
 .vs/
 DebilBot/
-workspace.code-workspace
+*.code-workspace
 
 # IntelliJ IDEA
 .idea/
