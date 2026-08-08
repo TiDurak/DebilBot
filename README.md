@@ -39,3 +39,7 @@ sudo apt update
 sudo apt install ttf-mscorefonts-installer
 ```
 
+# Troubleshooting
+In any not understandable situation
+```pip install -U -r requirements.txt```
+
