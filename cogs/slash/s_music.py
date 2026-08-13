@@ -17,42 +17,48 @@ FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconne
 class Queue:
     def __init__(self):
         self.__vc = None
-        self.__queue = []
-        self.__playing_now = None
+        self.__queue = {}
+        self.__playing_now = {}
 
-    def add_track(self, title):
-        self.__queue.append(title)
+    def add_track(self, title, guild_id):
+        if guild_id not in self.__queue:
+            self.__queue[guild_id] = []
+        self.__queue[guild_id].append(title)
 
-    def play_next(self):
-        if len(self.__queue) > 0:
-            next_track = self.__queue.pop(0)
-            self.__playing_now = next_track
+    def play_next(self, guild_id):
+        if guild_id in self.__queue and len(self.__queue[guild_id]) > 0:
+            next_track = self.__queue[guild_id].pop(0)
+            self.__playing_now[guild_id] = next_track
             return next_track
         else:
             return 0
 
-    def get_playing_now(self):
-        print(self.__playing_now)
-        return self.__playing_now
+    def get_playing_now(self, guild_id):
+        track = self.__playing_now.get(guild_id)
+        print(track)
+        return track
 
-    def set_playing_now(self, track):
-        self.__playing_now = track
+    def set_playing_now(self, track, guild_id):
+        self.__playing_now[guild_id] = track
 
-    def clear(self):
-        self.__queue = []
-        self.__playing_now = None
+    def clear(self, guild_id):
+        if guild_id in self.__queue:
+            self.__queue[guild_id] = []
+        self.__playing_now[guild_id] = None
 
-    def is_empty(self):
-        if len(self.__queue):
-            return False
-        else:
+    def is_empty(self, guild_id):
+        if guild_id not in self.__queue or len(self.__queue[guild_id]) == 0:
             return True
+        else:
+            return False
 
-    def length(self):
-        return len(self.__queue)
+    def length(self, guild_id):
+        return len(self.__queue.get(guild_id, []))
 
-    def get_by_id(self, id):
-        return self.__queue[id]
+    def get_by_id(self, index, guild_id):
+        if guild_id in self.__queue and 0 <= index < len(self.__queue[guild_id]):
+            return self.__queue[guild_id][index]
+        return None
 
 
 class SMusic(commands.Cog):
@@ -96,7 +102,7 @@ class SMusic(commands.Cog):
         async def button_stop(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.send_message("Хорошо, тормознул",
                                                     ephemeral=True)
-            self.__stop()
+            self.__stop(interaction.guild.id)
 
         @discord.ui.button(style=discord.ButtonStyle.blurple, label='Пауза / Продолжить', emoji='⏯️')
         async def button_pause_resume(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -140,7 +146,7 @@ class SMusic(commands.Cog):
                                                                              self.__skip))
 
         title = video.get('title')
-        self.__queue.set_playing_now(title)
+        self.__queue.set_playing_now(title, interaction.guild.id)
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=title))
 
     def __skip(self, interaction):
@@ -148,17 +154,17 @@ class SMusic(commands.Cog):
                                          activity=discord.Game(f"{settings.get('prefix')}help")), self.bot.loop)
         if self.vc.is_playing():
             self.vc.pause()
-        if not self.__queue.is_empty():
-            next_track = self.__queue.play_next()
+        if not self.__queue.is_empty(interaction.guild.id):
+            next_track = self.__queue.play_next(interaction.guild.id)
             asyncio.run_coroutine_threadsafe(self.__play(interaction, next_track), self.bot.loop)
 
-    def __stop(self):
+    def __stop(self, guild_id):
         asyncio.run_coroutine_threadsafe(
             self.bot.change_presence(status=discord.Status.online,
                                      activity=discord.Game(f"{settings.get('prefix')}help")),
             self.bot.loop)
 
-        self.__queue.clear()
+        self.__queue.clear(guild_id)
         if self.vc.is_playing():
             self.vc.stop()
         elif self.vc.is_paused():
@@ -248,7 +254,7 @@ class SMusic(commands.Cog):
         if not self.vc.is_playing():
             await self.__play(interaction, vid)
         else:
-            self.__queue.add_track(vid)
+            self.__queue.add_track(vid, interaction.guild.id)
             await interaction.followup.send(f"**{vid.get('title')}** добавлен в список, бля.")
 
     @app_commands.command(name="switch_pause", description="Ставит на паузу/врубает твой говномузон")
@@ -274,7 +280,7 @@ class SMusic(commands.Cog):
     @app_commands.command(name="stop", description="Стопает музон, и чистит список воспроизведения")
     async def stop(self, interaction: discord.Interaction):
         if self.vc is not None:
-            self.__stop()
+            self.__stop(interaction.guild.id)
             await interaction.response.send_message("Я СТОПАЮ МУЗООН НАХ🔞УУЙ")
         else:
             await interaction.response.send_message("Бот не подрублен к голосовому чату")
@@ -289,12 +295,12 @@ class SMusic(commands.Cog):
 
     @app_commands.command(name="queue", description="Показывает список следующих песен")
     async def queue_embed(self, interaction: discord.Interaction):
-        now = self.__queue.get_playing_now()
+        now = self.__queue.get_playing_now(interaction.guild.id)
         if now != None:
             embed = (discord.Embed(title="📜 Список Воспроизведения", color=0xf0cd4f))
             embed.add_field(name="▶️ Сейчас Играет", value=now, inline=False)
-            for i in range(self.__queue.length()):
-                video = self.__queue.get_by_id(i)
+            for i in range(self.__queue.length(interaction.guild.id)):
+                video = self.__queue.get_by_id(i, interaction.guild.id)
                 embed.add_field(name=f"{i + 1} по списку", value=video.get('title'), inline=False)
             await interaction.response.send_message(embed=embed)
         else:
