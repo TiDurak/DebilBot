@@ -71,7 +71,7 @@ class SText(commands.Cog):
     async def ai(self, interaction: discord.Interaction, message: str):
         embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user.name} :: {message}")
         await interaction.response.send_message(embed=embed)
-        embed.set_footer(text=f"DebilAI - Powered by {google_ai_settings.get("gemini_model")}",
+        embed.set_footer(text=f"DebilAI - Powered by {google_ai_settings.get('gemini_model')}",
                          icon_url="https://tidurak.github.io/google-gemini-icon.png")
         chat_session = self.chat_sessions.get(interaction.guild.id)
         if chat_session == None:
