@@ -5,8 +5,7 @@ from discord import app_commands
 from discord.ext import commands
 
 from googletrans import Translator
-import google.generativeai as genai
-from google.generativeai.types import StopCandidateException
+from google import genai
 
 
 class SText(commands.Cog):
@@ -14,15 +13,7 @@ class SText(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        genai.configure(api_key=google_ai_settings.get("google_api_key"))
-
-        
-
-        self.model = genai.GenerativeModel(
-          model_name=google_ai_settings.get("gemini_model"),
-          safety_settings=google_ai_settings.get("safety_settings"),
-          generation_config=google_ai_settings.get("generation_config"),
-        )
+        self.genai_client = genai.Client(api_key=google_ai_settings.get("google_api_key"))
         self.chat_sessions = {}
         
 
@@ -80,21 +71,15 @@ class SText(commands.Cog):
     async def ai(self, interaction: discord.Interaction, message: str):
         embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user.name} :: {message}")
         await interaction.response.send_message(embed=embed)
-        embed.set_footer(text="DebilAI - Powered by Google Gemini 1.5 Flash",
+        embed.set_footer(text=f"DebilAI - Powered by {google_ai_settings.get("gemini_model")}",
                          icon_url="https://tidurak.github.io/google-gemini-icon.png")
         chat_session = self.chat_sessions.get(interaction.guild.id)
         if chat_session == None:
-            self.chat_sessions[interaction.guild.id] = self.model.start_chat(history=[])
+            self.chat_sessions[interaction.guild.id] = self.genai_client.chats.create(model=google_ai_settings.get("gemini_model"))
             chat_session = self.chat_sessions.get(interaction.guild.id)
             response = None
 
-        try:
-            response = chat_session.send_message(message)
-        except StopCandidateException:
-            fuck_you_message = "ТЫ еблаН? Я нейронка от гугла, и у меня ёбнутые фильтры на т.н. \"опасный\" контент. ЫЫЫЫЫ"
-            embed.add_field(name="🚫 Иди нахуй", value=fuck_you_message, inline=False)
-            await interaction.edit_original_response(embed=embed)
-            return
+        response = chat_session.send_message(message)
 
         if len(response.text) > 1000:
             res = response.text

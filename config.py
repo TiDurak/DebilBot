@@ -1,4 +1,5 @@
 import os
+from google.genai import types
 
 try:
     os.environ["DEBIL_TOKEN"]
@@ -25,29 +26,17 @@ google_ai_settings = {
     # See https://ai.google.dev/api/python/google/generativeai/GenerativeModel
     "google_api_key": os.environ.get("GOOGLE_API_KEY"), # https://aistudio.google.com/app/apikey
     "gemini_model": "gemini-3.6-flash", # Recommend to use flash models
-    "generation_config": {
-        "temperature": 0.9,
-        "top_p": 1,
-        "top_k": 0,
-        "max_output_tokens": 2000,
-        "response_mime_type": "text/plain",
-    },
-    "safety_settings": [
-        {
-            "category": "HARM_CATEGORY_HARASSMENT",
-            "threshold": "BLOCK_ONLY_HIGH",
-        },
-        {
-            "category": "HARM_CATEGORY_HATE_SPEECH",
-            "threshold": "BLOCK_ONLY_HIGH",
-        },
-        {
-            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-            "threshold": "BLOCK_ONLY_HIGH",
-        },
-        {
-            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-            "threshold": "BLOCK_ONLY_HIGH",
-        },
-    ]
+    "config": types.GenerateContentConfig(
+        temperature = 0.9,
+        top_p = 1,
+        top_k = 0,
+        max_output_tokens = 1700,
+        response_mime_type = "text/plain",
+        safety_settings = [
+            types.SafetySetting(
+                category = 'HARM_CATEGORY_HATE_SPEECH',
+                threshold = 'BLOCK_ONLY_HIGH'
+            ),
+        ]
+    )
 }
