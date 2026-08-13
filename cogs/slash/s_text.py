@@ -19,7 +19,7 @@ class SText(commands.Cog):
         
 
         self.model = genai.GenerativeModel(
-          model_name="gemini-3.6-flash",
+          model_name=google_ai_settings.get("gemini_model"),
           safety_settings=google_ai_settings.get("safety_settings"),
           generation_config=google_ai_settings.get("generation_config"),
         )
