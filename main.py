@@ -13,8 +13,6 @@ from discord.ext import commands
 print(f'[b yellow]Python {sys.version}')
 
 intents = Intents.default()
-intents.members = True
-intents.message_content = True
 
 bot = commands.Bot(command_prefix=settings['prefix'], intents=intents)
 
