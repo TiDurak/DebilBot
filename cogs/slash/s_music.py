@@ -131,7 +131,7 @@ class SMusic(commands.Cog):
         upload_date = f"{upload_date[:4]}.{upload_date[4:6]}.{upload_date[6:]}"
         embed = (discord.Embed(title=f'{self.bot.get_emoji(settings["emojis"]["youtube"])} Щас шпилит',
                                description=f"**{video.get('title')}**",
-                               color=0xff2a2a)
+                               color=settings.get("main_embed_color"))
                  .add_field(name="👤 Автор", value=video.get("uploader"), inline=False)
                  .add_field(name="⌛ Длительность", value=datetime.timedelta(seconds=duration))
                  .add_field(name="📅 Дата Загрузки", value=upload_date)
@@ -147,11 +147,8 @@ class SMusic(commands.Cog):
 
         title = video.get('title')
         self.__queue.set_playing_now(title, interaction.guild.id)
-        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=title))
 
     def __skip(self, interaction):
-        asyncio.run_coroutine_threadsafe(self.bot.change_presence(status=discord.Status.online,
-                                         activity=discord.Game(f"{settings.get('prefix')}help")), self.bot.loop)
         if self.vc.is_playing():
             self.vc.pause()
         if not self.__queue.is_empty(interaction.guild.id):
@@ -159,11 +156,6 @@ class SMusic(commands.Cog):
             asyncio.run_coroutine_threadsafe(self.__play(interaction, next_track), self.bot.loop)
 
     def __stop(self, guild_id):
-        asyncio.run_coroutine_threadsafe(
-            self.bot.change_presence(status=discord.Status.online,
-                                     activity=discord.Game(f"{settings.get('prefix')}help")),
-            self.bot.loop)
-
         self.__queue.clear(guild_id)
         if self.vc.is_playing():
             self.vc.stop()
@@ -171,10 +163,6 @@ class SMusic(commands.Cog):
             self.vc.stop()
 
     def __leave(self):
-        asyncio.run_coroutine_threadsafe(
-            self.bot.change_presence(status=discord.Status.online,
-                                     activity=discord.Game(f"{settings.get('prefix')}help")),
-            self.bot.loop)
         self.__pause()
         asyncio.run_coroutine_threadsafe(self.vc.disconnect(), self.bot.loop)
 
@@ -227,7 +215,7 @@ class SMusic(commands.Cog):
 
         videos = self.__get_info(song)
         view = self.SelectSongButtons()
-        embed = (discord.Embed(title=f"🔍 Результаты поиска по запросу \"{song}\"", color=0xf0cd4f))
+        embed = (discord.Embed(title=f"🔍 Результаты поиска по запросу \"{song}\"", color=settings.get("main_embed_color")))
         for i in range(3):
             upload_date = f"{videos[i]['upload_date'][:4]}.{videos[i]['upload_date'][4:6]}.{videos[i]['upload_date'][6:]}"
             embed.add_field(name=f"{i + 1}. {videos[i].get('title')}",
@@ -297,7 +285,7 @@ class SMusic(commands.Cog):
     async def queue_embed(self, interaction: discord.Interaction):
         now = self.__queue.get_playing_now(interaction.guild.id)
         if now != None:
-            embed = (discord.Embed(title="📜 Список Воспроизведения", color=0xf0cd4f))
+            embed = (discord.Embed(title="📜 Список Воспроизведения", color=settings.get("main_embed_color")))
             embed.add_field(name="▶️ Сейчас Играет", value=now, inline=False)
             for i in range(self.__queue.length(interaction.guild.id)):
                 video = self.__queue.get_by_id(i, interaction.guild.id)
@@ -305,7 +293,7 @@ class SMusic(commands.Cog):
             await interaction.response.send_message(embed=embed)
         else:
             embed = (discord.Embed(title="📜 Список Воспроизведения",
-                                   color=0xf0cd4f,
+                                   color=settings.get("main_embed_color"),
                                    description="Список воспроизведения пуст."))
             await interaction.response.send_message(embed=embed)
 

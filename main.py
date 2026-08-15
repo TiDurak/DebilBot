@@ -1,6 +1,6 @@
-from cogs import converters, fun, help, moderation, information, music, listeners, text
+from cogs import listeners
 from cogs.context_menu import c_fun, c_information
-from cogs.slash import s_fun, s_text, s_music, s_moderation, s_converters
+from cogs.slash import s_fun, s_text, s_music, s_moderation, s_information, s_converters
 from config import settings
 import sys
 import asyncio
@@ -16,12 +16,23 @@ intents = Intents.default()
 
 bot = commands.Bot(command_prefix=settings['prefix'], intents=intents)
 
-basic_cogs = [converters.setup(bot), fun.setup(bot), help.setup(bot), moderation.setup(bot),
-              information.setup(bot), music.setup(bot), listeners.setup(bot), text.setup(bot)]
-slash_cogs = [s_fun.setup(bot), s_text.setup(bot), s_music.setup(bot), s_moderation.setup(bot),
-              s_converters.setup(bot)]
-context_menu_cogs = [c_fun.setup(bot), c_information.setup(bot)]
-cogs_array = [basic_cogs, slash_cogs, context_menu_cogs]
+basic_cogs = [listeners.setup(bot)]
+
+slash_cogs = [s_fun.setup(bot),
+              s_text.setup(bot),
+              s_music.setup(bot),
+              s_information.setup(bot),
+              s_moderation.setup(bot),
+              s_converters.setup(bot)
+              ]
+
+context_menu_cogs = [c_fun.setup(bot),
+                     c_information.setup(bot)]
+
+cogs_array = [basic_cogs,
+              slash_cogs,
+              context_menu_cogs]
+
 for array in cogs_array:
     for cog in array:
         asyncio.run(cog)

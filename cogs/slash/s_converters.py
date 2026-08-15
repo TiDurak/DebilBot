@@ -5,6 +5,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from config import settings
+
 
 class SConverters(commands.Cog):
     """Converters"""
@@ -66,7 +68,7 @@ class SConverters(commands.Cog):
             elif code_or_decode.value == "decode":
                 output = coder.decode_binary(message)
 
-        embed = discord.Embed(color=0xffcd4c, title="Кодировка нахер")
+        embed = discord.Embed(color=settings.get("main_embed_color"), title="Кодировка нахер")
         embed.add_field(name="Исходный Текст", value=message, inline=False)
         embed.add_field(name=f"Метод Кодирования", value=f"{method.name}, {code_or_decode.name}", inline=False)
         embed.add_field(name=f"Выход", value=output, inline=False)
@@ -97,7 +99,7 @@ class SConverters(commands.Cog):
             hash_object = hashlib.md5(text.encode())
         hex_dig = hash_object.hexdigest()
 
-        embed = discord.Embed(color=0xffcd4c, title="Хеширатор блэт")
+        embed = discord.Embed(color=settings.get("main_embed_color"), title="Хеширатор блэт")
         embed.add_field(name="Исходный Текст", value=text, inline=False)
         embed.add_field(name=f"Метод Хеширования: {method.name}", value=hex_dig, inline=False)
         await interaction.response.send_message(embed=embed)

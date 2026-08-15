@@ -57,7 +57,7 @@ class SText(commands.Cog):
         translation = translator.translate(text, dest=str(language.value))
 
         if is_embed == 1:
-            embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user.name} :: DebilBot Super Mega 228 Translator")
+            embed = discord.Embed(color=settings.get("main_embed_color"), title=f"{interaction.user.name} :: DebilBot Super Mega 228 Translator")
             embed.add_field(name="Исходный Текст", value=text, inline=False)
             embed.add_field(name=f"Перевод на {language.name}", value=translation.text, inline=False)
             await interaction.response.send_message(embed=embed)
@@ -69,7 +69,7 @@ class SText(commands.Cog):
     @app_commands.command(name="ai", description="Общение с нейросетью Google Gemini")
     @app_commands.describe(message="Задай свой вопрос, скотина блядь")
     async def ai(self, interaction: discord.Interaction, message: str):
-        embed = discord.Embed(color=0xffcd4c, title=f"{interaction.user.name} :: {message}")
+        embed = discord.Embed(color=settings.get("main_embed_color"), title=f"{interaction.user.name} :: {message}")
         await interaction.response.send_message(embed=embed)
         embed.set_footer(text=f"DebilAI - Powered by {google_ai_settings.get('gemini_model')}",
                          icon_url="https://tidurak.github.io/google-gemini-icon.png")
