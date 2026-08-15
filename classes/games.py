@@ -2,7 +2,6 @@ import random
 
 class RockPaperScissors:
     def __init__(self):
-        super().__init__()
         self.__answers = ['Камень', 'Ножницы', 'Бумага']
         self.__answer = None
 
@@ -37,7 +36,6 @@ class RockPaperScissors:
 
 class Slots:
     def __init__(self):
-        super().__init__()
         self.__SYMBOLS = ['🍒', '🔔', '7️⃣', '👑', '☠️']
         self.__SLOTS = [0, 1, 2]
         self.slots = None
