@@ -24,7 +24,10 @@ settings = {
                'squid_cleaning': 880326444356612116}, # Replace this dict values to your Emoji Id's.
 }
 
-YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True', 'quiet': True}
+YDL_OPTIONS = {'format': 'bestaudio',
+               'noplaylist': 'True',
+               'quiet': True,
+               'extractor_args': 'youtube:player-client=default,-tv_simply'}
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
                   'options': '-vn'}
 
