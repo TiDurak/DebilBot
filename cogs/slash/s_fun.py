@@ -4,14 +4,14 @@ import requests
 import discord
 from discord import app_commands
 from discord.ext import commands
-from bs4 import BeautifulSoup as bs
+
 
 from googletrans import Translator
 
 from config import settings
 from classes.quote_image_creator import QuoteImageCreator
 from classes.exceptions import APIError
-from classes import games
+from classes import games, joke_parser
 
 
 class SFun(commands.Cog):
@@ -25,27 +25,17 @@ class SFun(commands.Cog):
                                                       "не можешь сам его загуглить")
     @app_commands.describe(joke_number="Номер анекдота, число от 1 до 1142")
     async def joke(self, interaction: discord.Interaction, joke_number: app_commands.Range[int, 1, 1142] = None):
-        if joke_number is None:
-            joke_number = str(random.randint(1, 1142))
+        joke = joke_parser.JokeParser()
+        parsed_joke = await joke.get_joke(joke_number)
+        embed = discord.Embed(color=settings.get("main_embed_color"), title=f"📋 Анекдот #{str(joke_number)}",
+                              description=parsed_joke)
+        embed.set_footer(text="Этот даунский анек взят (*скомунизжен) из https://baneks.ru/")
+        await interaction.response.send_message(embed=embed)
+        message = await interaction.original_response()
+        emojis = ['🤣', '😐', '💩', '🪗']
+        for emoji in emojis:
+            await message.add_reaction(emoji)
 
-        joke_website = "https://baneks.ru/"
-
-        joke_url = joke_website + str(joke_number)
-        request = requests.get(joke_url)
-        soup = bs(request.text, "html.parser")
-
-        parsed = soup.find_all("article")
-        for jokes in parsed:
-            embed = discord.Embed(color=settings.get("main_embed_color"), title=f"📋 Анекдот #{str(joke_number)}",
-                                  description=jokes.p.text)
-            embed.set_footer(text="Этот даунский анек взят (*скомунизжен) из https://baneks.ru/")
-            await interaction.response.send_message(embed=embed)
-            message = await interaction.original_response()
-
-            emojis = ['🤣', '😐', '💩', '🪗']
-
-            for emoji in emojis:
-                await message.add_reaction(emoji)
 
     @app_commands.command(name="quote", description="Создаёт картинку с цитатой жака фреско")
     @app_commands.describe(text="Ваша цитата (до 135 символов)",
