@@ -14,8 +14,7 @@ class SMusic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.music_manager = music_manager.MusicManager()
-        self.music_player = music_player.MusicPlayer(self.bot)
-        self.guild_player = None
+        self.music_player = music_player.MusicPlayer(self.bot, self.music_manager)
         self.vc = None
 
 
@@ -58,8 +57,9 @@ class SMusic(commands.Cog):
 
         if not self.music_player.is_playing():
             await self.music_player.play(interaction, selected_song)
+            guild_queue.queue.set_playing_now(selected_song)
         else:
-            guild_queue.queue.add_track(selected_song, interaction.guild.id)
+            guild_queue.queue.add_track(selected_song)
             await interaction.followup.send(f"**{selected_song.get('title')}** добавлен в список, бля.")
 
 
@@ -79,7 +79,7 @@ class SMusic(commands.Cog):
     async def skip(self, interaction: discord.Interaction):
         vc = self.music_player.get_vc()
         if vc is not None:
-            self.music_player.skip(interaction)
+            await self.music_player.skip(interaction)
             await interaction.response.send_message("Я скипаю твою хреномузыку")
         else:
             await interaction.response.send_message("Бот не подрублен к голосовому чату")
@@ -106,6 +106,7 @@ class SMusic(commands.Cog):
     async def queue_embed(self, interaction: discord.Interaction):
         guild_queue = self.music_manager.get_guild_queue(interaction.guild.id)
         playing_now = guild_queue.queue.get_playing_now()
+        print(playing_now)
         if playing_now is not None:
             embed = (discord.Embed(title="📜 Список Воспроизведения", color=settings.get("main_embed_color")))
             embed.add_field(name="▶️ Сейчас Играет", value=playing_now.get("title"), inline=False)

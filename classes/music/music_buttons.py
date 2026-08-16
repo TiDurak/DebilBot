@@ -37,7 +37,7 @@ class PlayerButtons(discord.ui.View):
     async def button_skip(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.send_message("Эту песню мы попускаем, потому что гивно",
                                                 ephemeral=True)
-        self.__skip(interaction)
+        await self.__skip(interaction)
 
 class SelectSongButtons(discord.ui.View):
     def __init__(self):

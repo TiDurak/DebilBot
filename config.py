@@ -17,7 +17,8 @@ settings = {
     "prefix": 'd.',
     "bot_status": "Юзай /",
     "main_embed_color": 0xf0cd4f,
-    "path_to_ffmpeg": ffmpeg_path.get('linux'), # If u are use Windows, type path.get('windows') and type path to the ffmpeg, else if u are use Linux, or Heroku, type path.get('linux')
+    "path_to_ffmpeg": ffmpeg_path.get('linux'),
+    "deno_path": "deno",
     "emojis": {'wuuut': 518051242807787520,
                'youtube': 878537811601555466,
                'stonks': 879411306157985862,
@@ -27,7 +28,10 @@ settings = {
 YDL_OPTIONS = {'format': 'bestaudio',
                'noplaylist': 'True',
                'quiet': True,
-               'extractor_args': 'youtube:player-client=default,-tv_simply'}
+               'extractor_args': {"youtube:player-client": "web_embedded,web,tv",
+                                  "youtube:player_js_version": "actual"},
+               'js-runtimes': f"deno:{settings.get('deno_path')}" # idk if u need to use this
+               }
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
                   'options': '-vn'}
 

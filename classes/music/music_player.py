@@ -1,6 +1,6 @@
 import config
 from config import settings
-from classes.music import music_buttons, music_manager
+from classes.music import music_buttons
 
 import asyncio
 import datetime
@@ -9,10 +9,10 @@ from yt_dlp import YoutubeDL, utils
 from discord.errors import ClientException
 
 class MusicPlayer:
-    def __init__(self, bot):
+    def __init__(self, bot, music_manager):
         self.vc = None
         self.bot = bot
-        self.music_manager = music_manager.MusicManager()
+        self.music_manager = music_manager
         self.__YDL_OPTIONS = config.YDL_OPTIONS
         self.__FFMPEG_OPTIONS = config.FFMPEG_OPTIONS
 
@@ -67,8 +67,6 @@ class MusicPlayer:
                                             source=song.get("url"), **self.__FFMPEG_OPTIONS),
                      after=lambda e: self.skip(interaction=interaction))
 
-        guild_queue = self.music_manager.get_guild_queue(interaction.guild.id)
-        guild_queue.queue.set_playing_now(song)
         embed = await self.make_song_embed(interaction, song)
         await interaction.followup.send(embed=embed, view=music_buttons.PlayerButtons(self.vc,
                                                                                       self.leave,
@@ -81,13 +79,13 @@ class MusicPlayer:
         guild_queue = self.music_manager.get_guild_queue(interaction.guild.id)
         if self.vc.is_playing():
             self.vc.pause()
-        if not guild_queue.queue.is_empty():
+        if guild_queue.queue.is_empty() is False:
             next_track = guild_queue.queue.play_next()
             asyncio.run_coroutine_threadsafe(self.play(interaction, next_track), self.bot.loop)
 
     def stop(self, guild_id):
         guild_queue = self.music_manager.get_guild_queue(guild_id)
-        guild_queue.queue.clear(guild_id)
+        guild_queue.queue.clear()
         if self.vc.is_playing():
             self.vc.stop()
         elif self.vc.is_paused():
