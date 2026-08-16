@@ -1,5 +1,5 @@
 from cogs import listeners
-from cogs.context_menu import c_fun, c_information
+from cogs.context_menu import c_fun, c_information, c_reputation
 from cogs.slash import s_fun, s_text, s_music, s_moderation, s_information, s_converters, s_reputation
 from config import settings
 from classes import reputation
@@ -32,7 +32,8 @@ slash_cogs = [s_fun.setup(bot),
               ]
 
 context_menu_cogs = [c_fun.setup(bot),
-                     c_information.setup(bot)]
+                     c_information.setup(bot),
+                     c_reputation.setup(bot, rep)]
 
 cogs_array = [basic_cogs,
               slash_cogs,

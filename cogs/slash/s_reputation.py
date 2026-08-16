@@ -3,7 +3,6 @@ from config import settings
 import discord
 from discord import app_commands
 from discord.ext import commands
-from discord.ext.commands import cooldown
 
 
 class SReputation(commands.Cog):
