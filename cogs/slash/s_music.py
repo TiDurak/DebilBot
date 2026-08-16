@@ -79,7 +79,7 @@ class SMusic(commands.Cog):
     async def skip(self, interaction: discord.Interaction):
         vc = self.music_player.get_vc()
         if vc is not None:
-            await self.music_player.skip(interaction)
+            self.music_player.skip(interaction)
             await interaction.response.send_message("Я скипаю твою хреномузыку")
         else:
             await interaction.response.send_message("Бот не подрублен к голосовому чату")
