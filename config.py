@@ -19,10 +19,12 @@ settings = {
     "main_embed_color": 0xf0cd4f,
     "path_to_ffmpeg": ffmpeg_path.get('linux'),
     "deno_path": "deno",
+    "reputation_db_path": "reputation.db",
     "emojis": {'wuuut': 518051242807787520,
                'youtube': 878537811601555466,
                'stonks': 879411306157985862,
                'squid_cleaning': 880326444356612116}, # Replace this dict values to your Emoji Id's.
+
 }
 
 YDL_OPTIONS = {'format': 'bestaudio',

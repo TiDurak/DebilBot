@@ -1,8 +1,9 @@
 import time
 import aiosqlite
+from config import settings
 
 class Reputation:
-    def __init__(self, db_path="tables/reputation.db"):
+    def __init__(self, db_path=settings.get("reputation_db_path")):
         self.__db_path = db_path
         self.__db = None
 
