@@ -43,7 +43,8 @@ class SReputation(commands.Cog):
         if success:
             reputation = await self.__reputation.get(member.id, interaction.guild.id)
             await interaction.response.send_message(
-                f"Пидору с ником **{member.mention}** была {string_addition} репутация. Теперь она составляет {reputation}")
+                f"Пидору с ником **{member.mention}** была {string_addition} репутация. Теперь на этом сервере "
+                f"она составляет {reputation}")
         else:
             time_remaining = result.get("remaining")
             await interaction.response.send_message(

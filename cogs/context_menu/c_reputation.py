@@ -30,7 +30,8 @@ class CReputation(commands.Cog):
         success = result.get("success")
         if success:
             await interaction.response.send_message(
-                f"Пидору с ником **{member.mention}** была выдана репутация. Теперь она составляет {reputation}")
+                f"Пидору с ником **{member.mention}** была выдана репутация. Теперь на этом сервере "
+                f"она составляет {reputation}")
         else:
             time_remaining = result.get("remaining")
             await interaction.response.send_message(

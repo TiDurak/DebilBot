@@ -8,14 +8,15 @@ from classes.eblan_photo import EblanPhoto
 class CFun(commands.Cog):
     """Fun"""
 
-    def __init__(self, bot) -> None:
+    def __init__(self, bot, eco) -> None:
         self.bot = bot
+        self.__economics = eco
         self.ctx_quote = app_commands.ContextMenu(
             name="Сделать Цитату",
             callback=self.quote,
         )
         self.ctx_eblan = app_commands.ContextMenu(
-            name="Ты Еблан!",
+            name="Ты Еблан! - 250₲",
             callback=self.get_eblan,
         )
         self.bot.tree.add_command(self.ctx_quote)
@@ -36,12 +37,17 @@ class CFun(commands.Cog):
             await interaction.response.send_message(file=discord.File(quote_image))
 
     async def get_eblan(self, interaction: discord.Interaction, member: discord.Member) -> None:
-        eblan_photo = EblanPhoto("assets/eblan.jpg", member.avatar.url)
-        eblan_photo.resize_image()
-        eblan_photo.add_border()
-        eblan_photo.place_image(position=(365, 95))
-        result = eblan_photo.save_result('assets/eblan_ready.jpg')
-        await interaction.response.send_message(member.mention, file=discord.File(result))
+        success = await self.__economics.edit_money(interaction.user.id, -250)
+        if success:
+            eblan_photo = EblanPhoto("assets/eblan.jpg", member.avatar.url)
+            eblan_photo.resize_image()
+            eblan_photo.add_border()
+            eblan_photo.place_image(position=(365, 95))
+            result = eblan_photo.save_result('assets/eblan_ready.jpg')
+            msg = f"{member.mention}, {interaction.user.mention} потратил `250 Gondons`, чтобы назвать тебя ебланом"
+            await interaction.response.send_message(msg, file=discord.File(result))
+        else:
+            await interaction.response.send_message("🫰🏿 Недостаточно денег на балансе, бичара", ephemeral=True)
 
-async def setup(bot):
-    await bot.add_cog(CFun(bot))
+async def setup(bot, eco):
+    await bot.add_cog(CFun(bot, eco))

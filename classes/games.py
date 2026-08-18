@@ -35,39 +35,74 @@ class RockPaperScissors:
         return description
 
 class Slots:
+    """
+    Multipliers:
+
+    👑👑👑 = x10
+    👑👑 = x6.66
+    7️⃣7️⃣7️⃣ = x50
+    7️⃣7️⃣ = x7.5
+    7️⃣ = x1.85
+    🔔🔔🔔 = x4
+    🔔🔔 = x2.5
+    🍒🍒🍒 = x2.5
+    🍒🍒 = x0.45
+    ☠️☠️☠️ = x1.5
+    ☠️☠️ = x0.65
+    """
     def __init__(self):
-        self.__SYMBOLS = ['🍒', '🔔', '7️⃣', '👑', '☠️']
-        self.__SLOTS = [0, 1, 2]
+        self.__SYMBOLS = ['🍒', '☠️', '🔔', '👑', '7️⃣']
+        self.__WEIGHTS = [30, 25, 20, 15, 10]
         self.slots = None
 
     async def __spin_slots(self) -> list:
-        slots = self.__SLOTS
-        for i in range(3):
-            slots[i] = self.__SYMBOLS[random.randint(0, 4)]
+        return random.choices(
+            self.__SYMBOLS,
+            weights=self.__WEIGHTS,
+            k=3
+        )
 
-        return slots
+    async def get_result(self) -> float:
+        self.slots = await self.__spin_slots()
+        counts = {
+            symbol: self.slots.count(symbol)
+            for symbol in self.__SYMBOLS
+        }
 
-    async def get_result(self) -> str:
-        slots = await self.__spin_slots()
-        self.slots = slots
-        is_same = True if slots[0] == slots[1] == slots[2] else False
-        if is_same and self.__SYMBOLS[4] in slots:
-            result = 'ЛОШАРА! Ваш баланс обнулён'
-        elif is_same and self.__SYMBOLS[3] in slots:
-            result = '+ 5 000 баксов на ваш счёт'
-        elif is_same and self.__SYMBOLS[2] in slots:
-            result = '+ 10 000 баксов на ваш счёт'
-        elif is_same and self.__SYMBOLS[1] in slots:
-            result = '+ 15 000 баксов на ваш счёт'
-        elif is_same and self.__SYMBOLS[0] in slots:
-            result = 'ДЖЕКПОТ!!! + 1 000 000 баксов на ваш счёт'
-        elif self.__SYMBOLS[0] == slots[0] == slots[1] or slots[0] == slots[2] == self.__SYMBOLS[0] or slots[1] == slots[2] == self.__SYMBOLS[0]:
-            result = '+ 3 500 баксов на ваш счёт'
-        elif self.__SYMBOLS[0] in slots:
-            result = '+ 1 500 баксов на ваш счёт'
-        else:
-            result = 'Ничего('
-        return result
+        if counts['👑'] == 3:
+            return 10
+
+        if counts['👑'] == 2:
+            return 6.66
+
+        if counts['7️⃣'] == 3:
+            return 50
+
+        if counts['7️⃣'] == 2:
+            return 7.5
+
+        if counts['7️⃣'] == 1:
+            return 1.85
+
+        if counts['🔔'] == 3:
+            return 4
+
+        if counts['🔔'] == 2:
+            return 2.5
+
+        if counts['🍒'] == 3:
+            return 2.5
+
+        if counts['🍒'] == 2:
+            return 0.45
+
+        if counts['☠️'] == 3:
+            return 1.5
+
+        if counts['☠️'] == 2:
+            return 0.65
+
+        return 0
 
     async def slots_parsed(self) -> str:
         slots = str(self.slots[0]) + str(self.slots[1]) + str(self.slots[2])

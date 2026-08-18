@@ -11,8 +11,9 @@ from google import genai
 class SText(commands.Cog):
     """Text"""
 
-    def __init__(self, bot):
+    def __init__(self, bot, eco):
         self.bot = bot
+        self.__economics = eco
         self.genai_client = genai.Client(api_key=google_ai_settings.get("google_api_key"))
         self.chat_sessions = {}
         
@@ -66,38 +67,44 @@ class SText(commands.Cog):
                                                                                              description="Переводит текст, ибо ты даун, "
                                                                                                          "не можешь перевести сам")
 
-    @app_commands.command(name="ai", description="Общение с нейросетью Google Gemini")
+    @app_commands.command(name="ai", description="Общение с нейросетью Google Gemini. Стоимость запроса: 15₲")
     @app_commands.describe(message="Задай свой вопрос, скотина блядь")
     async def ai(self, interaction: discord.Interaction, message: str):
-        embed = discord.Embed(color=settings.get("main_embed_color"), title=f"{interaction.user.name} :: {message}")
-        await interaction.response.send_message(embed=embed)
-        embed.set_footer(text=f"DebilAI - Powered by {google_ai_settings.get('gemini_model')}",
-                         icon_url="https://tidurak.github.io/google-gemini-icon.png")
-        chat_session = self.chat_sessions.get(interaction.guild.id)
-        if chat_session == None:
-            self.chat_sessions[interaction.guild.id] = self.genai_client.chats.create(model=google_ai_settings.get("gemini_model"))
+        success = await self.__economics.edit_money(interaction.user.id, -15)
+        if success:
+            balance = await self.__economics.get_balance(interaction.user.id)
+            embed = discord.Embed(color=settings.get("main_embed_color"), title=f"{interaction.user.name} :: {message}")
+            await interaction.response.send_message(embed=embed)
+            embed.set_footer(text=f"Powered by {google_ai_settings.get('gemini_model')}. Осталось {balance}₲",
+                             icon_url="https://tidurak.github.io/google-gemini-icon.png")
             chat_session = self.chat_sessions.get(interaction.guild.id)
-            response = None
+            if chat_session == None:
+                self.chat_sessions[interaction.guild.id] = self.genai_client.chats.create(model=google_ai_settings.get("gemini_model"))
+                chat_session = self.chat_sessions.get(interaction.guild.id)
+                response = None
 
-        response = chat_session.send_message(message)
+            response = chat_session.send_message(message)
 
-        if len(response.text) > 1000:
-            res = response.text
-            j = 1
-            embed.add_field(name="\u200b", value=res[:999], inline=False)
-            while True:
-                j += 1
-                res = res[999:]
-                if len(res) > 1000:
-                    embed.add_field(name="\u200b", value=res[0:999], inline=False)
-                else:
-                    embed.add_field(name="\u200b", value=res, inline=False)
-                    break
+            if len(response.text) > 1000:
+                res = response.text
+                j = 1
+                embed.add_field(name="\u200b", value=res[:999], inline=False)
+                while True:
+                    j += 1
+                    res = res[999:]
+                    if len(res) > 1000:
+                        embed.add_field(name="\u200b", value=res[0:999], inline=False)
+                    else:
+                        embed.add_field(name="\u200b", value=res, inline=False)
+                        break
+            else:
+                embed.add_field(name="\u200b", value=response.text, inline=False)
+
+            await interaction.edit_original_response(embed=embed)
         else:
-            embed.add_field(name="\u200b", value=response.text, inline=False)
-        
-        await interaction.edit_original_response(embed=embed)
+            await interaction.response.send_message("У тебя кончились бабки. Ты теперь бичара. Юзай `/daily`, "
+                                                    "или выиграй бабки в казике")
 
 
-async def setup(bot):
-    await bot.add_cog(SText(bot))
+async def setup(bot, eco):
+    await bot.add_cog(SText(bot, eco))

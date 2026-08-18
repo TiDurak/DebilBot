@@ -20,6 +20,7 @@ settings = {
     "path_to_ffmpeg": ffmpeg_path.get('linux'),
     "deno_path": "deno",
     "reputation_db_path": "reputation.db",
+    "economics_db_path": "economics.db",
     "emojis": {'wuuut': 518051242807787520,
                'youtube': 878537811601555466,
                'stonks': 879411306157985862,

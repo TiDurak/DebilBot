@@ -13,12 +13,35 @@ from classes.quote_image_creator import QuoteImageCreator
 from classes.exceptions import APIError
 from classes import games, joke_parser
 
+class SlotsButtons(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label='Показать множители', emoji='🎰')
+    async def button_multipliers(self, interaction: discord.Interaction, button: discord.ui.Button):
+        multipliers = """
+        👑👑👑 = x10 \n
+        👑👑 = x6.66 \n
+        7️⃣7️⃣7️⃣ = x50 \n
+        7️⃣7️⃣ = x7.5 \n
+        7️⃣ = x1.85 \n
+        🔔🔔🔔 = x4 \n
+        🔔🔔 = x2.5 \n
+        🍒🍒🍒 = x2.5 \n
+        🍒🍒 = x0.45 \n
+        ☠️☠️☠️ = x1.5 \n
+        ☠️☠️ = x0.65 \n
+        """
+        embed = discord.Embed(color=settings.get("main_embed_color"), title=f"🎰 Множители",
+                              description=multipliers)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 class SFun(commands.Cog):
     """Fun"""
 
-    def __init__(self, bot):
+    def __init__(self, bot, eco):
         self.bot = bot
+        self.__economics = eco
 
     @app_commands.command(name="anekdot", description="Парсит анекдот из сайта, "
                                                       "и делится им с тобой, ибо ты даун, "
@@ -128,14 +151,26 @@ class SFun(commands.Cog):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="slots", description="Азино три топора")
-    async def slots(self, interaction: discord.Interaction):
-        slots = games.Slots()
-        result = await slots.get_result()
-        slots_parsed = await slots.slots_parsed()
-        embed = discord.Embed(color=settings.get("main_embed_color"), title='🎰 Slots Azino777',
-                              description=slots_parsed)
-        embed.set_footer(text=result, icon_url="https://i.imgur.com/uZIlRnK.png")
-        await interaction.response.send_message(embed=embed)
+    @app_commands.describe(bet="Размер ставки в Gondon'ах")
+    async def slots(self, interaction: discord.Interaction, bet: app_commands.Range[int, 50, 10000]):
+        success = await self.__economics.edit_money(interaction.user.id, -bet)
+        balance = await self.__economics.get_balance(interaction.user.id)
+        if success:
+            slots = games.Slots()
+            bet_multiplier = await slots.get_result()
+            await self.__economics.edit_money(interaction.user.id, bet * bet_multiplier)
+            slots_parsed = await slots.slots_parsed()
+            embed = discord.Embed(color=settings.get("main_embed_color"), title='🎰 Slots Azino777',
+                                  description=slots_parsed)
+            embed.add_field(name="✖️ Полученный множитель", value=f"x{bet_multiplier}")
+            embed.add_field(name="📈 Прибыль", value = bet * bet_multiplier - bet)
+            embed.set_footer(text=f"Текущий баланс {balance}₲", icon_url="https://i.imgur.com/uZIlRnK.png")
+            view = SlotsButtons()
+            await interaction.response.send_message(embed=embed, view=view)
+        else:
+            await interaction.response.send_message(f"Ты даун? у тебя на балансе `{balance} Gondon'ов`. "
+                                                    f"Как ты хочешь сделать ставку {bet} Gondon'ов? Я тебе не банк, "
+                                                    "кредит не выдам")
 
-async def setup(bot):
-    await bot.add_cog(SFun(bot))
+async def setup(bot, eco):
+    await bot.add_cog(SFun(bot, eco))

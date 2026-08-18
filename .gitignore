@@ -1,5 +1,6 @@
 # SQL Tables
 reputation.db
+economics.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

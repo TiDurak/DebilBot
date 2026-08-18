@@ -72,5 +72,5 @@ class Reputation:
         return result[0]
 
     async def close(self):
-        if self.__db:
+        if self.__db is not None:
             await self.__db.close()
