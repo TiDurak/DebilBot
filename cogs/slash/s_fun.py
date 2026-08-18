@@ -154,11 +154,11 @@ class SFun(commands.Cog):
     @app_commands.describe(bet="Размер ставки в Gondon'ах")
     async def slots(self, interaction: discord.Interaction, bet: app_commands.Range[int, 50, 10000]):
         success = await self.__economics.edit_money(interaction.user.id, -bet)
-        balance = await self.__economics.get_balance(interaction.user.id)
         if success:
             slots = games.Slots()
             bet_multiplier = await slots.get_result()
             await self.__economics.edit_money(interaction.user.id, bet * bet_multiplier)
+            balance = await self.__economics.get_balance(interaction.user.id)
             slots_parsed = await slots.slots_parsed()
             embed = discord.Embed(color=settings.get("main_embed_color"), title='🎰 Slots Azino777',
                                   description=slots_parsed)
@@ -168,6 +168,7 @@ class SFun(commands.Cog):
             view = SlotsButtons()
             await interaction.response.send_message(embed=embed, view=view)
         else:
+            balance = await self.__economics.get_balance(interaction.user.id)
             await interaction.response.send_message(f"Ты даун? у тебя на балансе `{balance} Gondon'ов`. "
                                                     f"Как ты хочешь сделать ставку {bet} Gondon'ов? Я тебе не банк, "
                                                     "кредит не выдам")
