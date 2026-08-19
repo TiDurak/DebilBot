@@ -44,10 +44,10 @@ class Slots:
     7️⃣7️⃣ = x7.5
     7️⃣ = x1.85
     🔔🔔🔔 = x4
-    🔔🔔 = x2.5
-    🍒🍒🍒 = x2.5
+    🔔🔔 = x1.75
+    🍒🍒🍒 = x2
     🍒🍒 = x0.45
-    ☠️☠️☠️ = x1.5
+    ☠️☠️☠️ = x1.50
     ☠️☠️ = x0.65
     """
     def __init__(self):
@@ -88,16 +88,16 @@ class Slots:
             return 4
 
         if counts['🔔'] == 2:
-            return 2.5
+            return 1.75
 
         if counts['🍒'] == 3:
-            return 2.5
+            return 2
 
         if counts['🍒'] == 2:
             return 0.45
 
         if counts['☠️'] == 3:
-            return 1.5
+            return 1.50
 
         if counts['☠️'] == 2:
             return 0.65

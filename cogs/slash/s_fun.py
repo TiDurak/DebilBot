@@ -1,6 +1,5 @@
-import json
-import random
 import requests
+from textwrap import dedent
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -19,19 +18,19 @@ class SlotsButtons(discord.ui.View):
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label='Показать множители', emoji='🎰')
     async def button_multipliers(self, interaction: discord.Interaction, button: discord.ui.Button):
-        multipliers = """
-        👑👑👑 = x10 \n
-        👑👑 = x6.66 \n
-        7️⃣7️⃣7️⃣ = x50 \n
-        7️⃣7️⃣ = x7.5 \n
-        7️⃣ = x1.85 \n
-        🔔🔔🔔 = x4 \n
-        🔔🔔 = x2.5 \n
-        🍒🍒🍒 = x2.5 \n
-        🍒🍒 = x0.45 \n
-        ☠️☠️☠️ = x1.5 \n
-        ☠️☠️ = x0.65 \n
-        """
+        multipliers = dedent("""
+        👑👑👑 = x10
+        👑👑 = x6.66
+        7️⃣7️⃣7️⃣ = x50
+        7️⃣7️⃣ = x7.5
+        7️⃣ = x1.85
+        🔔🔔🔔 = x4
+        🔔🔔 = x1.75
+        🍒🍒🍒 = x2
+        🍒🍒 = x0.45
+        ☠️☠️☠️ = x1.50
+        ☠️☠️ = x0.65
+        """)
         embed = discord.Embed(color=settings.get("main_embed_color"), title=f"🎰 Множители",
                               description=multipliers)
         await interaction.response.send_message(embed=embed, ephemeral=True)
