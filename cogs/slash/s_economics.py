@@ -40,6 +40,28 @@ class SEconomics(commands.Cog):
         embed.set_footer(text=f"Запросил {interaction.user.name}", icon_url=interaction.user.avatar.url)
         await interaction.response.send_message(embed=embed)
 
+    @app_commands.command(name="send", description="Отправить Gondon'ы другу-дегенерату")
+    async def send(self, interaction: discord.Interaction,
+                   member: discord.Member,
+                   amount: app_commands.Range[int, 10, 100000]):
+        if interaction.user.id == member.id:
+            await interaction.response.send_message("Скажи честно, ты еблан? Нахуя сам себе деньги переводишь, пидорхуй "
+                                                    "блядь")
+            return
+        success = await self.__economics.edit_money(interaction.user.id, -amount)
+        if success:
+            await self.__economics.edit_money(member.id, amount)
+            current_self_balance = await self.__economics.get_balance(interaction.user.id)
+            current_member_balance = await self.__economics.get_balance(member.id)
+            embed = discord.Embed(color=settings.get("main_embed_color"),
+                                  title=f'💳 Перевод')
+            embed.add_field(name="Передано Gondons", value=f"{amount} ₲")
+            embed.add_field(name=f"Осталось у {interaction.user.name}", value=f"{current_self_balance} ₲")
+            embed.add_field(name=f"Текущий баланс у {member.name}", value=f"{current_member_balance} ₲", inline=False)
+            await interaction.response.send_message(embed=embed)
+        else:
+            await interaction.response.send_message("Пшёл нахуй гондон, у тебя не хватает денег")
+
 
 
 async def setup(bot, economics):
