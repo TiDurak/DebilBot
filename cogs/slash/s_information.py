@@ -7,8 +7,10 @@ from config import settings
 class SInformation(commands.Cog):
     """Information commands"""
 
-    def __init__(self, bot):
+    def __init__(self, bot, reputation, economics):
         self.bot = bot
+        self.__reputation = reputation
+        self.__economics = economics
 
     @app_commands.command(name="avatar", description="Получить твою аву / аву указанного юзверя / твоей мамаши")
     @app_commands.describe(member="Покажу аватарку этого говноеда")
@@ -25,14 +27,15 @@ class SInformation(commands.Cog):
         if member is None:
             member = interaction.user
         is_bot = "Да" if member.bot else "Нет"
-
+        reputation = await self.__reputation.get(member.id, interaction.guild.id)
+        balance = await self.__economics.get_balance(member.id)
         embed = discord.Embed(color=settings.get("main_embed_color"), title=f'Информация о пользователе {member}')
-        embed.add_field(name='Имя Пользователя', value=member)
-        embed.add_field(name='Пользователь На Сервере', value=member.mention)
-        embed.add_field(name='ID Пользователя', value=member.id)
-        embed.add_field(name='Бот', value=is_bot, inline=False)
-        embed.add_field(name='Зашёл На Сервер', value=member.joined_at.strftime("%#d %B %Y, %H:%M"))
-        embed.add_field(name='Дата Регистрации', value=member.created_at.strftime("%#d %B %Y, %H:%M"))
+        embed.add_field(name='🪪 ID Пользователя', value=member.id)
+        embed.add_field(name='🤖 Бот', value=is_bot)
+        embed.add_field(name='🕑 Зашёл На Сервер', value=member.joined_at.strftime("%#d %B %Y, %H:%M"))
+        embed.add_field(name='🕑 Дата Регистрации', value=member.created_at.strftime("%#d %B %Y, %H:%M"))
+        embed.add_field(name='📈 Репутация на сервере', value=reputation)
+        embed.add_field(name='💵 Баланс', value=f'{balance} Gondons')
         embed.set_thumbnail(url=member.avatar.url)
         embed.set_footer(text=f"Запросил {interaction.user.name}", icon_url=interaction.user.avatar.url)
         await interaction.response.send_message(embed=embed)
@@ -48,5 +51,5 @@ class SInformation(commands.Cog):
         embed.set_footer(text=f"Запросил {interaction.user.name}", icon_url=interaction.user.avatar.url)
         await interaction.response.send_message(embed=embed)
 
-async def setup(bot):
-    await bot.add_cog(SInformation(bot))
+async def setup(bot, rep, eco):
+    await bot.add_cog(SInformation(bot, rep, eco))

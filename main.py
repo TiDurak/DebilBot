@@ -28,7 +28,7 @@ basic_cogs = [listeners.setup(bot)]
 slash_cogs = [s_fun.setup(bot, eco),
               s_text.setup(bot, eco),
               s_music.setup(bot),
-              s_information.setup(bot),
+              s_information.setup(bot, rep, eco),
               s_moderation.setup(bot),
               s_converters.setup(bot),
               s_reputation.setup(bot, rep),
