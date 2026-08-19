@@ -10,11 +10,11 @@ Russian Discord bot for music, games, economics, moderation, and AI chat
 
 */slash and context commands only*
 
-<a href="https://discord.gg/4dEmQjt"><img src="https://img.shields.io/badge/Discord-Join%20today!-7289DA?logo=discord&logoColor=7289DA"></a>
-<a href="https://discord.com/api/oauth2/authorize?client_id=699912361481470032&permissions=8&scope=bot"><img src="https://img.shields.io/badge/DebilBot-Add to Discord server-orange?logo=probot&logoColor=orange"></a>
+<a href="https://discord.gg/4dEmQjt"><img src="https://img.shields.io/badge/Discord-Join%20today!-7289DA?logo=discord&logoColor=7289DA&style=flat-square"></a>
+<a href="https://discord.com/api/oauth2/authorize?client_id=699912361481470032&permissions=8&scope=bot"><img src="https://img.shields.io/badge/DebilBot-Add to Discord server-orange?logo=probot&logoColor=orange&style=flat-square"></a>
 <br>
-<img src="https://img.shields.io/badge/Python-3.10+-yellow">
-<img src="https://img.shields.io/badge/Discord.Py-2.7.1-blue">
+<img src="https://img.shields.io/badge/Python-3.10+-yellow?style=flat-square">
+<img src="https://img.shields.io/badge/Discord.Py-2.7.1-blue?style=flat-square">
 
 ***
 
