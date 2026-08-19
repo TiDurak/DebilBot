@@ -31,7 +31,7 @@ slash_cogs = [s_fun.setup(bot, eco),
               s_information.setup(bot, rep, eco),
               s_moderation.setup(bot),
               s_converters.setup(bot),
-              s_reputation.setup(bot, rep),
+              s_reputation.setup(bot, rep, eco),
               s_economics.setup(bot, eco),
               ]
 

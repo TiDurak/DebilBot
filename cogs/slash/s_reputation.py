@@ -7,8 +7,9 @@ from discord.ext import commands
 
 class SReputation(commands.Cog):
     """Reputation"""
-    def __init__(self, rep):
-        self.__reputation = rep
+    def __init__(self, reputation, economics):
+        self.__reputation = reputation
+        self.__economics = economics
 
     @app_commands.command(name="rep", description="+реп -реп / показать репутацию")
     @app_commands.choices(choice=[
@@ -23,10 +24,10 @@ class SReputation(commands.Cog):
                 "захуярьте его")
             return
         if choice.value == "+":
-            result = await self.__reputation.give(member.id, interaction.guild.id, 1)
+            result = await self.__reputation.edit(member.id, interaction.guild.id, 1)
             string_addition = "выдана"
         elif choice.value == "-":
-            result = await self.__reputation.give(member.id, interaction.guild.id, -1)
+            result = await self.__reputation.edit(member.id, interaction.guild.id, -1)
             string_addition = "захуярена"
         else:
             reputation = await self.__reputation.get(member.id, interaction.guild.id)
@@ -51,5 +52,43 @@ class SReputation(commands.Cog):
                 f"Этому челоёбу можно изменить репутацию только раз в 60 секунд. Жди `{time_remaining} сек`, пиздюк мелкий",
                 ephemeral=True)
 
-async def setup(bot, reputation):
-    await bot.add_cog(SReputation(reputation))
+    @app_commands.command(name="buy_reputation", description="Купить репутацию на этом сервере: 200₲ за 1 реп")
+    @app_commands.describe(amount="Количество репутации (200₲ за штуку)")
+    async def buy_reputation(self, interaction: discord.Interaction, amount: app_commands.Range[int, 1, 1000]):
+        price = -amount*200
+        success = await self.__economics.edit_money(interaction.user.id, price)
+        if success:
+            await self.__reputation.edit(interaction.user.id, interaction.guild.id, amount)
+            current_reputation = await self.__reputation.get(interaction.user.id, interaction.guild.id)
+            embed = discord.Embed(color=settings.get("main_embed_color"),
+                                  title=f'💵 Покупка удалась')
+            embed.add_field(name="Получено репутации", value=amount)
+            embed.add_field(name=f"Цена", value=f"{price}₲")
+            embed.add_field(name=f"По курсу", value="200₲ за 1 реп.")
+            embed.add_field(name=f"Репутация на сервере сейчас", value=current_reputation)
+            await interaction.response.send_message(embed=embed)
+        else:
+            await interaction.response.send_message("Пшёл нахуй гондон, у тебя не хватает денег")
+
+    @app_commands.command(name="sell_reputation", description="Продать репутацию: 150₲ за 1 реп")
+    @app_commands.describe(amount="Количество репутации к продаже (150₲ за штуку)")
+    async def sell_reputation(self, interaction: discord.Interaction, amount: app_commands.Range[int, 5, 500]):
+        price = amount * 150
+        success = await self.__reputation.edit(interaction.user.id, interaction.guild.id, -amount)
+        if success:
+            await self.__economics.edit_money(interaction.user.id, price)
+            current_reputation = await self.__reputation.get(interaction.user.id, interaction.guild.id)
+            current_balance = await self.__economics.get_balance(interaction.user.id)
+            embed = discord.Embed(color=settings.get("main_embed_color"),
+                                  title=f'💵 Продажа удалась')
+            embed.add_field(name="Продано репутации", value=amount)
+            embed.add_field(name=f"Получено", value=f"{price}₲")
+            embed.add_field(name=f"По курсу", value="150₲ за 1 реп.")
+            embed.add_field(name=f"Репутация на сервере сейчас", value=current_reputation)
+            embed.add_field(name=f"Баланс сейчас", value=current_balance)
+            await interaction.response.send_message(embed=embed)
+        else:
+            await interaction.response.send_message("Пшёл нахуй пиздюк говномпомазанный, у тебя нет столько репутации")
+
+async def setup(bot, reputation, economics):
+    await bot.add_cog(SReputation(reputation, economics))

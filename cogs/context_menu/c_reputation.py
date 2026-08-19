@@ -25,7 +25,7 @@ class CReputation(commands.Cog):
                 "Слыш ты, гомик ебливый. Самолайк - залог охуения. Нельзя самому себе менять репутацию. Ану пездюки, "
                 "захуярьте его")
             return
-        result = await self.__reputation.give(member.id, interaction.guild.id, 1)
+        result = await self.__reputation.edit(member.id, interaction.guild.id, 1)
         reputation = await self.__reputation.get(member.id, interaction.guild.id)
         success = result.get("success")
         if success:
@@ -43,7 +43,7 @@ class CReputation(commands.Cog):
             await interaction.response.send_message(
                 "ты, я вижу, сам себя решил захуярить...", ephemeral=True)
             return
-        result = await self.__reputation.give(member.id, interaction.guild.id, -1)
+        result = await self.__reputation.edit(member.id, interaction.guild.id, -1)
         reputation = await self.__reputation.get(member.id, interaction.guild.id)
         success = result.get("success")
         if success:

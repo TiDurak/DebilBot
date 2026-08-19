@@ -22,7 +22,7 @@ class Reputation:
 
         await self.__db.commit()
 
-    async def give(self, user_id, guild_id, amount):
+    async def edit(self, user_id, guild_id, amount):
         now = int(time.time())
         cursor = await self.__db.execute("""
                 SELECT last_given
