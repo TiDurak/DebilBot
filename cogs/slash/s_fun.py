@@ -156,13 +156,13 @@ class SFun(commands.Cog):
         if success:
             slots = games.Slots()
             bet_multiplier = await slots.get_result()
-            await self.__economics.edit_money(interaction.user.id, bet * bet_multiplier)
+            await self.__economics.edit_money(interaction.user.id, round(bet * bet_multiplier, 2))
             balance = await self.__economics.get_balance(interaction.user.id)
             slots_parsed = await slots.slots_parsed()
-            embed = discord.Embed(color=settings.get("main_embed_color"), title='🎰 Slots Azino777',
+            embed = discord.Embed(color=settings.get("main_embed_color"), title='🎰 Казик Azino777 - ненаёб100%',
                                   description=slots_parsed)
             embed.add_field(name="✖️ Полученный множитель", value=f"x{bet_multiplier}")
-            embed.add_field(name="📈 Прибыль", value = bet * bet_multiplier - bet)
+            embed.add_field(name="📈 Прибыль", value = round(bet * bet_multiplier - bet, 2))
             embed.set_footer(text=f"Текущий баланс {balance}₲", icon_url="https://i.imgur.com/uZIlRnK.png")
             view = SlotsButtons()
             await interaction.response.send_message(embed=embed, view=view)
