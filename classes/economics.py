@@ -40,6 +40,17 @@ class Economics:
     async def edit_money(self, user_id, amount):
         if amount == 0:
             return True
+        if amount < 0:
+            cursor = await self.__db.execute("""
+                    SELECT balance
+                    FROM economics
+                    WHERE user_id = ?
+                """, (user_id,))
+
+            result = await cursor.fetchone()
+            if result is None or result[0] < abs(amount):
+                return False
+            
         cursor = await self.__db.execute("""
             INSERT INTO economics (user_id, balance)
             VALUES (?, ?)
