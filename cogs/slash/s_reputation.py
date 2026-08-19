@@ -51,8 +51,5 @@ class SReputation(commands.Cog):
                 f"Этому челоёбу можно изменить репутацию только раз в 60 секунд. Жди `{time_remaining} сек`, пиздюк мелкий",
                 ephemeral=True)
 
-
-
-
 async def setup(bot, reputation):
     await bot.add_cog(SReputation(reputation))
