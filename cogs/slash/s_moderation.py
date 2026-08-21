@@ -6,7 +6,9 @@ from discord.ext import commands
 
 
 class SModeration(commands.Cog):
-    """Moderation"""
+    HELP_NAME = "🔨 Модерация"
+    HELP_NAME_VALUE = "moderation"
+    HELP_DESCRIPTION = "БАН"
 
     def __init__(self, bot):
         self.bot = bot

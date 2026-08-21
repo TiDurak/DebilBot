@@ -9,7 +9,9 @@ from google import genai
 
 
 class SText(commands.Cog):
-    """Text"""
+    HELP_NAME = "💬 Текст"
+    HELP_NAME_VALUE = "text"
+    HELP_DESCRIPTION = "Текстовые говносрани"
 
     def __init__(self, bot, eco):
         self.bot = bot

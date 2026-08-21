@@ -1,6 +1,6 @@
 from cogs import listeners
 from cogs.context_menu import c_fun, c_information, c_reputation
-from cogs.slash import s_fun, s_text, s_music, s_moderation, s_information, s_converters, s_reputation, s_economics
+from cogs.slash import s_help, s_fun, s_text, s_music, s_moderation, s_information, s_converters, s_reputation, s_economics
 from config import settings
 from classes import reputation, economics
 
@@ -25,7 +25,8 @@ asyncio.run(eco.initialize())
 
 basic_cogs = [listeners.setup(bot)]
 
-slash_cogs = [s_fun.setup(bot, eco),
+slash_cogs = [s_help.setup(bot),
+              s_fun.setup(bot, eco),
               s_text.setup(bot, eco),
               s_music.setup(bot),
               s_information.setup(bot, rep, eco),

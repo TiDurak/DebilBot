@@ -9,7 +9,9 @@ from discord import app_commands
 from discord.ext import commands
 
 class SMusic(commands.Cog):
-    """Music"""
+    HELP_NAME = "🎵 Музло"
+    HELP_NAME_VALUE = "music"
+    HELP_DESCRIPTION = "Даже не пытайся включать всякую срань с помощью этих функций. Внатуре, только не реп пжпж"
 
     def __init__(self, bot):
         self.bot = bot

@@ -5,7 +5,9 @@ from discord.ext import commands
 from config import settings
 
 class SInformation(commands.Cog):
-    """Information commands"""
+    HELP_NAME = "ℹ️ Информационные плюхи"
+    HELP_NAME_VALUE = "information"
+    HELP_DESCRIPTION = "Инфа сотка"
 
     def __init__(self, bot, reputation, economics):
         self.bot = bot

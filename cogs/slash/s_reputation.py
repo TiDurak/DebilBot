@@ -6,7 +6,10 @@ from discord.ext import commands
 
 
 class SReputation(commands.Cog):
-    """Reputation"""
+    HELP_NAME = "📈 Репутация"
+    HELP_NAME_VALUE = "reputation"
+    HELP_DESCRIPTION = "Репутация - способ показать человеку его интеллектуальную ущербность"
+
     def __init__(self, reputation, economics):
         self.__reputation = reputation
         self.__economics = economics

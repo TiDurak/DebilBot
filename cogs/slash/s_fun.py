@@ -36,7 +36,9 @@ class SlotsButtons(discord.ui.View):
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
 class SFun(commands.Cog):
-    """Fun"""
+    HELP_NAME = "🎉 Развекуха"
+    HELP_NAME_VALUE = "fun"
+    HELP_DESCRIPTION = "Тип очень развлекательные хуйни"
 
     def __init__(self, bot, eco):
         self.bot = bot

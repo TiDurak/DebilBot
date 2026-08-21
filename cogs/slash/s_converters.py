@@ -9,7 +9,9 @@ from config import settings
 
 
 class SConverters(commands.Cog):
-    """Converters"""
+    HELP_NAME = "💱 Конвертеры"
+    HELP_NAME_VALUE = "converters"
+    HELP_DESCRIPTION = "Хэш, ь64, двоичный код и прочая дрисня"
 
     def __init__(self, bot):
         self.bot = bot

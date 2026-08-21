@@ -6,10 +6,10 @@ from discord.ext import commands
 
 
 class SEconomics(commands.Cog):
-    """
-    Economics cog
-    Currency: ₲ - Gondon
-    """
+    HELP_NAME = "💰 Экономика"
+    HELP_NAME_VALUE = "economics"
+    HELP_DESCRIPTION = "Дегенератские и никому не нужные экономические финтиплюшки. Валюта: гондоны (Gondons ₲)"
+
     def __init__(self, economics):
         self.__economics = economics
 
