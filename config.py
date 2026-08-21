@@ -16,7 +16,7 @@ settings = {
     "token": os.environ["DEBIL_TOKEN"],
     "prefix": 'd.',
     "bot_status": "Юзай /",
-    "main_embed_color": 0xf0cd4f,
+    "main_embed_color": 0xffcc7e,
     "path_to_ffmpeg": ffmpeg_path.get('linux'),
     "deno_path": "deno",
     "reputation_db_path": "reputation.db",
