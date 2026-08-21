@@ -52,7 +52,7 @@ class Slots:
     """
     def __init__(self):
         self.__SYMBOLS = ['🍒', '☠️', '🔔', '👑', '7️⃣']
-        self.__WEIGHTS = [30, 25, 20, 15, 10]
+        self.__WEIGHTS = [30, 30, 25, 10, 5]
         self.slots = None
 
     async def __spin_slots(self) -> list:
