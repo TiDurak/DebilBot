@@ -38,7 +38,7 @@ class SEconomics(commands.Cog):
             balance = await self.__economics.edit_money(interaction.user.id, reward)
             await interaction.response.send_message(
                 f"**{interaction.user.mention}** активировал ключ и забрал бомж пакет "
-                f"в размере `{reward}` гондонов")
+                f"в размере `{reward} Gondon'ов`")
         else:
             await interaction.response.send_message(
                 "Твой промокод - фальшивка, или ты лох, и его уже заюзали")
