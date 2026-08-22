@@ -28,6 +28,7 @@ class HelpTemplates:
             📙 `/help` `категория` для вывода команд выбранной категории
 
             🌍 [Страница DebilBot'а](https://govnoed.de/)
+            🗝️ [Залутать промокод](https://govnoed.de/get_key)
             🪩 [Discord сервер + техподдержка](https://discord.com/invite/4dEmQjt)
             🐞 [GitHub - Репорт бага](https://github.com/TiDurak/DebilBot/issues/new/choose)
             """)
