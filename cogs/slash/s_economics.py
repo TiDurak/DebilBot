@@ -10,8 +10,10 @@ class SEconomics(commands.Cog):
     HELP_NAME_VALUE = "economics"
     HELP_DESCRIPTION = "Дегенератские и никому не нужные экономические финтиплюшки. Валюта: гондоны (Gondons ₲)"
 
-    def __init__(self, economics):
+    def __init__(self, economics, promo):
         self.__economics = economics
+        self.__promo_keys = promo
+
 
     @app_commands.command(name="daily", description="Забрать ежедневную подачку для лохов")
     async def daily(self, interaction: discord.Interaction):
@@ -28,6 +30,18 @@ class SEconomics(commands.Cog):
                 "Если блядь по простому нахуй блядь сука блядь нахуй, то ты получаешь сука блядь "
                 "государственную подачку для бомжей раз в 24 часа блядь нахуй. Это означает блядь, "
                 f"что ты получишь свою карманку от меня через `{remaining}`. Всё. Пошёл нахуй, быдло блядь")
+
+    @app_commands.command(name="redeem_promo", description="Активировать код, полученный на сайте govnoed.de")
+    async def redeem_promo(self, interaction: discord.Interaction, promo: str):
+        reward = await self.__promo_keys.get_reward(promo)
+        if reward > 0:
+            balance = await self.__economics.edit_money(interaction.user.id, reward)
+            await interaction.response.send_message(
+                f"**{interaction.user.mention}** активировал ключ и забрал бомж пакет "
+                f"в размере `{reward}` гондонов")
+        else:
+            await interaction.response.send_message(
+                "Твой промокод - фальшивка, или ты лох, и его уже заюзали")
 
     @app_commands.command(name="balance", description="Посмотреть баланс Gondons'ов")
     async def balance(self, interaction: discord.Interaction, member: discord.Member = None):
@@ -64,5 +78,5 @@ class SEconomics(commands.Cog):
 
 
 
-async def setup(bot, economics):
-    await bot.add_cog(SEconomics(economics))
+async def setup(bot, economics, promo):
+    await bot.add_cog(SEconomics(economics, promo))

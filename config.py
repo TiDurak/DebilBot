@@ -21,6 +21,7 @@ settings = {
     "deno_path": "deno",
     "reputation_db_path": "reputation.db",
     "economics_db_path": "economics.db",
+    "promokeys_db_path": "external_db/promo_keys.db",
     "emojis": {'wuuut': 518051242807787520,
                'youtube': 878537811601555466,
                'stonks': 879411306157985862,
