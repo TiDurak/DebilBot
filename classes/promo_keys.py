@@ -3,6 +3,9 @@ from config import settings
 import hashlib
 import aiosqlite
 
+# This class communicates with the database managed by GovnoedPromoAPI.
+# Database schema and operations are maintained by GovnoedPromoAPI.
+# See: https://github.com/TiDurak/GovnoedPromoAPI
 class PromoKeys:
     def __init__(self, db_path=settings.get("promokeys_db_path")):
         self.__db_path = db_path
