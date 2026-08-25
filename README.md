@@ -31,7 +31,7 @@ Russian Discord bot for music, games, economics, moderation, and AI chat
 1. Install all Python dependencies: `pip install -U -r requirements.txt`.
 2. Install Dyno and FFmpeg, then set their paths in `config.py`.
 3. If you are using Linux, install the *Times New Roman* font.
-4. Install the [Google Cloud CLI](https://cloud.google.com/sdk/docs/install), set up [`GOOGLE_API_KEY`](https://aistudio.google.com/app/apikey), and follow [these instructions](https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev) to use the `/ai` command.
+4. Set up [`OPENROUTER_API_KEY`](https://openrouter.ai/)
 5. Get your bot token from the [Discord Developer Portal](https://discord.com/developers/applications).
 6. Set the `DEBIL_TOKEN` environment variable.
 7. Edit `config.py` according to your preferences.
