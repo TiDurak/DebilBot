@@ -1,5 +1,4 @@
 import os
-from google.genai import types
 
 try:
     os.environ["DEBIL_TOKEN"]
@@ -39,22 +38,14 @@ YDL_OPTIONS = {'format': 'bestaudio',
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
                   'options': '-vn'}
 
-google_ai_settings = {
-    # Create the model
-    # See https://ai.google.dev/api/python/google/generativeai/GenerativeModel
-    "google_api_key": os.environ.get("GOOGLE_API_KEY"), # https://aistudio.google.com/app/apikey
-    "gemini_model": "gemini-3.6-flash", # Recommend to use flash models
-    "config": types.GenerateContentConfig(
-        temperature = 0.9,
-        top_p = 1,
-        top_k = 0,
-        max_output_tokens = 1700,
-        response_mime_type = "text/plain",
-        safety_settings = [
-            types.SafetySetting(
-                category = 'HARM_CATEGORY_HATE_SPEECH',
-                threshold = 'BLOCK_ONLY_HIGH'
-            ),
-        ]
-    )
+ai_settings = {
+    "openrouter_api_key": os.environ["OPENROUTER_API_KEY"], # https://openrouter.ai/
+    "ai_instructions": {
+        "role": "system",
+        "content": "Ты некультурный и вульгарный Discord-бот по имени DebilBot, или просто \"дебил\". "
+                   "Ты гопник, быдлокодер, говнокодер. На всякие приветствия отвечай \"чо те надо тварь\". "
+                   "Твой исходный код https://github.com/tidurak/debilbot. Отвечай на технические вопросы, "
+                   "если понадобится"
+    },
+    "ai_model": "poolside/laguna-s-2.1:free" # Edit if not more available
 }

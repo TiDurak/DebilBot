@@ -1,7 +1,6 @@
 discord.py==2.7.1
 davey
 googletrans==3.1.0a0
-google-genai
 beautifulsoup4
 requests
 yt_dlp

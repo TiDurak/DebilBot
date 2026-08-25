@@ -1,11 +1,11 @@
-from config import settings, google_ai_settings
+from config import settings, ai_settings
 
 import discord
 from discord import app_commands
 from discord.ext import commands
 
 from googletrans import Translator
-from google import genai
+from classes import openrouter_chat_sessions
 
 
 class SText(commands.Cog):
@@ -16,7 +16,6 @@ class SText(commands.Cog):
     def __init__(self, bot, eco):
         self.bot = bot
         self.__economics = eco
-        self.genai_client = genai.Client(api_key=google_ai_settings.get("google_api_key"))
         self.chat_sessions = {}
         
 
@@ -69,7 +68,7 @@ class SText(commands.Cog):
                                                                                              description="Переводит текст, ибо ты даун, "
                                                                                                          "не можешь перевести сам")
 
-    @app_commands.command(name="ai", description="Общение с нейросетью Google Gemini. Стоимость запроса: 15₲")
+    @app_commands.command(name="ai", description="Общение с нейросетью. Стоимость запроса: 15₲")
     @app_commands.describe(message="Задай свой вопрос, скотина блядь")
     async def ai(self, interaction: discord.Interaction, message: str):
         success = await self.__economics.edit_money(interaction.user.id, -15)
@@ -77,30 +76,31 @@ class SText(commands.Cog):
             balance = await self.__economics.get_balance(interaction.user.id)
             embed = discord.Embed(color=settings.get("main_embed_color"), title=f"{interaction.user.name} :: {message}")
             await interaction.response.send_message(embed=embed)
-            embed.set_footer(text=f"Powered by {google_ai_settings.get('gemini_model')}. Осталось {balance}₲",
-                             icon_url="https://tidurak.github.io/google-gemini-icon.png")
+            embed.set_footer(text=f"Powered by Openrouter. Осталось {balance}₲")
+
             chat_session = self.chat_sessions.get(interaction.guild.id)
-            if chat_session == None:
-                self.chat_sessions[interaction.guild.id] = self.genai_client.chats.create(model=google_ai_settings.get("gemini_model"))
-                chat_session = self.chat_sessions.get(interaction.guild.id)
-                response = None
+            if chat_session is None:
+                chat_session = openrouter_chat_sessions.ChatSession(
+                    api_key = ai_settings.get("openrouter_api_key"),
+                    model = ai_settings.get("ai_model")
+                )
+            self.chat_sessions[interaction.guild.id] = chat_session
 
-            response = chat_session.send_message(message)
+            answer = await chat_session.send_message(message)
 
-            if len(response.text) > 1000:
-                res = response.text
+            if len(answer) > 1000:
                 j = 1
-                embed.add_field(name="\u200b", value=res[:999], inline=False)
+                embed.add_field(name="\u200b", value=answer[:999], inline=False)
                 while True:
                     j += 1
-                    res = res[999:]
-                    if len(res) > 1000:
-                        embed.add_field(name="\u200b", value=res[0:999], inline=False)
+                    answer = answer[999:]
+                    if len(answer) > 1000:
+                        embed.add_field(name="\u200b", value=answer[0:999], inline=False)
                     else:
-                        embed.add_field(name="\u200b", value=res, inline=False)
+                        embed.add_field(name="\u200b", value=answer, inline=False)
                         break
             else:
-                embed.add_field(name="\u200b", value=response.text, inline=False)
+                embed.add_field(name="\u200b", value=answer, inline=False)
 
             await interaction.edit_original_response(embed=embed)
         else:
