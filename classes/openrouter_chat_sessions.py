@@ -42,26 +42,23 @@ class ChatSession:
 
                     if response.status != 200:
                         self.__messages.pop()
-
                         error = data.get("error", {})
-                        raise Exception(
-                            f"OpenRouter {response.status}: "
-                            f"{error.get('message', data)}"
-                        )
+                        print(f"OpenRouter {response.status}: "
+                              f"{error.get('message', data)}")
+                        return "❌ Опенроутер не отвечает. Слишком много запросов бля"
+
 
                     answer = data["choices"][0]["message"]["content"]
 
         except asyncio.TimeoutError:
             self.__messages.pop()
-            raise Exception("OpenRouter не ответил за 60 секунд.")
+            raise Exception("OpenRouter doesn't respond.")
 
         except aiohttp.ClientError as e:
             self.__messages.pop()
-            raise Exception(f"Ошибка соединения с OpenRouter: {e}")
+            raise Exception(f"Failed connection with OpenRouter: {e}")
 
         except Exception:
-            # Если ошибка произошла после добавления user-сообщения
-            # и оно ещё осталось в истории — удаляем его.
             if self.__messages and self.__messages[-1].get("role") == "user":
                 self.__messages.pop()
 
