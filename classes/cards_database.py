@@ -10,7 +10,8 @@ class CardsDatabase:
             await db.execute("""
                 CREATE TABLE IF NOT EXISTS user_items (
                     discord_id INTEGER PRIMARY KEY,
-                    current_card TEXT NOT NULL DEFAULT 'basic'
+                    current_card TEXT NOT NULL DEFAULT 'basic',
+                    cards TEXT NOT NULL DEFAULT '["basic"]'
                 )
             """)
 
