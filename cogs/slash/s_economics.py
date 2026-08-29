@@ -49,7 +49,7 @@ class SEconomics(commands.Cog):
         if member is None:
             member = interaction.user
         current_balance = await self.__economics.get_balance(member.id)
-        balance_str = f"{str(round(current_balance, 2))} ₲"
+        balance_str = f"{str(round(current_balance, 2))} Gondons"
         card_design = await self.__cards_db.get_current_card(member.id)
 
         bank_card = DebilCard(member.name, balance_str, f"assets/debil_card/{card_design}.png")
