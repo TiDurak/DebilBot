@@ -2,7 +2,7 @@ from cogs import listeners
 from cogs.context_menu import c_fun, c_information, c_reputation
 from cogs.slash import s_help, s_fun, s_text, s_music, s_moderation, s_information, s_converters, s_reputation, s_economics
 from config import settings
-from classes import reputation, economics, promo_keys
+from classes import reputation, economics, promo_keys, cards_database
 
 import sys
 import asyncio
@@ -20,10 +20,12 @@ bot = commands.Bot(command_prefix=settings['prefix'], intents=intents)
 rep = reputation.Reputation()
 eco = economics.Economics()
 promo = promo_keys.PromoKeys()
+cards = cards_database.CardsDatabase()
 
 asyncio.run(rep.initialize())
 asyncio.run(eco.initialize())
 asyncio.run(promo.initialize())
+asyncio.run(cards.initialize())
 
 basic_cogs = [listeners.setup(bot)]
 
@@ -35,7 +37,7 @@ slash_cogs = [s_help.setup(bot),
               s_moderation.setup(bot),
               s_converters.setup(bot),
               s_reputation.setup(bot, rep, eco),
-              s_economics.setup(bot, eco, promo),
+              s_economics.setup(bot, eco, promo, cards),
               ]
 
 context_menu_cogs = [c_fun.setup(bot, eco),

@@ -1,3 +1,4 @@
+from classes.debil_card import DebilCard
 from config import settings
 
 import discord
@@ -10,10 +11,10 @@ class SEconomics(commands.Cog):
     HELP_NAME_VALUE = "economics"
     HELP_DESCRIPTION = "Дегенератские и никому не нужные экономические финтиплюшки. Валюта: гондоны (Gondons ₲)"
 
-    def __init__(self, economics, promo):
+    def __init__(self, economics, promo, cards):
         self.__economics = economics
         self.__promo_keys = promo
-
+        self.__cards_db = cards
 
     @app_commands.command(name="daily", description="Забрать ежедневную подачку для лохов")
     async def daily(self, interaction: discord.Interaction):
@@ -48,11 +49,13 @@ class SEconomics(commands.Cog):
         if member is None:
             member = interaction.user
         current_balance = await self.__economics.get_balance(member.id)
-        embed = discord.Embed(color=settings.get("main_embed_color"),
-                              title=f'💳 Баланс {member.name}')
-        embed.add_field(name='Gondons', value=f"{current_balance} ₲")
-        embed.set_footer(text=f"Запросил {interaction.user.name}", icon_url=interaction.user.avatar.url)
-        await interaction.response.send_message(embed=embed)
+        balance_str = f"{str(round(current_balance, 2))} ₲"
+        card_design = await self.__cards_db.get_current_card(member.id)
+
+        bank_card = DebilCard(member.name, balance_str, f"assets/debil_card/{card_design}.png")
+        bank_card.add_text()
+        image = bank_card.get_buffer()
+        await interaction.response.send_message(file = discord.File(image, filename="debil_card.png"))
 
     @app_commands.command(name="send", description="Отправить Gondon'ы другу-дегенерату")
     async def send(self, interaction: discord.Interaction,
@@ -78,5 +81,5 @@ class SEconomics(commands.Cog):
 
 
 
-async def setup(bot, economics, promo):
-    await bot.add_cog(SEconomics(economics, promo))
+async def setup(bot, economics, promo, cards):
+    await bot.add_cog(SEconomics(economics, promo, cards))
