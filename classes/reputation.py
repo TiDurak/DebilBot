@@ -22,6 +22,7 @@ class Reputation:
 
         await self.__db.commit()
 
+    # Returns (False, remaining) if cooldown, else (True, None)
     async def edit(self, user_id, guild_id, amount):
         now = int(time.time())
         cursor = await self.__db.execute("""
@@ -36,7 +37,7 @@ class Reputation:
             remaining = 60 - (now - result[0])
 
             if remaining > 0:
-                return {"success":False, "remaining":remaining}
+                return False, remaining
 
         await self.__db.execute("""
                 INSERT INTO reputation (
@@ -55,7 +56,42 @@ class Reputation:
 
         await self.__db.commit()
 
-        return {"success":True}
+        return True, None
+
+    async def buy(self, user_id, guild_id, amount):
+        await self.__db.execute("""
+            INSERT INTO reputation (
+                user_id,
+                guild_id,
+                reputation
+            )
+            VALUES (?, ?, ?)
+
+            ON CONFLICT(user_id, guild_id)
+            DO UPDATE SET
+                reputation = reputation + excluded.reputation
+        """, (user_id, guild_id, amount))
+
+        await self.__db.commit()
+
+    async def sell(self, user_id, guild_id, amount):
+        if amount <= 0:
+            return False
+
+        cursor = await self.__db.execute("""
+            UPDATE reputation
+            SET reputation = reputation - ?
+            WHERE user_id = ?
+              AND guild_id = ?
+              AND reputation >= ?
+        """, (amount, user_id, guild_id, amount))
+
+        await self.__db.commit()
+
+        if cursor.rowcount == 0:
+            return False
+
+        return True
 
     async def get(self, user_id, guild_id):
         cursor = await self.__db.execute("""
