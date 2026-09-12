@@ -27,8 +27,7 @@ class SText(commands.Cog):
     @app_commands.command(name="translate", description="Переводит текст, ибо ты даун, "
                                                         "не можешь перевести сам")
     @app_commands.describe(language="Язык, на который я переведу текст",
-                           text="Текст, который я переведу на выбранный тобой язык",
-                           is_embed="Как выводить перевод")
+                           text="Текст, который я переведу на выбранный тобой язык")
     @app_commands.choices(language=[
         app_commands.Choice(name="Английский", value="en"),
         app_commands.Choice(name="Арабский", value="ar"),
@@ -47,26 +46,16 @@ class SText(commands.Cog):
         app_commands.Choice(name="Украинский", value="uk"),
         app_commands.Choice(name="Французский", value="fr"),
         app_commands.Choice(name="Чешский", value="cs"),
-    ], is_embed=[
-        app_commands.Choice(name="Вывести в виде вложения (По умолчанию)", value=1),
-        app_commands.Choice(name="Вывести в виде обычного текста", value=0),
     ])
     async def translate(self, interaction: discord.Interaction,
-                        language: app_commands.Choice[str], text: str,
-                        is_embed: app_commands.Choice[
-                            int] = 1):  # Using "int" instead "bool", because second is not allowed
+                        language: app_commands.Choice[str], text: str):  # Using "int" instead "bool", because second is not allowed
         translator = Translator()
         translation = translator.translate(text, dest=str(language.value))
 
-        if is_embed == 1:
-            embed = discord.Embed(color=settings.get("main_embed_color"), title=f"{interaction.user.name} :: DebilBot Super Mega 228 Translator")
-            embed.add_field(name="Исходный Текст", value=text, inline=False)
-            embed.add_field(name=f"Перевод на {language.name}", value=translation.text, inline=False)
-            await interaction.response.send_message(embed=embed)
-        else:
-            await interaction.response.send_message(translation.text) @ app_commands.command(name="translate",
-                                                                                             description="Переводит текст, ибо ты даун, "
-                                                                                                         "не можешь перевести сам")
+        embed = discord.Embed(color=settings.get("main_embed_color"), title=f"{interaction.user.name} :: DebilBot Super Mega 228 Translator")
+        embed.add_field(name="Исходный Текст", value=text, inline=False)
+        embed.add_field(name=f"Перевод на {language.name}", value=translation.text, inline=False)
+        await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="ai", description="Общение с нейросетью. Стоимость запроса: 15₲")
     @app_commands.describe(message="Задай свой вопрос, скотина блядь")
