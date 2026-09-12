@@ -27,10 +27,10 @@ class SReputation(commands.Cog):
                 "захуярьте его")
             return
         if choice.value == "+":
-            result = await self.__reputation.edit(member.id, interaction.guild.id, 1)
+            success, remaining = await self.__reputation.edit(member.id, interaction.guild.id, 1)
             string_addition = "выдана"
         elif choice.value == "-":
-            result = await self.__reputation.edit(member.id, interaction.guild.id, -1)
+            success, remaining = await self.__reputation.edit(member.id, interaction.guild.id, -1)
             string_addition = "захуярена"
         else:
             reputation = await self.__reputation.get(member.id, interaction.guild.id)
@@ -42,17 +42,14 @@ class SReputation(commands.Cog):
             await interaction.response.send_message(embed=embed)
 
             return
-
-        success, remaining = result
         if success:
             reputation = await self.__reputation.get(member.id, interaction.guild.id)
             await interaction.response.send_message(
                 f"Пидору с ником **{member.mention}** была {string_addition} репутация. Теперь на этом сервере "
                 f"она составляет {reputation}")
         else:
-            time_remaining = result.get("remaining")
             await interaction.response.send_message(
-                f"Этому челоёбу можно изменить репутацию только раз в 60 секунд. Жди `{time_remaining} сек`, пиздюк мелкий",
+                f"Этому челоёбу можно изменить репутацию только раз в 60 секунд. Жди `{remaining} сек`, пиздюк мелкий",
                 ephemeral=True)
 
     @app_commands.command(name="buy_reputation", description="Купить репутацию на этом сервере: 200₲ за 1 реп")
