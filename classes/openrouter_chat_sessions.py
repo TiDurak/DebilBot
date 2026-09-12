@@ -15,10 +15,7 @@ class ChatSession:
             "HTTP-Referer": "https://discord.com/",
             "X-Title": "Discord Bot"
         }
-        self.__timeout = aiohttp.ClientTimeout(
-            total=60,
-            connect=10
-        )
+        self.__timeout = aiohttp.ClientTimeout(total=60, connect=20)
 
     async def send_message(self, text: str) -> str:
         self.__messages.append({
@@ -34,9 +31,9 @@ class ChatSession:
         try:
             async with aiohttp.ClientSession(timeout=self.__timeout) as session:
                 async with session.post(
-                        "https://openrouter.ai/api/v1/chat/completions",
-                        headers=self.__headers,
-                        json=payload
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    headers=self.__headers,
+                    json=payload,
                 ) as response:
                     data = await response.json()
 
@@ -45,7 +42,7 @@ class ChatSession:
                         error = data.get("error", {})
                         print(f"OpenRouter {response.status}: "
                               f"{error.get('message', data)}")
-                        return "❌ Опенроутер не отвечает. Слишком много запросов бля"
+                        return "❌ Опенроутер не отвечает. Повтори попытку"
 
 
                     answer = data["choices"][0]["message"]["content"]
